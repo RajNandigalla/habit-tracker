@@ -28,7 +28,7 @@ export const JournalView: React.FC<JournalViewProps> = ({ entries, habits, onAdd
             <Button
               size="sm"
               onClick={() => setModalOpen(true)}
-              className="hidden md:flex shadow-md"
+              className="hidden md:flex shadow-md px-4 py-2.5"
             >
               <Plus className="h-4 w-4 mr-2" /> New Entry
             </Button>

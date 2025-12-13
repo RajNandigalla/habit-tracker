@@ -26,3 +26,4 @@ export * from './Container';
 export { default as FAB } from './FAB';
 export * from './IconButton';
 export * from './Tooltip';
+export * from './EmptyState';
