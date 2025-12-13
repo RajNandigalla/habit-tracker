@@ -1,7 +1,7 @@
 import React from 'react';
 import { SpinnerIcon } from '../icons';
 
-type ButtonVariant =
+export type ButtonVariant =
   | 'primary'
   | 'secondary'
   | 'danger'
@@ -10,7 +10,7 @@ type ButtonVariant =
   | 'ghost'
   | 'danger-ghost'
   | 'outline';
-type ButtonSize = 'sm' | 'md' | 'lg' | 'icon' | 'icon-sm';
+export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon' | 'icon-sm';
 
 interface BaseButtonProps {
   children?: React.ReactNode;
@@ -33,7 +33,7 @@ type ButtonAsLink = BaseButtonProps &
     href: string;
   };
 
-type ButtonProps = ButtonAsButton | ButtonAsLink;
+export type ButtonProps = ButtonAsButton | ButtonAsLink;
 
 export const Button: React.FC<ButtonProps> = ({
   children,

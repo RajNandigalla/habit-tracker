@@ -98,7 +98,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   };
 
   return (
-    <PageTransition className="bg-slate-50 dark:bg-slate-950">
+    <PageTransition>
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 py-6 md:px-8 pb-24 md:pb-8">
           <PageTitle
@@ -107,7 +107,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             className="mb-8"
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6">
             {/* Left Column */}
             <div className="space-y-6">
               {/* Data & Storage */}
@@ -163,7 +163,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                   Data Management
                 </h2>
                 <Card className="space-y-4">
-                  <div className="flex flex-col sm:flex-row gap-4 p-2">
+                  <div className="flex flex-col gap-4 p-2">
                     <Button
                       variant="secondary"
                       className="flex-1 justify-between"

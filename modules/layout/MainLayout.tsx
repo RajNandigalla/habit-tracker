@@ -120,7 +120,7 @@ export const MainLayout: React.FC = () => {
         </SideMenu>
 
         {/* Main Content Area - Full width/height, no margins */}
-        <div className="flex-1 min-w-0 flex flex-col min-h-full relative bg-slate-50 dark:bg-slate-950">
+        <div className="flex-1 min-w-0 flex flex-col min-h-full relative">
           <div className="flex-1 w-full h-full">
             <Routes>
               <Route path="/" element={<Dashboard />} />

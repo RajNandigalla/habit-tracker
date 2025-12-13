@@ -23,7 +23,7 @@ export const ChallengesView: React.FC<ChallengesViewProps> = ({ habits, onJoinCh
   };
 
   return (
-    <PageTransition className="bg-slate-50 dark:bg-slate-950">
+    <PageTransition>
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 py-6 md:px-8 pb-24 md:pb-8">
           <PageTitle

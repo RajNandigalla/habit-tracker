@@ -24,3 +24,5 @@ export { default as SideMenu } from './SideMenu';
 export { Switch as Toggle } from './Switch';
 export * from './Container';
 export { default as FAB } from './FAB';
+export * from './IconButton';
+export * from './Tooltip';

@@ -51,8 +51,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   };
 
   return (
-    <PageTransition className="bg-slate-50 dark:bg-slate-950">
-      {/* Content */}
+    <PageTransition>
       <main className="flex-1 relative scroll-smooth">
         <div className="max-w-7xl mx-auto px-4 py-6 md:px-8 pb-24 md:pb-8">
           <DailyOverview
@@ -81,8 +80,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
 
           {/* Category Filter - Increased Spacing */}
-          <div className="sticky top-0 z-30 -mx-4 px-4 pt-2 pb-4 bg-slate-50/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200/50 dark:border-slate-800/50 mb-8 transition-all duration-300 md:static md:bg-transparent md:dark:bg-transparent md:backdrop-blur-none md:border-none md:p-0 md:m-0 md:mb-6">
-            <div className="flex gap-2.5 overflow-x-auto no-scrollbar w-full md:w-auto md:flex-wrap pb-1 md:pb-0">
+          <div className="sticky top-0 z-30 -mx-4 px-4 pt-2 pb-4 bg-slate-50/95 dark:bg-slate-950/95 border-b border-slate-200/50 dark:border-slate-800/50 mb-8 transition-all duration-300 md:static md:bg-transparent md:dark:bg-transparent md:border-none md:p-0 md:m-0 md:mb-6">
+            <div className="flex gap-2.5 overflow-x-auto no-scrollbar w-full md:w-auto md:flex-wrap p-1">
               {categories.map(cat => (
                 <Chip
                   key={cat}

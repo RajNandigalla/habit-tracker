@@ -20,7 +20,7 @@ export const JournalView: React.FC<JournalViewProps> = ({ entries, habits, onAdd
   const sortedEntries = [...entries].sort((a, b) => sortDatesDesc(a.date, b.date));
 
   return (
-    <PageTransition className="bg-slate-50 dark:bg-slate-950">
+    <PageTransition>
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 py-6 md:px-8 pb-24 md:pb-8">
           <div className="flex items-center justify-between mb-8">
