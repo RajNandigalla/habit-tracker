@@ -22,3 +22,5 @@ export { default as SideMenu } from './SideMenu';
 
 // Legacy export for backward compatibility if any
 export { Switch as Toggle } from './Switch';
+export * from './Container';
+export { default as FAB } from './FAB';

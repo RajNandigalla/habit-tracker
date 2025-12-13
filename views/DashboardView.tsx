@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Habit, ViewMode, HabitCategory, JournalEntry } from '../types';
 import { HabitListItem, AddHabitModal } from '../modules/habits';
-import { Button, Chip, Modal, Show } from '../core';
+import { Button, Chip, Modal, Show, FAB } from '../core';
 import { dayjs } from '../utils';
 import { Plus, Sparkles, AlertTriangle } from 'lucide-react';
 import { cn, getTodayISO, generateId } from '../utils';
@@ -160,12 +160,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       </main>
 
       {/* Mobile FAB */}
-      <button
+      <FAB
         onClick={() => setModalOpen(true)}
-        className="md:hidden fixed bottom-6 right-6 p-4 bg-indigo-600 text-white rounded-full shadow-lg shadow-indigo-600/30 dark:shadow-indigo-900/30 active:scale-90 transition-transform z-40 animate-pop"
-      >
-        <Plus className="h-6 w-6" />
-      </button>
+        ariaLabel="Create new habit"
+        isParentOpen={isModalOpen}
+      />
 
       <AddHabitModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} onAdd={onAddHabit} />
 

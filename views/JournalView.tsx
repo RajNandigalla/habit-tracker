@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { JournalEntry, Habit } from '../types';
-import { Button, Show } from '../core';
+import { Button, Show, FAB } from '../core';
 import { Plus, Sparkles } from 'lucide-react';
 import { JournalTimelineItem, AddJournalEntryModal } from '../modules/journal';
 import { PageTitle } from '../modules/PageTitle';
@@ -75,12 +75,7 @@ export const JournalView: React.FC<JournalViewProps> = ({ entries, habits, onAdd
       </main>
 
       {/* Mobile FAB */}
-      <button
-        onClick={() => setModalOpen(true)}
-        className="md:hidden fixed bottom-6 right-6 p-4 bg-indigo-600 text-white rounded-full shadow-lg shadow-indigo-600/30 dark:shadow-indigo-900/30 active:scale-95 transition-transform z-40"
-      >
-        <Plus className="h-6 w-6" />
-      </button>
+      <FAB onClick={() => setModalOpen(true)} ariaLabel="New Entry" isParentOpen={isModalOpen} />
 
       <AddJournalEntryModal
         isOpen={isModalOpen}
