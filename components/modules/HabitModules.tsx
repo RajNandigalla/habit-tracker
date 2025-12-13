@@ -6,6 +6,7 @@ import {
   generateId,
   calculateHabitStats,
   isHabitScheduledForDate,
+  calculateWeeklyProgress,
 } from '../../utils';
 import {
   Check,
@@ -400,7 +401,10 @@ const HabitDetailsModal: React.FC<{
               label="Category"
               value={editCategory}
               onChange={v => setEditCategory(v as HabitCategory)}
-              options={Object.values(HabitCategory).map(c => ({ label: c, value: c }))}
+              options={Object.values(HabitCategory).map(c => ({
+                label: c,
+                value: c,
+              }))}
             />
             <TimePicker label="Daily Reminder" value={editReminder} onChange={setEditReminder} />
           </div>
@@ -466,20 +470,7 @@ export const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
   const isScheduledToday = isHabitScheduledForDate(habit, today);
 
   // Weekly Progress Calculation
-  const getWeeklyProgress = () => {
-    if (habit.frequency !== 'weekly') return null;
-    const startOfWeek = dayjs().startOf('isoWeek');
-    const endOfWeek = dayjs().endOf('isoWeek');
-    const count = habit.completedDates.filter(d => {
-      const dObj = dayjs(d);
-      return (
-        dObj.isAfter(startOfWeek.subtract(1, 'second')) && dObj.isBefore(endOfWeek.add(1, 'second'))
-      );
-    }).length;
-    return { current: count, target: habit.targetCount || 1 };
-  };
-
-  const weeklyStats = getWeeklyProgress();
+  const weeklyStats = calculateWeeklyProgress(habit);
 
   const handleFocus = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -787,7 +778,10 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, o
               label="Category"
               value={category}
               onChange={val => setCategory(val as HabitCategory)}
-              options={Object.values(HabitCategory).map(c => ({ label: c, value: c }))}
+              options={Object.values(HabitCategory).map(c => ({
+                label: c,
+                value: c,
+              }))}
             />
           </div>
 

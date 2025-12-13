@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Habit, JournalEntry, UserPreferences, ViewMode, HabitCategory, Challenge } from '../types';
-import { calculateStreak, generateId, getTodayISO, playSuccessSound } from '../utils';
+import { calculateStreak, generateId, getTodayISO, audioManager } from '../utils';
+import { storageService } from '../services/storageService';
 import { useToast } from './ToastContext';
 import dayjs from 'dayjs';
 
@@ -48,37 +49,40 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
 
   // Initialize state from localStorage or defaults
   const [habits, setHabits] = useState<Habit[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.HABITS);
-    return saved ? JSON.parse(saved) : [];
+    return storageService.getItem<Habit[]>(STORAGE_KEYS.HABITS, []);
   });
 
   const [journalEntries, setJournalEntries] = useState<JournalEntry[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.JOURNAL);
-    return saved ? JSON.parse(saved) : [];
+    return storageService.getItem<JournalEntry[]>(STORAGE_KEYS.JOURNAL, []);
   });
 
   const [preferences, setPreferences] = useState<UserPreferences>(() => {
-    const saved = localStorage.getItem(STORAGE_KEYS.PREFS);
-    return saved ? JSON.parse(saved) : { darkMode: false, viewMode: 'list', soundEnabled: true };
+    return storageService.getItem<UserPreferences>(STORAGE_KEYS.PREFS, {
+      darkMode: false,
+      viewMode: 'list',
+      soundEnabled: true,
+    });
   });
 
   // Effects for persistence
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.HABITS, JSON.stringify(habits));
+    storageService.setItem(STORAGE_KEYS.HABITS, habits);
   }, [habits]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.JOURNAL, JSON.stringify(journalEntries));
+    storageService.setItem(STORAGE_KEYS.JOURNAL, journalEntries);
   }, [journalEntries]);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEYS.PREFS, JSON.stringify(preferences));
+    storageService.setItem(STORAGE_KEYS.PREFS, preferences);
     // Apply dark mode class to html element
     if (preferences.darkMode) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
+    // Update audio manager
+    audioManager.setEnabled(preferences.soundEnabled);
   }, [preferences]);
 
   // Actions
@@ -116,7 +120,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         // Play sound for positive habit completion
         if (!isCompleted && habit.habitType === 'positive') {
           if (preferences.soundEnabled) {
-            playSuccessSound();
+            audioManager.playSuccess();
           }
         }
 

@@ -227,33 +227,8 @@ export const toBase64 = (file: File): Promise<string> => {
   });
 };
 
-// Simple success sound using AudioContext
-export const playSuccessSound = () => {
-  try {
-    const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-    if (!AudioContext) return;
+// Re-export habit utilities
+export { calculateWeeklyProgress } from './utils/habitUtils';
 
-    const ctx = new AudioContext();
-    const oscillator = ctx.createOscillator();
-    const gainNode = ctx.createGain();
-
-    oscillator.connect(gainNode);
-    gainNode.connect(ctx.destination);
-
-    // Sine wave for a pleasant "ding"
-    oscillator.type = 'sine';
-
-    // Frequency sweep: Start high, go slightly higher, then fade
-    oscillator.frequency.setValueAtTime(500, ctx.currentTime);
-    oscillator.frequency.exponentialRampToValueAtTime(1000, ctx.currentTime + 0.1);
-
-    // Envelope
-    gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
-
-    oscillator.start();
-    oscillator.stop(ctx.currentTime + 0.5);
-  } catch (e) {
-    console.error('Audio play failed', e);
-  }
-};
+// Audio playback - using centralized AudioManager to prevent memory leaks
+export { audioManager } from './utils/audioManager';

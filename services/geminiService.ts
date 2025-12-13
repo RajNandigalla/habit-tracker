@@ -1,10 +1,24 @@
 import { GoogleGenAI } from '@google/genai';
 import { Habit, JournalEntry } from '../types';
 
+/**
+ * SECURITY WARNING: This API key is exposed in the client-side bundle.
+ *
+ * For production use, you should:
+ * 1. Move AI functionality to a backend API endpoint
+ * 2. Use API key restrictions (HTTP referrer, API restrictions) in Google Cloud Console
+ * 3. Never commit the .env.local file to version control
+ *
+ * To use this service:
+ * 1. Create a .env.local file in the project root
+ * 2. Add: VITE_GEMINI_API_KEY=your_api_key_here
+ * 3. Restart the dev server
+ */
+
 const getAIClient = () => {
-  const apiKey = process.env.API_KEY;
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
   if (!apiKey) {
-    console.warn('API Key not found in environment variables.');
+    console.warn('Gemini API key not found. Add VITE_GEMINI_API_KEY to .env.local file.');
     return null;
   }
   return new GoogleGenAI({ apiKey });
@@ -89,7 +103,11 @@ export const generateHabitSuggestions = async (goal: string): Promise<string[]> 
 
 export const generateProgressReport = async (
   habits: Habit[],
-  stats: { totalCompletions: number; completionRate: number; longestStreak: number }
+  stats: {
+    totalCompletions: number;
+    completionRate: number;
+    longestStreak: number;
+  }
 ): Promise<string> => {
   const ai = getAIClient();
   if (!ai)
