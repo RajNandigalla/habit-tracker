@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { JournalEntry, Habit } from '../types';
 import { Button } from '../core';
 import { Plus, Sparkles } from 'lucide-react';
-import { JournalTimelineItem, AddJournalEntryModal } from '../modules/JournalModules';
+import { JournalTimelineItem, AddJournalEntryModal } from '../modules/journal';
 import { PageTitle } from '../modules/PageTitle';
 import PageTransition from '../core/PageTransition';
 

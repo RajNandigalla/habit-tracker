@@ -1,7 +1,8 @@
 import React from 'react';
 import { Achievement } from '../types';
+import { Card } from '../core';
 import { PageTitle } from '../modules/PageTitle';
-import { AchievementsSection } from '../modules/ProgressModules';
+import { AchievementsSection } from '../modules/progress';
 import PageTransition from '../core/PageTransition';
 
 interface AchievementsViewProps {

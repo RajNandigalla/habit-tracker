@@ -7,12 +7,12 @@ import {
   GlobalStatsGrid,
   ConsistencyHeatmap,
   HabitPerformanceChart,
+  MoodCorrelationCard,
+  AIReportModal,
   GlobalStats,
   HeatmapData,
-  AIReportModal,
   MoodCorrelationData,
-  MoodCorrelationCard,
-} from '../modules/ProgressModules';
+} from '../modules/progress';
 import PageTransition from '../core/PageTransition';
 
 interface ProgressViewProps {
