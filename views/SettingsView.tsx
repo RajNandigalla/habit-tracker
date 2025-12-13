@@ -99,7 +99,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
   return (
     <PageTransition className="bg-slate-50 dark:bg-slate-950">
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 py-6 md:px-8 pb-24 md:pb-8">
           <PageTitle
             title="Settings"

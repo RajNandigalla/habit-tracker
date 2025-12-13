@@ -53,7 +53,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   return (
     <PageTransition className="bg-slate-50 dark:bg-slate-950">
       {/* Content */}
-      <main className="flex-1 overflow-y-auto relative scroll-smooth">
+      <main className="flex-1 relative scroll-smooth">
         <div className="max-w-7xl mx-auto px-4 py-6 md:px-8 pb-24 md:pb-8">
           <DailyOverview
             habits={habits}

@@ -46,7 +46,7 @@ export const ProgressView: React.FC<ProgressViewProps> = ({
 }) => {
   return (
     <PageTransition className="bg-slate-50 dark:bg-slate-950">
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1">
         <div className="max-w-7xl mx-auto px-4 py-6 md:px-8 pb-24 md:pb-8">
           <div
             className="flex flex-col md:flex-row md:items-start md:justify-between mb-6 gap-4 animate-slide-up"

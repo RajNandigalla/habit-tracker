@@ -18,7 +18,7 @@ import {
   Swords,
   Trophy,
 } from 'lucide-react';
-import { SideMenu } from '../../core';
+import { SideMenu, Container } from '../../core';
 import { Header } from '../Header';
 import { NavItem } from './NavItem';
 
@@ -27,13 +27,17 @@ export const MainLayout: React.FC = () => {
   const { preferences, toggleDarkMode } = useStore();
 
   return (
-    <div className="flex flex-col h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 overflow-hidden font-sans">
+    <div className="flex flex-col min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
       {/* Global Header */}
-      <Header darkMode={preferences.darkMode} onToggleDarkMode={toggleDarkMode} />
+      <Header
+        className="sticky top-0"
+        darkMode={preferences.darkMode}
+        onToggleDarkMode={toggleDarkMode}
+      />
 
-      <div className="flex flex-1 overflow-hidden relative">
+      <Container className="flex flex-1 relative px-0 sm:px-0 md:px-0 max-w-none md:max-w-none lg:max-w-7xl lg:px-8">
         {/* Desktop Floating Sidebar - Height fit content */}
-        <aside className="hidden md:flex w-72 flex-col m-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none z-20 h-fit max-h-[calc(100vh-6rem)] overflow-hidden shrink-0 overflow-y-auto no-scrollbar">
+        <aside className="hidden md:flex w-72 flex-col m-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none z-20 h-fit sticky top-24 shrink-0 no-scrollbar">
           <nav className="flex-1 px-4 space-y-2 py-4">
             <NavItem to="/" icon={<ListTodo />} label="Habits" />
             <NavItem to="/challenges" icon={<Swords />} label="Challenges" />
@@ -116,8 +120,8 @@ export const MainLayout: React.FC = () => {
         </SideMenu>
 
         {/* Main Content Area - Full width/height, no margins */}
-        <div className="flex-1 flex flex-col h-full overflow-hidden relative bg-slate-50 dark:bg-slate-950">
-          <div className="flex-1 w-full h-full overflow-hidden">
+        <div className="flex-1 min-w-0 flex flex-col min-h-full relative bg-slate-50 dark:bg-slate-950">
+          <div className="flex-1 w-full h-full">
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/challenges" element={<Challenges />} />
@@ -128,7 +132,7 @@ export const MainLayout: React.FC = () => {
             </Routes>
           </div>
         </div>
-      </div>
+      </Container>
     </div>
   );
 };
