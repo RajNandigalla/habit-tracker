@@ -1,11 +1,7 @@
 import { useMemo } from 'react';
 import { Habit, JournalEntry } from '../types';
 import dayjs from 'dayjs';
-import {
-  GlobalStats,
-  HeatmapData,
-  MoodCorrelationData,
-} from '../components/modules/ProgressModules';
+import { GlobalStats, HeatmapData, MoodCorrelationData } from '../modules/ProgressModules';
 
 /**
  * Custom hook to calculate all progress statistics

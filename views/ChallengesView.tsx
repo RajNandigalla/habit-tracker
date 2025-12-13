@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Challenge, Habit } from '../../types';
-import { CHALLENGES } from '../../data/challenges';
+import { Challenge, Habit } from '../types';
+import { CHALLENGES } from '../data/challenges';
 import { PageTitle } from '../modules/PageTitle';
 import { Button, Card, Modal, Select } from '../core';
 import { Clock, Check, ArrowRight, Layers, Plus } from 'lucide-react';
-import { cn } from '../../utils';
+import { cn } from '../utils';
 import PageTransition from '../core/PageTransition';
 
 interface ChallengesViewProps {

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { PlusIcon, XIcon } from '../icons';
-import { useScrollAwareFab } from '../../hooks/useScrollAwareFab';
-import { acquireScrollLock, releaseScrollLock } from '../../utils/scrollLock';
+import { useScrollAwareFab } from '../hooks/useScrollAwareFab';
+import { acquireScrollLock, releaseScrollLock } from '../utils/scrollLock';
 
 export interface FabAction {
   id: string;

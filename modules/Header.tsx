@@ -1,7 +1,7 @@
 import React from 'react';
 import { Activity, Sun, Moon } from 'lucide-react';
-import { cn } from '../../utils';
-import { useNavigation } from '../../context/NavigationContext';
+import { cn } from '../utils';
+import { useNavigation } from '../context/NavigationContext';
 import { MenuIcon } from '../icons';
 
 interface HeaderProps {

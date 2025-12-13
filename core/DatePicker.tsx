@@ -2,10 +2,10 @@ import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react'
 import ReactDOM from 'react-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeftIcon, ChevronRightIcon, CalendarIcon } from '../icons';
-import useOnClickOutside from '../../hooks/useOnClickOutside';
+import useOnClickOutside from '../hooks/useOnClickOutside';
 import { computePosition, flip, shift, offset } from '@floating-ui/dom';
 import Button from './Button';
-import useIsMobile from '../../hooks/useIsMobile';
+import useIsMobile from '../hooks/useIsMobile';
 import Modal from './Modal';
 
 interface DatePickerProps {

@@ -12,8 +12,8 @@ import {
   FireIcon,
   TrashIcon,
 } from '../icons';
-import { UserPreferences } from '../../types';
-import { cn } from '../../utils';
+import { UserPreferences } from '../types';
+import { cn } from '../utils';
 import { PageTitle } from '../modules/PageTitle';
 import PageTransition from '../core/PageTransition';
 

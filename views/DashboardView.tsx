@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from 'react';
-import { Habit, ViewMode, HabitCategory, JournalEntry } from '../../types';
+import { Habit, ViewMode, HabitCategory, JournalEntry } from '../types';
 import { HabitListItem, AddHabitModal } from '../modules/HabitModules';
 import { Button, Chip, Modal } from '../core';
 import { Plus, Sparkles, AlertTriangle } from 'lucide-react';
-import { cn, getTodayISO, generateId } from '../../utils';
+import { cn, getTodayISO, generateId } from '../utils';
 import { PageTitle } from '../modules/PageTitle';
 import { FocusTimer } from '../modules/FocusTimer';
 import { DailyOverview } from '../modules/DashboardWidgets';
-import { useStore } from '../../context/Store';
+import { useStore } from '../context/Store';
 import PageTransition from '../core/PageTransition';
 
 interface DashboardViewProps {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Achievement } from '../../types';
+import { Achievement } from '../types';
 import { PageTitle } from '../modules/PageTitle';
 import { AchievementsSection } from '../modules/ProgressModules';
 import PageTransition from '../core/PageTransition';

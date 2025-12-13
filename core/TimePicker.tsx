@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import { Clock } from 'lucide-react';
-import { cn } from '../../utils';
-import useOnClickOutside from '../../hooks/useOnClickOutside';
+import { cn } from '../utils';
+import useOnClickOutside from '../hooks/useOnClickOutside';
 import { computePosition, flip, shift, offset } from '@floating-ui/dom';
-import useIsMobile from '../../hooks/useIsMobile';
+import useIsMobile from '../hooks/useIsMobile';
 import Modal from './Modal';
 import Button from './Button';
 

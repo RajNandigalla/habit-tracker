@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStore } from '../context/Store';
-import { DashboardView } from '../components/views/DashboardView';
+import { DashboardView } from '../views/DashboardView';
 
 export const Dashboard: React.FC = () => {
   const {

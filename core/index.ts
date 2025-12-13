@@ -12,7 +12,7 @@ export * from './TagsInput';
 export * from './SliderStepper';
 export * from './Slider'; // Added export
 export * from './TimePicker';
-export * from '../../context/ToastContext';
+export * from '../context/ToastContext';
 export { default as AnimatedNumber } from './AnimatedNumber';
 export { default as SideMenu } from './SideMenu';
 

@@ -1,8 +1,8 @@
 import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import { XIcon, PlusIcon } from '../icons';
-import { Tag } from '../../types';
-import useOnClickOutside from '../../hooks/useOnClickOutside';
+import { Tag } from '../types';
+import useOnClickOutside from '../hooks/useOnClickOutside';
 import { computePosition, flip, shift, offset } from '@floating-ui/dom';
 
 interface TagsInputProps {

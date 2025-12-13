@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStore } from '../context/Store';
-import { JournalView } from '../components/views/JournalView';
+import { JournalView } from '../views/JournalView';
 
 export const Journal: React.FC = () => {
   const { journalEntries, habits, addJournalEntry, preferences, toggleDarkMode } = useStore();

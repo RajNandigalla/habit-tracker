@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStore } from '../context/Store';
-import { ProgressView } from '../components/views/ProgressView';
+import { ProgressView } from '../views/ProgressView';
 import { useProgressStats } from '../hooks/useProgressStats';
 
 export const Progress: React.FC = () => {

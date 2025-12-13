@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { cn } from '../../utils';
+import { cn } from '../utils';
 
 interface SliderProps {
   label?: string;

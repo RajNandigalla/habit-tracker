@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStore } from '../context/Store';
-import { ChallengesView } from '../components/views/ChallengesView';
+import { ChallengesView } from '../views/ChallengesView';
 
 export const Challenges: React.FC = () => {
   const { habits, joinChallenge, preferences, toggleDarkMode } = useStore();

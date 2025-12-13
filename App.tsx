@@ -20,8 +20,8 @@ import {
   Trophy,
 } from 'lucide-react';
 import { cn } from './utils';
-import { SideMenu } from './components/core';
-import { Header } from './components/modules/Header';
+import { SideMenu } from './core';
+import { Header } from './modules/Header';
 
 const NavItem: React.FC<{
   to: string;

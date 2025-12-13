@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStore } from '../context/Store';
-import { AchievementsView } from '../components/views/AchievementsView';
+import { AchievementsView } from '../views/AchievementsView';
 import { useAchievements } from '../hooks/useAchievements';
 
 export const Achievements: React.FC = () => {

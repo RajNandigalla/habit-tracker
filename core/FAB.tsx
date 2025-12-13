@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PlusIcon } from '../icons';
-import { useScrollAwareFab } from '../../hooks/useScrollAwareFab';
+import { useScrollAwareFab } from '../hooks/useScrollAwareFab';
 
 interface FABProps {
   onClick: () => void;

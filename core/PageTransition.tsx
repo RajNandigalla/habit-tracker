@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { cn } from '../../utils';
+import { cn } from '../utils';
 
 interface PageTransitionProps {
   children: React.ReactNode;

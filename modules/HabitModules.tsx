@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Habit, HabitCategory, HabitType, HabitFrequency } from '../../types';
+import { Habit, HabitCategory, HabitType, HabitFrequency } from '../types';
 import {
   cn,
   getTodayISO,
@@ -7,7 +7,7 @@ import {
   calculateHabitStats,
   isHabitScheduledForDate,
   calculateWeeklyProgress,
-} from '../../utils';
+} from '../utils';
 import {
   Check,
   Flame,
@@ -29,7 +29,7 @@ import {
 } from 'lucide-react';
 import { Button, Input, Select, Modal, Textarea, TimePicker, Switch, Slider } from '../core';
 import dayjs from 'dayjs';
-import { useStore } from '../../context/Store';
+import { useStore } from '../context/Store';
 import { HeatmapGrid, HeatmapData } from './ProgressModules';
 
 interface HabitActionProps {

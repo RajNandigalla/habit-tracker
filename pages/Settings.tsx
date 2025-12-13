@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStore } from '../context/Store';
-import { SettingsView } from '../components/views/SettingsView';
+import { SettingsView } from '../views/SettingsView';
 
 export const Settings: React.FC = () => {
   const {

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react';
 import ReactDOM from 'react-dom';
-import useOnClickOutside from '../../hooks/useOnClickOutside';
+import useOnClickOutside from '../hooks/useOnClickOutside';
 import { CheckIcon, ChevronDownIcon, SearchIcon } from '../icons';
 import { computePosition, flip, shift, offset } from '@floating-ui/dom';
 
