@@ -17,6 +17,7 @@ import {
   BarChartBigIcon,
   Swords,
   Trophy,
+  QuoteIcon,
 } from 'lucide-react';
 import { SideMenu, Container } from '../../core';
 import { Header } from '../Header';
@@ -47,13 +48,22 @@ export const MainLayout: React.FC = () => {
             <NavItem to="/settings" icon={<Settings2 />} label="Settings" />
           </nav>
 
-          <div className="p-4 mx-4 mb-4 bg-slate-50 dark:bg-slate-950/50 rounded-xl border border-slate-100 dark:border-slate-800">
-            <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-2 flex items-center gap-1">
-              Daily Wisdom
-            </p>
-            <p className="text-xs text-slate-700 dark:text-slate-300 italic font-serif leading-relaxed opacity-90">
-              "Consistency is what transforms average into excellence."
-            </p>
+          <div className="relative mx-4 mb-4 overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 p-5 text-white shadow-lg shadow-indigo-500/20">
+            <div className="absolute top-0 right-0 -mt-2 -mr-2 h-24 w-24 rounded-full bg-white/10 blur-2xl"></div>
+            <div className="absolute bottom-0 left-0 -mb-2 -ml-2 h-16 w-16 rounded-full bg-black/10 blur-xl"></div>
+
+            <div className="relative z-10">
+              <div className="mb-3 flex items-center gap-2 text-indigo-100">
+                <QuoteIcon className="h-4 w-4 opacity-80" />
+                <span className="text-xs font-bold uppercase tracking-wider opacity-90">
+                  Daily Wisdom
+                </span>
+              </div>
+
+              <blockquote className="font-serif text-sm leading-relaxed italic text-white/95">
+                "Consistency is what transforms average into excellence."
+              </blockquote>
+            </div>
           </div>
         </aside>
 
@@ -65,7 +75,7 @@ export const MainLayout: React.FC = () => {
                 <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-md">
                   <Activity className="h-4 w-4" />
                 </div>
-                <span className="text-lg font-extrabold text-slate-900 dark:text-white">
+                <span className="text-md font-extrabold text-slate-900 dark:text-white">
                   TickOff
                 </span>
               </div>

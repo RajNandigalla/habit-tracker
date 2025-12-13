@@ -28,10 +28,10 @@ export const Title: React.FC<TitleProps> = ({
   const levelClasses: Record<TitleLevel, string> = {
     1: 'text-4xl md:text-5xl leading-tight tracking-tight',
     2: 'text-3xl md:text-4xl leading-snug tracking-tight',
-    3: 'text-2xl md:text-3xl leading-snug',
-    4: 'text-xl md:text-2xl leading-normal',
-    5: 'text-lg md:text-xl leading-normal',
-    6: 'text-base md:text-lg leading-normal',
+    3: 'text-xl md:text-3xl leading-snug',
+    4: 'text-lg md:text-xl leading-normal',
+    5: 'text-md md:text-lg leading-normal',
+    6: 'text-base md:text-md leading-normal',
   };
 
   const weightClasses: Record<TitleWeight, string> = {

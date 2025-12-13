@@ -210,7 +210,7 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
                 <GreetingIcon className="w-3.5 h-3.5" />
                 <span>{dayjs().format('dddd, MMM D')}</span>
               </div>
-              <h2 className="text-2xl font-bold truncate">
+              <h2 className="text-xl font-bold truncate">
                 {greeting}, {username}
               </h2>
               <p className="text-indigo-100/90 text-sm mt-0.5 truncate">
@@ -227,11 +227,11 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
               {/* Stats */}
               <div className="flex gap-6 text-right">
                 <div>
-                  <div className="text-xl font-bold leading-none">{completedHabits}</div>
+                  <div className="text-lg font-bold leading-none">{completedHabits}</div>
                   <div className="text-[10px] text-indigo-200 uppercase font-bold mt-1">Done</div>
                 </div>
                 <div>
-                  <div className="text-xl font-bold leading-none">
+                  <div className="text-lg font-bold leading-none">
                     {totalHabits - completedHabits}
                   </div>
                   <div className="text-[10px] text-indigo-200 uppercase font-bold mt-1">To Go</div>

@@ -74,7 +74,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 
       <h3
         className={twMerge(
-          'text-lg font-semibold bg-clip-text text-transparent',
+          'text-md font-semibold bg-clip-text text-transparent',
           'bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300',
           'mb-0 tracking-tight'
         )}

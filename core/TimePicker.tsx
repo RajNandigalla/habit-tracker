@@ -80,7 +80,7 @@ const ScrollColumn: React.FC<{
               className={cn(
                 'w-full h-8 flex items-center justify-center snap-center transition-all duration-200',
                 isSelected
-                  ? 'text-lg font-bold text-indigo-600 dark:text-indigo-400 scale-110'
+                  ? 'text-md font-bold text-indigo-600 dark:text-indigo-400 scale-110'
                   : 'text-base text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'
               )}
             >

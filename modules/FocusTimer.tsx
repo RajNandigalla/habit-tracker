@@ -98,9 +98,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({ habit, isOpen, onClose, 
               <div className="w-24 h-24 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce">
                 <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400" />
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
-                Great Work!
-              </h3>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Great Work!</h3>
               <p className="text-slate-500 dark:text-slate-400 mb-6">
                 You completed your focus session!
               </p>

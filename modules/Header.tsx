@@ -41,7 +41,7 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex w-8 h-8 bg-indigo-600 rounded-lg items-center justify-center text-white shadow-lg shadow-indigo-600/20 dark:shadow-indigo-900/20">
               <Activity className="h-4 w-4" />
             </div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <h1 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">
               TickOff
             </h1>
           </div>

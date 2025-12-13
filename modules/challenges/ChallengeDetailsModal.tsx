@@ -78,7 +78,7 @@ export const ChallengeDetailsModal: React.FC<ChallengeDetailsModalProps> = ({
         <div className="grid grid-cols-2 gap-4">
           <div className="p-3 border border-slate-100 dark:border-slate-700 rounded-lg text-center">
             <div className="text-slate-400 text-xs font-bold uppercase mb-1">Duration</div>
-            <div className="text-xl font-bold text-slate-900 dark:text-white">
+            <div className="text-lg font-bold text-slate-900 dark:text-white">
               {challenge.durationDays} Days
             </div>
           </div>
@@ -86,7 +86,7 @@ export const ChallengeDetailsModal: React.FC<ChallengeDetailsModalProps> = ({
             <div className="text-slate-400 text-xs font-bold uppercase mb-1">Difficulty</div>
             <div
               className={cn(
-                'text-xl font-bold',
+                'text-lg font-bold',
                 challenge.difficulty === 'Easy' && 'text-green-500',
                 challenge.difficulty === 'Medium' && 'text-yellow-500',
                 challenge.difficulty === 'Hard' && 'text-red-500'

@@ -10,7 +10,7 @@ interface PageTitleProps {
 export const PageTitle: React.FC<PageTitleProps> = ({ title, description, className }) => {
   return (
     <div className={cn('px-1', className)}>
-      <h1 className="text-lg font-semibold text-slate-900 dark:text-white">{title}</h1>
+      <h1 className="text-md font-semibold text-slate-900 dark:text-white">{title}</h1>
       <p className="text-sm text-slate-500 dark:text-slate-400 font-semibold">{description}</p>
     </div>
   );

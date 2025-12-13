@@ -47,7 +47,7 @@ const MoodCorrelationCard: React.FC<{ data: MoodCorrelationData[] }> = ({ data }
     <Card className="p-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
         <div>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <h3 className="text-md font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <TrendingUp className="h-5 w-5 text-indigo-500" />
             Mood & Performance
           </h3>

@@ -9,7 +9,7 @@ const ConsistencyHeatmap: React.FC<{ data: HeatmapData[] }> = ({ data }) => {
     <Card className="p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <h3 className="text-md font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <Calendar className="h-5 w-5 text-indigo-500" />
             Consistency Heatmap
           </h3>

@@ -64,13 +64,13 @@ const AIReportModal: React.FC<{
             {generalText.map((t, i) => {
               if (t.startsWith('##'))
                 return (
-                  <h2 key={i} className="text-lg font-bold text-slate-900 dark:text-white mt-2">
+                  <h2 key={i} className="text-md font-bold text-slate-900 dark:text-white mt-2">
                     {t.replace(/#/g, '')}
                   </h2>
                 );
               if (t.startsWith('#'))
                 return (
-                  <h3 key={i} className="text-xl font-bold text-slate-900 dark:text-white mt-2">
+                  <h3 key={i} className="text-lg font-bold text-slate-900 dark:text-white mt-2">
                     {t.replace(/#/g, '')}
                   </h3>
                 );
@@ -113,7 +113,7 @@ const AIReportModal: React.FC<{
             <div className="bg-indigo-50 dark:bg-indigo-900/20 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
               <Sparkles className="h-8 w-8 text-indigo-500" />
             </div>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+            <h3 className="text-md font-bold text-slate-900 dark:text-white mb-2">
               Ready to review your week?
             </h3>
             <p className="text-slate-500 dark:text-slate-400 mb-6">
@@ -150,7 +150,7 @@ const AIReportModal: React.FC<{
         {report && !isLoading && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="bg-indigo-600 p-4 rounded-xl text-white mb-6 shadow-lg shadow-indigo-600/20">
-              <div className="flex items-center gap-2 font-bold text-lg mb-1">
+              <div className="flex items-center gap-2 font-bold text-md mb-1">
                 <Crown className="h-5 w-5 text-yellow-300" />
                 Coach Report
               </div>

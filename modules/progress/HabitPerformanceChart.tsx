@@ -12,7 +12,7 @@ const HabitPerformanceChart: React.FC<{ habits: Habit[] }> = ({ habits }) => {
 
   return (
     <Card className="p-6 h-full">
-      <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
+      <h3 className="text-md font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
         <Trophy className="h-5 w-5 text-yellow-500" />
         Habit Performance
       </h3>

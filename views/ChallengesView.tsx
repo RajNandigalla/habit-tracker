@@ -74,7 +74,7 @@ export const ChallengesView: React.FC<ChallengesViewProps> = ({ habits, onJoinCh
                       >
                         <challenge.icon className="h-6 w-6" style={{ color: challenge.color }} />
                       </div>
-                      <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1 md:group-hover:text-indigo-600 dark:md:group-hover:text-indigo-400 transition-colors">
+                      <h3 className="text-md font-bold text-slate-900 dark:text-white mb-1 md:group-hover:text-indigo-600 dark:md:group-hover:text-indigo-400 transition-colors">
                         {challenge.title}
                       </h3>
                       <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">

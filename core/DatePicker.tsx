@@ -371,7 +371,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       return (
         <button
           onClick={jumpToStagedDate}
-          className="text-lg font-semibold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
+          className="text-md font-semibold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200"
         >
           {formattedStagedDate}
         </button>

@@ -257,7 +257,7 @@ const HabitDetailsModal: React.FC<{
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-2">
-                      <h2 className="text-2xl font-bold text-slate-900 dark:text-white">
+                      <h2 className="text-xl font-bold text-slate-900 dark:text-white">
                         {habit.name}
                       </h2>
                       {habit.habitType === 'negative' && (

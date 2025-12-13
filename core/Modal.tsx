@@ -93,7 +93,7 @@ export const Modal: React.FC<ModalProps> = ({
         )}
       >
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 dark:border-slate-800 shrink-0">
-          <div className="text-xl font-bold text-slate-900 dark:text-white">{title}</div>
+          <div className="text-lg font-bold text-slate-900 dark:text-white">{title}</div>
           <button
             onClick={onClose}
             className="rounded-full p-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors active:scale-90 duration-200"
