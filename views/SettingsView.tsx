@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Card, Switch, Button, SettingsRow, Modal } from '../core';
+import { Card, Switch, Button, SettingsRow, ConfirmationModal } from '../core';
 import {
   CloudIcon,
   MoonIcon,
@@ -16,6 +16,7 @@ import { UserPreferences } from '../types';
 import { cn } from '../utils';
 import { PageTitle } from '../modules/PageTitle';
 import PageTransition from '../core/PageTransition';
+import { ActionRow } from '../modules/settings';
 
 interface SettingsViewProps {
   preferences: UserPreferences;
@@ -26,55 +27,6 @@ interface SettingsViewProps {
   onClearAllData: () => void;
   onPrivacyPolicy: () => void;
 }
-
-// Internal Action Row Component for Danger Zone
-const ActionRow: React.FC<{
-  icon: React.FC<{ className?: string }>;
-  title: string;
-  description: string;
-  buttonText: string;
-  onClick: () => void;
-  isDanger?: boolean;
-  disabled?: boolean;
-  isLoading?: boolean;
-}> = ({ icon: Icon, title, description, buttonText, onClick, isDanger, disabled, isLoading }) => (
-  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4">
-    <div className="flex items-start gap-4">
-      <div
-        className={cn(
-          'flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-lg',
-          isDanger
-            ? 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400'
-            : 'bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
-        )}
-      >
-        <Icon className="w-5 h-5" />
-      </div>
-      <div>
-        <h3
-          className={cn(
-            'font-semibold',
-            isDanger ? 'text-red-700 dark:text-red-400' : 'text-slate-800 dark:text-slate-100'
-          )}
-        >
-          {title}
-        </h3>
-        <p className="text-sm text-slate-500 dark:text-slate-400 leading-snug">{description}</p>
-      </div>
-    </div>
-    <div className="flex-shrink-0">
-      <Button
-        variant={isDanger ? 'danger' : 'secondary'}
-        size="sm"
-        onClick={onClick}
-        disabled={disabled}
-        isLoading={isLoading}
-      >
-        {buttonText}
-      </Button>
-    </div>
-  </div>
-);
 
 export const SettingsView: React.FC<SettingsViewProps> = ({
   preferences,
@@ -88,7 +40,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   const [cloudSync, setCloudSync] = useState(false);
   const [notifications, setNotifications] = useState(true);
 
-  const [confirmation, setConfirmation] = useState({
+  const [confirmation, setConfirmation] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    confirmLabel: string;
+    onConfirm: () => void;
+    isDanger: boolean;
+  }>({
     isOpen: false,
     title: '',
     message: '',
@@ -302,31 +261,15 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </div>
       </main>
 
-      <Modal
+      <ConfirmationModal
         isOpen={confirmation.isOpen}
         onClose={() => setConfirmation(prev => ({ ...prev, isOpen: false }))}
         title={confirmation.title}
-      >
-        <div className="space-y-6">
-          <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-            {confirmation.message}
-          </p>
-          <div className="flex justify-end gap-3">
-            <Button
-              variant="secondary"
-              onClick={() => setConfirmation(prev => ({ ...prev, isOpen: false }))}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant={confirmation.isDanger ? 'danger' : 'primary'}
-              onClick={confirmation.onConfirm}
-            >
-              {confirmation.confirmLabel}
-            </Button>
-          </div>
-        </div>
-      </Modal>
+        message={confirmation.message}
+        confirmLabel={confirmation.confirmLabel}
+        onConfirm={confirmation.onConfirm}
+        isDanger={confirmation.isDanger}
+      />
     </PageTransition>
   );
 };

@@ -1,9 +1,10 @@
 import React, { useMemo, useEffect, useState } from 'react';
-import { Card, Modal } from '../core';
+import { Card } from '../core';
 import { Habit, JournalEntry } from '../types';
 import { getTodayISO, cn } from '../utils';
 import { Smile, Meh, Frown, Zap, Trophy, CloudRain, Sun, Moon, Flame } from 'lucide-react';
 import dayjs from 'dayjs';
+import { MoodSelectionModal } from './dashboard';
 
 interface DailyOverviewProps {
   habits: Habit[];
@@ -184,54 +185,12 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
         </div>
       </div>
 
-      {/* --- Mobile Mood Modal --- */}
-      <Modal
+      <MoodSelectionModal
         isOpen={isMoodModalOpen}
         onClose={() => setIsMoodModalOpen(false)}
-        title="How are you feeling?"
-        center
-      >
-        <div className="grid grid-cols-3 gap-3 py-2">
-          {moodOptions.map(m => {
-            const isSelected = currentMood === m.value;
-            return (
-              <button
-                key={m.value}
-                onClick={() => {
-                  onLogMood(m.value as any);
-                  setIsMoodModalOpen(false);
-                }}
-                className={cn(
-                  'flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-200 active:scale-95',
-                  isSelected
-                    ? 'bg-indigo-50 border-indigo-500 ring-1 ring-indigo-500 dark:bg-indigo-900/30 dark:border-indigo-400'
-                    : 'bg-white border-slate-200 dark:bg-slate-800 dark:border-slate-700 hover:border-indigo-200'
-                )}
-              >
-                <div
-                  className={cn(
-                    'w-10 h-10 rounded-full flex items-center justify-center mb-2',
-                    m.bg,
-                    isSelected ? 'scale-110' : ''
-                  )}
-                >
-                  <m.icon className={cn('w-6 h-6', m.color)} />
-                </div>
-                <span
-                  className={cn(
-                    'text-xs font-semibold',
-                    isSelected
-                      ? 'text-indigo-700 dark:text-indigo-300'
-                      : 'text-slate-600 dark:text-slate-400'
-                  )}
-                >
-                  {m.label}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </Modal>
+        currentMood={currentMood}
+        onLogMood={onLogMood}
+      />
 
       {/* --- Desktop View: Compact Stacked Layout --- */}
       <div className="hidden lg:flex flex-col gap-4 mb-8 animate-slide-up">
