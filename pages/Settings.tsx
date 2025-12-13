@@ -5,17 +5,25 @@ import { getTodayISO } from '../utils';
 import { useToast } from '../context/ToastContext';
 
 export const Settings: React.FC = () => {
-  const { preferences, toggleDarkMode, habits, journalEntries, importData, populateTestData, clearAllData } = useStore();
+  const {
+    preferences,
+    toggleDarkMode,
+    habits,
+    journalEntries,
+    importData,
+    populateTestData,
+    clearAllData,
+  } = useStore();
   const { addToast } = useToast();
 
   const handleExportData = () => {
     const data = {
-        habits,
-        journalEntries,
-        exportDate: getTodayISO()
+      habits,
+      journalEntries,
+      exportDate: getTodayISO(),
     };
     const jsonString = JSON.stringify(data, null, 2);
-    const blob = new Blob([jsonString], { type: "application/json" });
+    const blob = new Blob([jsonString], { type: 'application/json' });
     const href = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = href;
@@ -27,21 +35,21 @@ export const Settings: React.FC = () => {
 
   const handleImportData = async (file: File) => {
     const reader = new FileReader();
-    reader.onload = async (e) => {
-        const text = e.target?.result as string;
-        if(text) {
-           await importData(text);
-        }
+    reader.onload = async e => {
+      const text = e.target?.result as string;
+      if (text) {
+        await importData(text);
+      }
     };
     reader.readAsText(file);
   };
 
   const handlePrivacyPolicy = () => {
-      addToast("Privacy Policy coming soon!", "info");
+    addToast('Privacy Policy coming soon!', 'info');
   };
 
   return (
-    <SettingsView 
+    <SettingsView
       preferences={preferences}
       onToggleDarkMode={toggleDarkMode}
       onExportData={handleExportData}

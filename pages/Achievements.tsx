@@ -5,24 +5,22 @@ import { useAchievements } from '../hooks/useAchievements';
 import dayjs from 'dayjs';
 
 export const Achievements: React.FC = () => {
-    const { habits, journalEntries } = useStore();
+  const { habits, journalEntries } = useStore();
 
-    // Calculate necessary stats for achievements hook
-    const stats = useMemo(() => {
-        let totalCompletions = 0;
-        let maxGlobalStreak = 0;
+  // Calculate necessary stats for achievements hook
+  const stats = useMemo(() => {
+    let totalCompletions = 0;
+    let maxGlobalStreak = 0;
 
-        habits.forEach(habit => {
-            totalCompletions += habit.completedDates.length;
-            if (habit.streak > maxGlobalStreak) maxGlobalStreak = habit.streak;
-        });
+    habits.forEach(habit => {
+      totalCompletions += habit.completedDates.length;
+      if (habit.streak > maxGlobalStreak) maxGlobalStreak = habit.streak;
+    });
 
-        return { totalCompletions, longestStreak: maxGlobalStreak };
-    }, [habits]);
+    return { totalCompletions, longestStreak: maxGlobalStreak };
+  }, [habits]);
 
-    const achievements = useAchievements(habits, journalEntries, stats);
+  const achievements = useAchievements(habits, journalEntries, stats);
 
-    return (
-        <AchievementsView achievements={achievements} />
-    );
+  return <AchievementsView achievements={achievements} />;
 };

@@ -1,10 +1,10 @@
-import { GoogleGenAI } from "@google/genai";
-import { Habit, JournalEntry } from "../types";
+import { GoogleGenAI } from '@google/genai';
+import { Habit, JournalEntry } from '../types';
 
 const getAIClient = () => {
   const apiKey = process.env.API_KEY;
   if (!apiKey) {
-    console.warn("API Key not found in environment variables.");
+    console.warn('API Key not found in environment variables.');
     return null;
   }
   return new GoogleGenAI({ apiKey });
@@ -12,7 +12,7 @@ const getAIClient = () => {
 
 export const getHabitAdvice = async (habitName: string, currentStreak: number): Promise<string> => {
   const ai = getAIClient();
-  if (!ai) return "AI service unavailable. Please check configuration.";
+  if (!ai) return 'AI service unavailable. Please check configuration.';
 
   try {
     const prompt = `
@@ -30,14 +30,14 @@ export const getHabitAdvice = async (habitName: string, currentStreak: number): 
 
     return response.text || "Keep going! You're doing great.";
   } catch (error) {
-    console.error("Gemini API Error:", error);
-    return "Consistency is key. Keep it up!";
+    console.error('Gemini API Error:', error);
+    return 'Consistency is key. Keep it up!';
   }
 };
 
 export const analyzeJournalEntry = async (entry: string, mood?: string): Promise<string> => {
   const ai = getAIClient();
-  if (!ai) return "AI service unavailable.";
+  if (!ai) return 'AI service unavailable.';
 
   try {
     const prompt = `
@@ -52,16 +52,16 @@ export const analyzeJournalEntry = async (entry: string, mood?: string): Promise
       contents: prompt,
     });
 
-    return response.text || "Thank you for sharing your thoughts.";
+    return response.text || 'Thank you for sharing your thoughts.';
   } catch (error) {
-    console.error("Gemini API Error:", error);
-    return "Reflection recorded.";
+    console.error('Gemini API Error:', error);
+    return 'Reflection recorded.';
   }
 };
 
 export const generateHabitSuggestions = async (goal: string): Promise<string[]> => {
   const ai = getAIClient();
-  if (!ai) return ["Drink water", "Read 10 pages", "Walk 15 mins"];
+  if (!ai) return ['Drink water', 'Read 10 pages', 'Walk 15 mins'];
 
   try {
     const prompt = `
@@ -76,25 +76,33 @@ export const generateHabitSuggestions = async (goal: string): Promise<string[]> 
       contents: prompt,
     });
 
-    const text = response.text || "";
-    return text.split(',').map(s => s.trim()).filter(s => s.length > 0);
+    const text = response.text || '';
+    return text
+      .split(',')
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
   } catch (error) {
-    console.error("Gemini API Error:", error);
-    return ["Start small", "Be consistent", "Track progress"];
+    console.error('Gemini API Error:', error);
+    return ['Start small', 'Be consistent', 'Track progress'];
   }
 };
 
 export const generateProgressReport = async (
-  habits: Habit[], 
-  stats: { totalCompletions: number, completionRate: number, longestStreak: number }
+  habits: Habit[],
+  stats: { totalCompletions: number; completionRate: number; longestStreak: number }
 ): Promise<string> => {
   const ai = getAIClient();
-  if (!ai) return "## Weekly Review\n\n**Status:** AI unavailable.\n**Advice:** Keep tracking your habits manually!";
+  if (!ai)
+    return '## Weekly Review\n\n**Status:** AI unavailable.\n**Advice:** Keep tracking your habits manually!';
 
   try {
     // Construct a summary of habit performance
-    const habitSummary = habits.map(h => `- ${h.name}: ${h.streak} day streak, ${h.completedDates.length} total completions.`).join('\n');
-    
+    const habitSummary = habits
+      .map(
+        h => `- ${h.name}: ${h.streak} day streak, ${h.completedDates.length} total completions.`
+      )
+      .join('\n');
+
     const prompt = `
       You are a world-class performance coach. Generate a "Weekly Progress Report" for this user based on their data.
       
@@ -119,9 +127,9 @@ export const generateProgressReport = async (
       contents: prompt,
     });
 
-    return response.text || "Report generation failed.";
+    return response.text || 'Report generation failed.';
   } catch (error) {
-    console.error("Gemini API Error:", error);
-    return "Could not generate report at this time.";
+    console.error('Gemini API Error:', error);
+    return 'Could not generate report at this time.';
   }
 };

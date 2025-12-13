@@ -28,7 +28,7 @@ export enum HabitCategory {
   LEARNING = 'Learning',
   MINDFULNESS = 'Mindfulness',
   FITNESS = 'Fitness',
-  OTHER = 'Other'
+  OTHER = 'Other',
 }
 
 export interface JournalEntry {
@@ -56,7 +56,7 @@ export interface AIResponse {
 
 export enum QuickActionType {
   HABIT = 'HABIT',
-  JOURNAL = 'JOURNAL'
+  JOURNAL = 'JOURNAL',
 }
 
 export interface Tag {

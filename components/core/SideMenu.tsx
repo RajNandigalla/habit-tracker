@@ -27,9 +27,8 @@ const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose, children }) => {
       const openingTimer = setTimeout(() => {
         setIsActive(true);
       }, 20);
-      
-      return () => clearTimeout(openingTimer);
 
+      return () => clearTimeout(openingTimer);
     } else {
       setIsActive(false);
       // Wait for transition to finish before unmounting
@@ -70,7 +69,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose, children }) => {
     if (e.target === e.currentTarget) {
       onClose();
     }
-  }
+  };
 
   const menuContent = (
     <div
@@ -91,7 +90,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose, children }) => {
   if (!isMounted) {
     return null;
   }
-  
+
   return ReactDOM.createPortal(menuContent, document.body);
 };
 

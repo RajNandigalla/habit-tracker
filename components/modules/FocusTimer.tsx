@@ -16,7 +16,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({ habit, isOpen, onClose, 
   const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isActive, setIsActive] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
-  
+
   const presets = [
     { label: '5m', val: 5 * 60 },
     { label: '15m', val: 15 * 60 },
@@ -30,7 +30,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({ habit, isOpen, onClose, 
 
     if (isActive && timeLeft > 0) {
       interval = setInterval(() => {
-        setTimeLeft((prev) => prev - 1);
+        setTimeLeft(prev => prev - 1);
       }, 1000);
     } else if (timeLeft === 0 && isActive) {
       setIsActive(false);
@@ -53,7 +53,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({ habit, isOpen, onClose, 
   }, [isOpen, duration]);
 
   const toggleTimer = () => setIsActive(!isActive);
-  
+
   const resetTimer = () => {
     setIsActive(false);
     setIsFinished(false);
@@ -89,7 +89,6 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({ habit, isOpen, onClose, 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`Focus: ${habit.name}`} center>
       <div className="flex flex-col items-center justify-center py-4">
-        
         {!isFinished ? (
           <>
             {/* Timer Display */}
@@ -121,8 +120,10 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({ habit, isOpen, onClose, 
                   cx={radius}
                   cy={radius}
                   className={cn(
-                    "transition-all duration-1000 ease-linear",
-                    isActive ? "text-indigo-600 dark:text-indigo-500" : "text-slate-400 dark:text-slate-600"
+                    'transition-all duration-1000 ease-linear',
+                    isActive
+                      ? 'text-indigo-600 dark:text-indigo-500'
+                      : 'text-slate-400 dark:text-slate-600'
                   )}
                 />
               </svg>
@@ -141,53 +142,55 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({ habit, isOpen, onClose, 
               >
                 <RotateCcw className="w-6 h-6" />
               </button>
-              
+
               <button
                 onClick={toggleTimer}
                 className={cn(
-                  "p-4 rounded-full text-white shadow-lg transform transition-all active:scale-95",
-                  isActive 
-                    ? "bg-amber-500 hover:bg-amber-600" 
-                    : "bg-indigo-600 hover:bg-indigo-700"
+                  'p-4 rounded-full text-white shadow-lg transform transition-all active:scale-95',
+                  isActive ? 'bg-amber-500 hover:bg-amber-600' : 'bg-indigo-600 hover:bg-indigo-700'
                 )}
               >
-                {isActive ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 fill-current pl-1" />}
+                {isActive ? (
+                  <Pause className="w-8 h-8 fill-current" />
+                ) : (
+                  <Play className="w-8 h-8 fill-current pl-1" />
+                )}
               </button>
             </div>
 
             {/* Custom Slider */}
             <div className="w-full max-w-[280px] mb-6">
-                <Slider 
-                    value={Math.floor(duration / 60)}
-                    min={1}
-                    max={120}
-                    step={1}
-                    onChange={(val) => {
-                         const newDuration = val * 60;
-                         setDuration(newDuration);
-                         setTimeLeft(newDuration);
-                         setIsActive(false);
-                         setIsFinished(false);
-                    }}
-                    formatValue={(v) => `${v} min`}
-                    disabled={isActive}
-                    showValue={true}
-                />
+              <Slider
+                value={Math.floor(duration / 60)}
+                min={1}
+                max={120}
+                step={1}
+                onChange={val => {
+                  const newDuration = val * 60;
+                  setDuration(newDuration);
+                  setTimeLeft(newDuration);
+                  setIsActive(false);
+                  setIsFinished(false);
+                }}
+                formatValue={v => `${v} min`}
+                disabled={isActive}
+                showValue={true}
+              />
             </div>
 
             {/* Presets */}
             <div className="flex flex-wrap justify-center gap-2 w-full">
-              {presets.map((p) => (
+              {presets.map(p => (
                 <button
                   key={p.label}
                   onClick={() => handlePresetChange(p.val)}
                   disabled={isActive}
                   className={cn(
-                    "px-3 py-1 text-sm font-medium rounded-full transition-colors border",
+                    'px-3 py-1 text-sm font-medium rounded-full transition-colors border',
                     duration === p.val
-                      ? "bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-indigo-900/30 dark:border-indigo-800 dark:text-indigo-300"
-                      : "bg-transparent border-slate-200 text-slate-500 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800",
-                    isActive && "opacity-50 cursor-not-allowed"
+                      ? 'bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-indigo-900/30 dark:border-indigo-800 dark:text-indigo-300'
+                      : 'bg-transparent border-slate-200 text-slate-500 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800',
+                    isActive && 'opacity-50 cursor-not-allowed'
                   )}
                 >
                   {p.label}
@@ -200,9 +203,12 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({ habit, isOpen, onClose, 
             <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-4 text-green-600 dark:text-green-400 shadow-sm">
               <CheckCircle2 className="w-10 h-10" />
             </div>
-            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Session Complete!</h3>
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+              Session Complete!
+            </h3>
             <p className="text-slate-500 dark:text-slate-400 text-center mb-6 max-w-xs">
-              Great job focusing on <strong>{habit.name}</strong>. We've marked it as complete for today.
+              Great job focusing on <strong>{habit.name}</strong>. We've marked it as complete for
+              today.
             </p>
             <Button onClick={onClose} size="lg" className="px-8">
               Done

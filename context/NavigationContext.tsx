@@ -32,7 +32,9 @@ export const NavigationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   const toggleSideMenu = () => setIsSideMenuOpen(prev => !prev);
 
   return (
-    <NavigationContext.Provider value={{ isSideMenuOpen, openSideMenu, closeSideMenu, toggleSideMenu }}>
+    <NavigationContext.Provider
+      value={{ isSideMenuOpen, openSideMenu, closeSideMenu, toggleSideMenu }}
+    >
       {children}
     </NavigationContext.Provider>
   );

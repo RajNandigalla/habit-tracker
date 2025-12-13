@@ -42,16 +42,14 @@ export const Select: React.FC<SelectProps> = ({
     opacity: 0,
     pointerEvents: 'none',
   });
-  
+
   const showSearch = useMemo(() => options.length > 10, [options.length]);
 
   const filteredOptions = useMemo(() => {
     if (!showSearch || !searchQuery) {
       return options;
     }
-    return options.filter(option =>
-      option.label.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    return options.filter(option => option.label.toLowerCase().includes(searchQuery.toLowerCase()));
   }, [options, searchQuery, showSearch]);
 
   const updatePosition = useCallback(() => {
@@ -61,11 +59,7 @@ export const Select: React.FC<SelectProps> = ({
     computePosition(buttonRef.current, dropdownRef.current, {
       placement: 'bottom-start',
       strategy: 'fixed',
-      middleware: [
-        offset(4),
-        flip(),
-        shift({ padding: 8 }),
-      ],
+      middleware: [offset(4), flip(), shift({ padding: 8 })],
     }).then(({ x, y, strategy, placement }) => {
       setDropdownStyles({
         position: strategy,
@@ -74,24 +68,24 @@ export const Select: React.FC<SelectProps> = ({
         width: `${buttonWidth}px`,
         opacity: 1,
         pointerEvents: 'auto',
-        zIndex: 9999
+        zIndex: 9999,
       });
       setDropdownPlacement(placement);
     });
   }, []);
-  
+
   useEffect(() => {
     if (isOpen) {
       const positionTimer = setTimeout(() => {
         updatePosition();
         if (showSearch) {
-            searchInputRef.current?.focus();
+          searchInputRef.current?.focus();
         }
       }, 0);
 
       window.addEventListener('scroll', updatePosition, true);
       window.addEventListener('resize', updatePosition);
-      
+
       return () => {
         clearTimeout(positionTimer);
         window.removeEventListener('scroll', updatePosition, true);
@@ -109,11 +103,10 @@ export const Select: React.FC<SelectProps> = ({
   }, [isOpen, updatePosition, showSearch]);
 
   useEffect(() => {
-      if (isOpen) {
-          updatePosition();
-      }
+    if (isOpen) {
+      updatePosition();
+    }
   }, [isOpen, filteredOptions, updatePosition]);
-
 
   const closeDropdown = useCallback(() => {
     setIsOpen(false);
@@ -129,14 +122,15 @@ export const Select: React.FC<SelectProps> = ({
     onChange(option.value);
     closeDropdown();
   };
-  
+
   const handleToggle = () => {
-      if (!disabled) {
-          setIsOpen(prev => !prev);
-      }
+    if (!disabled) {
+      setIsOpen(prev => !prev);
+    }
   };
 
-  const baseClasses = 'w-full text-left px-3 py-2 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-slate-900 dark:text-slate-100 transition-colors duration-200 text-base disabled:opacity-50';
+  const baseClasses =
+    'w-full text-left px-3 py-2 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-slate-900 dark:text-slate-100 transition-colors duration-200 text-base disabled:opacity-50';
 
   const DropdownContent = (
     <div
@@ -146,48 +140,54 @@ export const Select: React.FC<SelectProps> = ({
       role="listbox"
     >
       {showSearch && (
-        <div className={`p-2 ${dropdownPlacement.startsWith('top') ? 'border-t' : 'border-b'} border-slate-200 dark:border-slate-700`}>
-            <div className="relative">
-                <input
-                    ref={searchInputRef}
-                    type="text"
-                    placeholder="Search..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-8 pr-2 py-1.5 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm dark:text-white dark:placeholder-slate-500"
-                />
-                <SearchIcon className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-            </div>
+        <div
+          className={`p-2 ${dropdownPlacement.startsWith('top') ? 'border-t' : 'border-b'} border-slate-200 dark:border-slate-700`}
+        >
+          <div className="relative">
+            <input
+              ref={searchInputRef}
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="w-full pl-8 pr-2 py-1.5 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm dark:text-white dark:placeholder-slate-500"
+            />
+            <SearchIcon className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          </div>
         </div>
       )}
       <div className="max-h-52 overflow-auto">
-          {filteredOptions.length > 0 ? (
-            filteredOptions.map(option => (
-              <button
-                key={option.value}
-                onClick={() => handleSelect(option)}
-                className="w-full text-left flex items-center justify-between px-3 py-2 text-base text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
-                role="option"
-                aria-selected={value === option.value}
-              >
-                <span className="truncate">{option.label}</span>
-                {value === option.value && (
-                  <CheckIcon className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-                )}
-              </button>
-            ))
-          ) : (
-            <div className="px-3 py-2 text-base text-center text-slate-500 dark:text-slate-400">
-                No results found
-            </div>
-          )}
+        {filteredOptions.length > 0 ? (
+          filteredOptions.map(option => (
+            <button
+              key={option.value}
+              onClick={() => handleSelect(option)}
+              className="w-full text-left flex items-center justify-between px-3 py-2 text-base text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+              role="option"
+              aria-selected={value === option.value}
+            >
+              <span className="truncate">{option.label}</span>
+              {value === option.value && (
+                <CheckIcon className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              )}
+            </button>
+          ))
+        ) : (
+          <div className="px-3 py-2 text-base text-center text-slate-500 dark:text-slate-400">
+            No results found
+          </div>
+        )}
       </div>
     </div>
   );
 
   return (
     <div className={`relative ${className}`}>
-      {label && <label className="block text-base font-medium text-slate-700 dark:text-slate-300 mb-2">{label}</label>}
+      {label && (
+        <label className="block text-base font-medium text-slate-700 dark:text-slate-300 mb-2">
+          {label}
+        </label>
+      )}
       <button
         ref={buttonRef}
         type="button"
@@ -202,7 +202,7 @@ export const Select: React.FC<SelectProps> = ({
           className={`w-5 h-5 text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
-      
+
       {isOpen && ReactDOM.createPortal(DropdownContent, document.body)}
     </div>
   );

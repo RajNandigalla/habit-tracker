@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const AnimatedNumber: React.FC<{ value: number, format: (val: number) => string }> = ({ value, format }) => {
+const AnimatedNumber: React.FC<{ value: number; format: (val: number) => string }> = ({
+  value,
+  format,
+}) => {
   // Always start the display value at 0. When the component mounts (or re-mounts on page switch),
   // this state is reset, which is key to re-triggering the animation.
   const [displayValue, setDisplayValue] = useState(0);
-  
+
   // A ref to hold the previous value prop. This is used to animate from the old number to the new one if the value changes.
   const prevValueRef = useRef(0);
-  
+
   // A ref to hold the requestAnimationFrame ID so we can cancel it on cleanup.
   // Fix: Initialize useRef with null and update type to handle null value.
   const animationFrameRef = useRef<number | null>(null);
@@ -22,12 +25,12 @@ const AnimatedNumber: React.FC<{ value: number, format: (val: number) => string 
       setDisplayValue(endValue);
       return;
     }
-    
+
     // Cancel any existing animation frame to avoid conflicts.
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
     }
-    
+
     const animationDuration = 500; // ms
     let startTime: number | null = null;
 
@@ -35,10 +38,10 @@ const AnimatedNumber: React.FC<{ value: number, format: (val: number) => string 
       if (!startTime) startTime = timestamp;
       const elapsed = timestamp - startTime;
       const progress = Math.min(elapsed / animationDuration, 1);
-      
+
       // Using an "ease-out" function for a smoother stop.
       const easedProgress = 1 - Math.pow(1 - progress, 3);
-      
+
       const currentVal = startValue + (endValue - startValue) * easedProgress;
       setDisplayValue(currentVal);
 

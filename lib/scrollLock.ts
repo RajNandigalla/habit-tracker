@@ -5,11 +5,11 @@
 
 let lockCount = 0;
 let originalBodyStyle: {
-    position: string;
-    top: string;
-    width: string;
-    overflow: string;
-    paddingRight: string;
+  position: string;
+  top: string;
+  width: string;
+  overflow: string;
+  paddingRight: string;
 } | null = null;
 let scrollY = 0;
 
@@ -32,10 +32,10 @@ export const acquireScrollLock = () => {
     document.body.style.position = 'fixed';
     document.body.style.top = `-${scrollY}px`;
     document.body.style.width = '100%';
-    
+
     // Compensate for the scrollbar to prevent layout shifts
     if (scrollbarWidth > 0) {
-        document.body.style.paddingRight = `${scrollbarWidth}px`;
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
     }
   }
   lockCount++;
@@ -52,7 +52,7 @@ export const releaseScrollLock = () => {
     document.body.style.top = originalBodyStyle.top;
     document.body.style.width = originalBodyStyle.width;
     document.body.style.paddingRight = originalBodyStyle.paddingRight;
-    
+
     // Restore the original scroll position
     window.scrollTo(0, scrollY);
     originalBodyStyle = null;

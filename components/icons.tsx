@@ -1,16 +1,16 @@
 import React from 'react';
-import { 
-  Loader2, 
-  ChevronLeft, 
-  ChevronRight, 
-  Calendar, 
-  Plus, 
-  X, 
-  ArrowDownLeft, 
-  ArrowUpRight, 
-  ArrowRightLeft, 
-  Check, 
-  ChevronDown, 
+import {
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
+  Calendar,
+  Plus,
+  X,
+  ArrowDownLeft,
+  ArrowUpRight,
+  ArrowRightLeft,
+  Check,
+  ChevronDown,
   Search,
   Menu,
   Flame,
@@ -28,10 +28,12 @@ import {
   ShieldCheck,
   Smartphone,
   LogOut,
-  BarChartBig // Added
+  BarChartBig, // Added
 } from 'lucide-react';
 
-export const SpinnerIcon = ({ className }: { className?: string }) => <Loader2 className={`animate-spin ${className}`} />;
+export const SpinnerIcon = ({ className }: { className?: string }) => (
+  <Loader2 className={`animate-spin ${className}`} />
+);
 export const ChevronLeftIcon = ChevronLeft;
 export const ChevronRightIcon = ChevronRight;
 export const CalendarIcon = Calendar;

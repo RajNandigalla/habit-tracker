@@ -1,7 +1,5 @@
 {
   "name": "TickOff - Habit Tracker",
   "description": "A simple yet powerful habit tracker to simplify building habits, tracking progress, and maintaining consistency with integrated journaling and AI coaching.",
-  "requestFramePermissions": [
-    "camera"
-  ]
+  "requestFramePermissions": ["camera"]
 }

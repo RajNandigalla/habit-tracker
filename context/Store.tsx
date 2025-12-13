@@ -40,7 +40,7 @@ interface StoreProviderProps {
 const STORAGE_KEYS = {
   HABITS: 'tickoff_habits',
   JOURNAL: 'tickoff_journal',
-  PREFS: 'tickoff_prefs'
+  PREFS: 'tickoff_prefs',
 };
 
 export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
@@ -88,7 +88,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
   };
 
   const updateHabit = (updatedHabit: Habit) => {
-    setHabits(prev => prev.map(h => h.id === updatedHabit.id ? updatedHabit : h));
+    setHabits(prev => prev.map(h => (h.id === updatedHabit.id ? updatedHabit : h)));
     addToast('Habit updated.', 'success');
   };
 
@@ -98,76 +98,80 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
   };
 
   const toggleHabitCompletion = (id: string, date: string) => {
-    setHabits(prev => prev.map(habit => {
-      if (habit.id !== id) return habit;
-      
-      const isCompleted = habit.completedDates.includes(date);
-      const newCompletedDates = isCompleted
-        ? habit.completedDates.filter(d => d !== date)
-        : [...habit.completedDates, date];
-      
-      // Temporary habit object for calculation
-      const tempHabit = { ...habit, completedDates: newCompletedDates };
-      
-      // Recalculate streak
-      const newStreak = calculateStreak(tempHabit);
+    setHabits(prev =>
+      prev.map(habit => {
+        if (habit.id !== id) return habit;
 
-      // Play sound for positive habit completion
-      if (!isCompleted && habit.habitType === 'positive') {
-         if (preferences.soundEnabled) {
-             playSuccessSound();
-         }
-      }
+        const isCompleted = habit.completedDates.includes(date);
+        const newCompletedDates = isCompleted
+          ? habit.completedDates.filter(d => d !== date)
+          : [...habit.completedDates, date];
 
-      return {
-        ...habit,
-        completedDates: newCompletedDates,
-        streak: newStreak
-      };
-    }));
+        // Temporary habit object for calculation
+        const tempHabit = { ...habit, completedDates: newCompletedDates };
+
+        // Recalculate streak
+        const newStreak = calculateStreak(tempHabit);
+
+        // Play sound for positive habit completion
+        if (!isCompleted && habit.habitType === 'positive') {
+          if (preferences.soundEnabled) {
+            playSuccessSound();
+          }
+        }
+
+        return {
+          ...habit,
+          completedDates: newCompletedDates,
+          streak: newStreak,
+        };
+      })
+    );
   };
 
   const joinChallenge = (challenge: Challenge, existingHabitId?: string) => {
-      // Check if already active
-      const isActive = habits.some(h => h.challengeId === challenge.id);
-      if (isActive) {
-          addToast('You are already tracking this challenge!', 'info');
-          return;
-      }
+    // Check if already active
+    const isActive = habits.some(h => h.challengeId === challenge.id);
+    if (isActive) {
+      addToast('You are already tracking this challenge!', 'info');
+      return;
+    }
 
-      if (existingHabitId) {
-          // Link to existing habit
-          setHabits(prev => prev.map(h => {
-              if (h.id === existingHabitId) {
-                  return {
-                      ...h,
-                      challengeId: challenge.id,
-                      challengeDuration: challenge.durationDays
-                  };
-              }
-              return h;
-          }));
-          addToast(`Challenge linked to existing habit!`, 'success');
-      } else {
-          // Create new habit
-          const newHabit: Habit = {
-              id: generateId(),
-              name: challenge.habitTemplate.name,
-              description: challenge.habitTemplate.description,
-              category: challenge.habitTemplate.category,
-              frequency: 'daily',
-              habitType: 'positive',
-              color: challenge.habitTemplate.color,
-              completedDates: [],
-              createdAt: getTodayISO(),
-              streak: 0,
+    if (existingHabitId) {
+      // Link to existing habit
+      setHabits(prev =>
+        prev.map(h => {
+          if (h.id === existingHabitId) {
+            return {
+              ...h,
               challengeId: challenge.id,
-              challengeDuration: challenge.durationDays
-          };
+              challengeDuration: challenge.durationDays,
+            };
+          }
+          return h;
+        })
+      );
+      addToast(`Challenge linked to existing habit!`, 'success');
+    } else {
+      // Create new habit
+      const newHabit: Habit = {
+        id: generateId(),
+        name: challenge.habitTemplate.name,
+        description: challenge.habitTemplate.description,
+        category: challenge.habitTemplate.category,
+        frequency: 'daily',
+        habitType: 'positive',
+        color: challenge.habitTemplate.color,
+        completedDates: [],
+        createdAt: getTodayISO(),
+        streak: 0,
+        challengeId: challenge.id,
+        challengeDuration: challenge.durationDays,
+      };
 
-          setHabits(prev => [newHabit, ...prev]);
-          addToast(`Joined ${challenge.title}!`, 'success');
-      }
+      setHabits(prev => [newHabit, ...prev]);
+      addToast(`Joined ${challenge.title}!`, 'success');
+    }
   };
 
   const addJournalEntry = (entry: JournalEntry) => {
@@ -198,14 +202,14 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
 
     // Helper to generate completion dates based on probability
     const generateDates = (consistency: number) => {
-        const dates: string[] = [];
-        for (let i = 0; i < DAYS_BACK; i++) {
-            // Random chance based on consistency (0.0 - 1.0)
-            if (Math.random() < consistency) {
-                dates.push(today.subtract(i, 'day').format('YYYY-MM-DD'));
-            }
+      const dates: string[] = [];
+      for (let i = 0; i < DAYS_BACK; i++) {
+        // Random chance based on consistency (0.0 - 1.0)
+        if (Math.random() < consistency) {
+          dates.push(today.subtract(i, 'day').format('YYYY-MM-DD'));
         }
-        return dates;
+      }
+      return dates;
     };
 
     const dummyHabits: Habit[] = [
@@ -219,7 +223,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         completedDates: generateDates(0.65), // 65% consistent
         createdAt: today.subtract(DAYS_BACK, 'day').toISOString(),
         streak: 0,
-        color: '#f59e0b'
+        color: '#f59e0b',
       },
       {
         id: generateId(),
@@ -231,7 +235,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         completedDates: [today.subtract(5, 'day').format('YYYY-MM-DD')], // One failure 5 days ago
         createdAt: today.subtract(DAYS_BACK, 'day').toISOString(),
         streak: 0,
-        color: '#ef4444'
+        color: '#ef4444',
       },
       {
         id: generateId(),
@@ -241,10 +245,10 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         frequency: 'weekly',
         habitType: 'positive',
         targetCount: 3,
-        completedDates: generateDates(0.50), // rough simulation
+        completedDates: generateDates(0.5), // rough simulation
         createdAt: today.subtract(DAYS_BACK, 'day').toISOString(),
         streak: 0,
-        color: '#3b82f6'
+        color: '#3b82f6',
       },
       {
         id: generateId(),
@@ -254,49 +258,49 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         frequency: 'specific_days',
         habitType: 'positive',
         targetDays: [0, 6], // Sun, Sat
-        completedDates: generateDates(0.40),
+        completedDates: generateDates(0.4),
         createdAt: today.subtract(DAYS_BACK, 'day').toISOString(),
         streak: 0,
-        color: '#8b5cf6'
-      }
+        color: '#8b5cf6',
+      },
     ];
 
     // Recalculate streaks
     dummyHabits.forEach(h => {
-        h.streak = calculateStreak(h);
+      h.streak = calculateStreak(h);
     });
 
     const dummyEntries: JournalEntry[] = [];
     const moods = ['happy', 'motivated', 'neutral', 'sad', 'tired'];
     const sampleTexts = [
-        "Really felt the burn today. Good progress on the run.",
-        "Hard to focus, but got it done eventually.",
-        "Amazing session! Feeling a lot of clarity.",
-        "Skipped yesterday, but back on track today. Consistency is key.",
-        "Need to adjust my schedule, evenings are getting too busy.",
-        "Small win: maintained the streak for another day.",
-        "Felt tired, but discipline > motivation.",
-        "Hit a new personal best!",
-        "Struggling a bit with motivation, but I know this will pay off.",
-        "Great start to the morning. The water habit is really helping my energy."
+      'Really felt the burn today. Good progress on the run.',
+      'Hard to focus, but got it done eventually.',
+      'Amazing session! Feeling a lot of clarity.',
+      'Skipped yesterday, but back on track today. Consistency is key.',
+      'Need to adjust my schedule, evenings are getting too busy.',
+      'Small win: maintained the streak for another day.',
+      'Felt tired, but discipline > motivation.',
+      'Hit a new personal best!',
+      'Struggling a bit with motivation, but I know this will pay off.',
+      'Great start to the morning. The water habit is really helping my energy.',
     ];
 
-    for(let i=0; i<50; i++) {
-        const randomDay = Math.floor(Math.random() * DAYS_BACK);
-        const date = today.subtract(randomDay, 'day').toISOString();
-        const habit = dummyHabits[Math.floor(Math.random() * dummyHabits.length)];
-        
-        dummyEntries.push({
-            id: generateId(),
-            date: date,
-            content: sampleTexts[Math.floor(Math.random() * sampleTexts.length)],
-            mood: moods[Math.floor(Math.random() * moods.length)] as any,
-            habitId: Math.random() > 0.3 ? habit.id : undefined,
-            aiAnalysis: Math.random() > 0.6 ? "Consistency builds momentum. Keep going!" : undefined
-        });
+    for (let i = 0; i < 50; i++) {
+      const randomDay = Math.floor(Math.random() * DAYS_BACK);
+      const date = today.subtract(randomDay, 'day').toISOString();
+      const habit = dummyHabits[Math.floor(Math.random() * dummyHabits.length)];
+
+      dummyEntries.push({
+        id: generateId(),
+        date: date,
+        content: sampleTexts[Math.floor(Math.random() * sampleTexts.length)],
+        mood: moods[Math.floor(Math.random() * moods.length)] as any,
+        habitId: Math.random() > 0.3 ? habit.id : undefined,
+        aiAnalysis: Math.random() > 0.6 ? 'Consistency builds momentum. Keep going!' : undefined,
+      });
     }
 
-    dummyEntries.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    dummyEntries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     setHabits(dummyHabits);
     setJournalEntries(dummyEntries);
@@ -310,48 +314,50 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
   };
 
   const importData = async (jsonString: string): Promise<boolean> => {
-      try {
-          const data = JSON.parse(jsonString);
-          if (Array.isArray(data.habits)) {
-              // Migration check: add default fields if missing
-              const migratedHabits = data.habits.map((h: any) => ({
-                  ...h,
-                  habitType: h.habitType || 'positive',
-                  frequency: h.frequency || 'daily'
-              }));
-              setHabits(migratedHabits);
-          }
-          if (Array.isArray(data.journalEntries)) {
-              setJournalEntries(data.journalEntries);
-          }
-          addToast('Data imported successfully!', 'success');
-          return true;
-      } catch (e) {
-          console.error("Import failed", e);
-          addToast('Invalid data file.', 'error');
-          return false;
+    try {
+      const data = JSON.parse(jsonString);
+      if (Array.isArray(data.habits)) {
+        // Migration check: add default fields if missing
+        const migratedHabits = data.habits.map((h: any) => ({
+          ...h,
+          habitType: h.habitType || 'positive',
+          frequency: h.frequency || 'daily',
+        }));
+        setHabits(migratedHabits);
       }
+      if (Array.isArray(data.journalEntries)) {
+        setJournalEntries(data.journalEntries);
+      }
+      addToast('Data imported successfully!', 'success');
+      return true;
+    } catch (e) {
+      console.error('Import failed', e);
+      addToast('Invalid data file.', 'error');
+      return false;
+    }
   };
 
   return (
-    <StoreContext.Provider value={{
-      habits,
-      journalEntries,
-      preferences,
-      addHabit,
-      updateHabit,
-      deleteHabit,
-      toggleHabitCompletion,
-      joinChallenge,
-      addJournalEntry,
-      deleteJournalEntry,
-      toggleDarkMode,
-      toggleSound,
-      setViewMode,
-      populateTestData,
-      clearAllData,
-      importData
-    }}>
+    <StoreContext.Provider
+      value={{
+        habits,
+        journalEntries,
+        preferences,
+        addHabit,
+        updateHabit,
+        deleteHabit,
+        toggleHabitCompletion,
+        joinChallenge,
+        addJournalEntry,
+        deleteJournalEntry,
+        toggleDarkMode,
+        toggleSound,
+        setViewMode,
+        populateTestData,
+        clearAllData,
+        importData,
+      }}
+    >
       {children}
     </StoreContext.Provider>
   );

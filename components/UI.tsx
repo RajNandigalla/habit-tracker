@@ -11,8 +11,8 @@ export * from './core/SettingsRow';
 export * from './core/TagsInput';
 export * from './core/SliderStepper';
 export * from './core/Slider'; // Added export
-export * from './core/TimePicker'; 
-export * from '../context/ToastContext'; 
+export * from './core/TimePicker';
+export * from '../context/ToastContext';
 export { default as AnimatedNumber } from './core/AnimatedNumber';
 export { default as SideMenu } from './core/SideMenu';
 

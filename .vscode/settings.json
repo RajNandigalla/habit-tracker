@@ -1,0 +1,30 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/dist-ssr": true,
+    "**/*.local": true,
+    "**/*.log": true,
+    "**/npm-debug.log*": true,
+    "**/yarn-debug.log*": true,
+    "**/yarn-error.log*": true,
+    "**/pnpm-debug.log*": true,
+    "**/lerna-debug.log*": true,
+    "**/.idea": true,
+    "**/*.suo": true,
+    "**/*.ntvs*": true,
+    "**/*.njsproj": true,
+    "**/*.sln": true,
+    "**/*.sw?": true,
+    "**/package-lock.json": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/dist-ssr": true,
+    "**/*.log": true,
+    "**/package-lock.json": true
+  }
+}

@@ -13,15 +13,24 @@ interface TagsInputProps {
 }
 
 // Added named export
-export const TagsInput: React.FC<TagsInputProps> = ({ allTags, selectedTagIds, onChange, onAddTag }) => {
+export const TagsInput: React.FC<TagsInputProps> = ({
+  allTags,
+  selectedTagIds,
+  onChange,
+  onAddTag,
+}) => {
   const [inputValue, setInputValue] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  
+
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
+
   const [dropdownStyles, setDropdownStyles] = useState<React.CSSProperties>({
-    position: 'fixed', top: 0, left: 0, opacity: 0, pointerEvents: 'none',
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    opacity: 0,
+    pointerEvents: 'none',
   });
 
   const updatePosition = useCallback(() => {
@@ -55,7 +64,7 @@ export const TagsInput: React.FC<TagsInputProps> = ({ allTags, selectedTagIds, o
         window.removeEventListener('resize', updatePosition);
       };
     } else {
-        setDropdownStyles(prev => ({ ...prev, opacity: 0, pointerEvents: 'none' }));
+      setDropdownStyles(prev => ({ ...prev, opacity: 0, pointerEvents: 'none' }));
     }
   }, [isDropdownOpen, updatePosition]);
 
@@ -66,9 +75,13 @@ export const TagsInput: React.FC<TagsInputProps> = ({ allTags, selectedTagIds, o
   }, [selectedTagIds, allTags]);
 
   const availableTags = useMemo(() => {
-    return allTags.filter(tag => !selectedTagIds.includes(tag.id) && tag.name.toLowerCase().includes(inputValue.toLowerCase()));
+    return allTags.filter(
+      tag =>
+        !selectedTagIds.includes(tag.id) &&
+        tag.name.toLowerCase().includes(inputValue.toLowerCase())
+    );
   }, [allTags, selectedTagIds, inputValue]);
-  
+
   const exactMatch = useMemo(() => {
     return allTags.find(tag => tag.name.toLowerCase() === inputValue.trim().toLowerCase());
   }, [allTags, inputValue]);
@@ -106,17 +119,28 @@ export const TagsInput: React.FC<TagsInputProps> = ({ allTags, selectedTagIds, o
       handleRemoveTag(selectedTags[selectedTags.length - 1].id);
     }
   };
-  
+
   const DropdownContent = (
-    <div ref={dropdownRef} style={dropdownStyles} className="z-50 bg-white dark:bg-slate-800 rounded-md shadow-lg border border-slate-200 dark:border-slate-700 focus:outline-none transition-opacity duration-150">
+    <div
+      ref={dropdownRef}
+      style={dropdownStyles}
+      className="z-50 bg-white dark:bg-slate-800 rounded-md shadow-lg border border-slate-200 dark:border-slate-700 focus:outline-none transition-opacity duration-150"
+    >
       <div className="max-h-48 overflow-y-auto">
         {inputValue.trim() && !exactMatch && (
-          <button onClick={handleCreateAndAddTag} className="w-full flex items-center gap-2 text-left px-3 py-2 text-sm text-indigo-600 dark:text-indigo-400 font-semibold hover:bg-slate-100 dark:hover:bg-slate-700">
+          <button
+            onClick={handleCreateAndAddTag}
+            className="w-full flex items-center gap-2 text-left px-3 py-2 text-sm text-indigo-600 dark:text-indigo-400 font-semibold hover:bg-slate-100 dark:hover:bg-slate-700"
+          >
             <PlusIcon className="w-4 h-4" /> Create "{inputValue.trim()}"
           </button>
         )}
         {availableTags.map(tag => (
-          <button key={tag.id} onClick={() => handleAddTag(tag)} className="w-full text-left px-3 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+          <button
+            key={tag.id}
+            onClick={() => handleAddTag(tag)}
+            className="w-full text-left px-3 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+          >
             {tag.name}
           </button>
         ))}
@@ -126,31 +150,40 @@ export const TagsInput: React.FC<TagsInputProps> = ({ allTags, selectedTagIds, o
 
   return (
     <div>
-        <label className="block text-base font-medium text-slate-700 dark:text-slate-300 mb-2">Tags</label>
-        <div 
-            className="flex flex-wrap items-baseline gap-2 p-2 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md"
-            onClick={() => inputRef.current?.focus()}
-        >
-            {selectedTags.map(tag => (
-                <div key={tag.id} className="flex items-center gap-1.5 bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-sm font-semibold px-2 py-0.5 rounded-full">
-                    <span>{tag.name}</span>
-                    <button type="button" onClick={() => handleRemoveTag(tag.id)} className="rounded-full hover:bg-indigo-200 dark:hover:bg-indigo-500/30">
-                        <XIcon className="w-3 h-3" />
-                    </button>
-                </div>
-            ))}
-            <input
-                ref={inputRef}
-                type="text"
-                value={inputValue}
-                onChange={e => setInputValue(e.target.value)}
-                onFocus={() => setIsDropdownOpen(true)}
-                onKeyDown={handleKeyDown}
-                placeholder={selectedTags.length === 0 ? "Add tags..." : ""}
-                className="flex-grow bg-transparent focus:outline-none text-base min-w-[80px] py-0.5 text-slate-900 dark:text-slate-100 dark:placeholder-slate-500"
-            />
-        </div>
-        {isDropdownOpen && ReactDOM.createPortal(DropdownContent, document.body)}
+      <label className="block text-base font-medium text-slate-700 dark:text-slate-300 mb-2">
+        Tags
+      </label>
+      <div
+        className="flex flex-wrap items-baseline gap-2 p-2 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md"
+        onClick={() => inputRef.current?.focus()}
+      >
+        {selectedTags.map(tag => (
+          <div
+            key={tag.id}
+            className="flex items-center gap-1.5 bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-sm font-semibold px-2 py-0.5 rounded-full"
+          >
+            <span>{tag.name}</span>
+            <button
+              type="button"
+              onClick={() => handleRemoveTag(tag.id)}
+              className="rounded-full hover:bg-indigo-200 dark:hover:bg-indigo-500/30"
+            >
+              <XIcon className="w-3 h-3" />
+            </button>
+          </div>
+        ))}
+        <input
+          ref={inputRef}
+          type="text"
+          value={inputValue}
+          onChange={e => setInputValue(e.target.value)}
+          onFocus={() => setIsDropdownOpen(true)}
+          onKeyDown={handleKeyDown}
+          placeholder={selectedTags.length === 0 ? 'Add tags...' : ''}
+          className="flex-grow bg-transparent focus:outline-none text-base min-w-[80px] py-0.5 text-slate-900 dark:text-slate-100 dark:placeholder-slate-500"
+        />
+      </div>
+      {isDropdownOpen && ReactDOM.createPortal(DropdownContent, document.body)}
     </div>
   );
 };

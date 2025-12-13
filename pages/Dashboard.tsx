@@ -3,10 +3,18 @@ import { useStore } from '../context/Store';
 import { DashboardView } from '../components/views/DashboardView';
 
 export const Dashboard: React.FC = () => {
-  const { habits, preferences, setViewMode, toggleDarkMode, addHabit, deleteHabit, toggleHabitCompletion } = useStore();
+  const {
+    habits,
+    preferences,
+    setViewMode,
+    toggleDarkMode,
+    addHabit,
+    deleteHabit,
+    toggleHabitCompletion,
+  } = useStore();
 
   return (
-    <DashboardView 
+    <DashboardView
       habits={habits}
       viewMode={preferences.viewMode}
       darkMode={preferences.darkMode}

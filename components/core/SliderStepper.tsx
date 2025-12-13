@@ -18,7 +18,7 @@ export const SliderStepper: React.FC<SliderStepperProps> = ({
   step,
   value,
   onChange,
-  unit = ''
+  unit = '',
 }) => {
   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(parseFloat(e.target.value));
@@ -36,27 +36,26 @@ export const SliderStepper: React.FC<SliderStepperProps> = ({
       <div className="relative w-full flex items-center">
         {/* Custom Track with Ticks */}
         <div className="absolute top-1/2 -translate-y-1/2 left-[12px] right-[12px] h-2">
-            {/* Base Track */}
-            <div className="absolute w-full h-full bg-slate-200 dark:bg-slate-700 rounded-full" />
-            
-            {/* Progress Fill */}
-            <div 
-                className="absolute h-full bg-indigo-500 rounded-l-full" 
-                style={{ width: `${progressPercent}%` }} 
-            />
+          {/* Base Track */}
+          <div className="absolute w-full h-full bg-slate-200 dark:bg-slate-700 rounded-full" />
 
-            {/* Ticks */}
-            <div className="absolute w-full h-full flex justify-between items-center pointer-events-none px-1">
-                {steps.map((stepValue) => (
-                    <div
-                        key={stepValue}
-                        className="w-px h-2 bg-black/20 dark:bg-white/20"
-                    />
-                ))}
-            </div>
+          {/* Progress Fill */}
+          <div
+            className="absolute h-full bg-indigo-500 rounded-l-full"
+            style={{ width: `${progressPercent}%` }}
+          />
+
+          {/* Ticks */}
+          <div className="absolute w-full h-full flex justify-between items-center pointer-events-none px-1">
+            {steps.map(stepValue => (
+              <div key={stepValue} className="w-px h-2 bg-black/20 dark:bg-white/20" />
+            ))}
+          </div>
         </div>
 
-        <label htmlFor={label} className="sr-only">{label}</label>
+        <label htmlFor={label} className="sr-only">
+          {label}
+        </label>
         <input
           id={label}
           type="range"
@@ -72,7 +71,8 @@ export const SliderStepper: React.FC<SliderStepperProps> = ({
         />
       </div>
       <span className="font-semibold text-slate-800 dark:text-slate-200 w-14 text-center">
-        {value.toFixed(1)}{unit}
+        {value.toFixed(1)}
+        {unit}
       </span>
     </div>
   );

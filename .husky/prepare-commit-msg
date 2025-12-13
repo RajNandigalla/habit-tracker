@@ -1,0 +1,7 @@
+#!/bin/sh
+# Invoke commitizen for interactive commits
+
+# Only run if there's no commit message yet (not amend, merge, etc.)
+if [ -z "${2}" ]; then
+  exec < /dev/tty && npx cz --hook || true
+fi

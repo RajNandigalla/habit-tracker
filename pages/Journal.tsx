@@ -6,7 +6,7 @@ export const Journal: React.FC = () => {
   const { journalEntries, habits, addJournalEntry, preferences, toggleDarkMode } = useStore();
 
   return (
-    <JournalView 
+    <JournalView
       entries={journalEntries}
       habits={habits}
       onAddEntry={addJournalEntry}
