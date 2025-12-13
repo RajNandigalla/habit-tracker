@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Habit, ViewMode, HabitCategory, JournalEntry } from '../types';
 import { HabitListItem, AddHabitModal } from '../modules/habits';
-import { Button, Chip, Modal } from '../core';
+import { Button, Chip, Modal, Show } from '../core';
 import { Plus, Sparkles, AlertTriangle } from 'lucide-react';
 import { cn, getTodayISO, generateId } from '../utils';
 import { PageTitle } from '../modules/PageTitle';
@@ -94,7 +94,39 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
           </div>
 
-          {habits.length === 0 ? (
+          <Show
+            when={habits.length === 0}
+            fallback={
+              <Show
+                when={filteredHabits.length === 0}
+                fallback={
+                  <div className="space-y-3">
+                    {filteredHabits.map((habit, index) => (
+                      <div
+                        key={habit.id}
+                        className="animate-slide-up"
+                        style={{ animationDelay: `${index * 50}ms` }}
+                      >
+                        <HabitListItem
+                          habit={habit}
+                          toggleHabitCompletion={onToggleCompletion}
+                          onFocus={setFocusHabit}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                }
+              >
+                <div className="text-center py-12 text-slate-500 dark:text-slate-400 animate-fade-scale">
+                  No habits found in{' '}
+                  <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+                    {selectedCategory}
+                  </span>
+                  .
+                </div>
+              </Show>
+            }
+          >
             <div className="flex flex-col items-center justify-center py-12 text-center animate-enter">
               <div className="relative mb-8 group">
                 <div className="absolute inset-0 bg-indigo-500/20 dark:bg-indigo-900/30 rounded-full blur-xl group-hover:bg-indigo-500/30 dark:group-hover:bg-indigo-900/40 transition-all duration-1000"></div>
@@ -122,35 +154,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 Create Habit
               </Button>
             </div>
-          ) : (
-            <>
-              {filteredHabits.length === 0 ? (
-                <div className="text-center py-12 text-slate-500 dark:text-slate-400 animate-fade-scale">
-                  No habits found in{' '}
-                  <span className="font-semibold text-indigo-600 dark:text-indigo-400">
-                    {selectedCategory}
-                  </span>
-                  .
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {filteredHabits.map((habit, index) => (
-                    <div
-                      key={habit.id}
-                      className="animate-slide-up"
-                      style={{ animationDelay: `${index * 50}ms` }}
-                    >
-                      <HabitListItem
-                        habit={habit}
-                        toggleHabitCompletion={onToggleCompletion}
-                        onFocus={setFocusHabit}
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
+          </Show>
         </div>
       </main>
 

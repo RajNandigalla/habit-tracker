@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { JournalEntry, Habit } from '../types';
-import { Button } from '../core';
+import { Button, Show } from '../core';
 import { Plus, Sparkles } from 'lucide-react';
 import { JournalTimelineItem, AddJournalEntryModal } from '../modules/journal';
 import { PageTitle } from '../modules/PageTitle';
@@ -35,7 +35,19 @@ export const JournalView: React.FC<JournalViewProps> = ({ entries, habits, onAdd
             </Button>
           </div>
 
-          {sortedEntries.length === 0 ? (
+          <Show
+            when={sortedEntries.length === 0}
+            fallback={
+              <div className="relative border-l-2 border-slate-200 dark:border-slate-800 ml-4 md:ml-6 space-y-8 my-4">
+                {sortedEntries.map((entry, index) => {
+                  const habit = habits.find(h => h.id === entry.habitId);
+                  return (
+                    <JournalTimelineItem key={entry.id} entry={entry} habit={habit} index={index} />
+                  );
+                })}
+              </div>
+            }
+          >
             <div className="flex flex-col items-center justify-center py-16 text-center animate-in fade-in zoom-in-95 duration-500">
               <div className="relative mb-6">
                 <div className="absolute inset-0 bg-indigo-500/20 dark:bg-indigo-900/30 rounded-full blur-xl"></div>
@@ -59,16 +71,7 @@ export const JournalView: React.FC<JournalViewProps> = ({ entries, habits, onAdd
                 Write First Entry
               </Button>
             </div>
-          ) : (
-            <div className="relative border-l-2 border-slate-200 dark:border-slate-800 ml-4 md:ml-6 space-y-8 my-4">
-              {sortedEntries.map((entry, index) => {
-                const habit = habits.find(h => h.id === entry.habitId);
-                return (
-                  <JournalTimelineItem key={entry.id} entry={entry} habit={habit} index={index} />
-                );
-              })}
-            </div>
-          )}
+          </Show>
         </div>
       </main>
 

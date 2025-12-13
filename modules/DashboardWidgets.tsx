@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect, useState } from 'react';
-import { Card } from '../core';
+import { Card, Show } from '../core';
 import { Habit, JournalEntry } from '../types';
 import { getTodayISO, cn } from '../utils';
 import { Smile, Meh, Frown, Zap, Trophy, CloudRain, Sun, Moon, Flame } from 'lucide-react';
@@ -169,13 +169,14 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
                   currentMood ? 'bg-white/20' : 'bg-white/10 hover:bg-white/20'
                 )}
               >
-                {currentMood ? (
+                <Show
+                  when={!!currentMood}
+                  fallback={<Smile className="w-5 h-5 text-indigo-200 mb-0.5" />}
+                >
                   <div className={cn('text-white')}>
                     <CurrentMoodIcon className="w-5 h-5 mb-0.5" />
                   </div>
-                ) : (
-                  <Smile className="w-5 h-5 text-indigo-200 mb-0.5" />
-                )}
+                </Show>
                 <span className="text-[9px] font-medium text-indigo-100 truncate w-full text-center px-0.5">
                   {currentMood ? 'Mood' : 'Log'}
                 </span>
@@ -295,7 +296,38 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
             </div>
 
             {/* Right: Actions */}
-            {currentMood ? (
+            <Show
+              when={!!currentMood}
+              fallback={
+                <div className="flex items-center gap-2">
+                  {moodOptions.map(mood => (
+                    <button
+                      key={mood.value}
+                      onClick={() => onLogMood(mood.value as any)}
+                      className="group relative p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 hover:scale-110 active:scale-95"
+                    >
+                      <mood.icon
+                        className={cn(
+                          'w-6 h-6 transition-colors duration-200 text-slate-400 dark:text-slate-500',
+                          mood.value === 'motivated' && 'group-hover:text-amber-500',
+                          mood.value === 'happy' && 'group-hover:text-green-500',
+                          mood.value === 'neutral' && 'group-hover:text-blue-500',
+                          mood.value === 'tired' && 'group-hover:text-purple-500',
+                          mood.value === 'sad' &&
+                            'group-hover:text-slate-600 dark:group-hover:text-slate-300'
+                        )}
+                      />
+
+                      {/* Custom Tooltip - Restored */}
+                      <span className="absolute -top-9 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 dark:bg-white text-white dark:text-slate-900 text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 pointer-events-none whitespace-nowrap shadow-xl z-20">
+                        {mood.label}
+                        <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800 dark:border-t-white"></span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              }
+            >
               <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-800 px-5 py-2.5 rounded-xl border border-slate-100 dark:border-slate-700 animate-fade-in">
                 <span className="text-sm text-slate-600 dark:text-slate-300">You're feeling</span>
                 <div
@@ -305,10 +337,7 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
                     moodOptions.find(m => m.value === currentMood)?.bg
                   )}
                 >
-                  {React.createElement(
-                    moodOptions.find(m => m.value === currentMood)?.icon || Smile,
-                    { className: 'w-4 h-4' }
-                  )}
+                  <CurrentMoodIcon className="w-4 h-4" />
                   <span className="capitalize">{currentMood}</span>
                 </div>
                 <button
@@ -318,35 +347,7 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
                   Edit
                 </button>
               </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                {moodOptions.map(mood => (
-                  <button
-                    key={mood.value}
-                    onClick={() => onLogMood(mood.value as any)}
-                    className="group relative p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 hover:scale-110 active:scale-95"
-                  >
-                    <mood.icon
-                      className={cn(
-                        'w-6 h-6 transition-colors duration-200 text-slate-400 dark:text-slate-500',
-                        mood.value === 'motivated' && 'group-hover:text-amber-500',
-                        mood.value === 'happy' && 'group-hover:text-green-500',
-                        mood.value === 'neutral' && 'group-hover:text-blue-500',
-                        mood.value === 'tired' && 'group-hover:text-purple-500',
-                        mood.value === 'sad' &&
-                          'group-hover:text-slate-600 dark:group-hover:text-slate-300'
-                      )}
-                    />
-
-                    {/* Custom Tooltip - Restored */}
-                    <span className="absolute -top-9 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 dark:bg-white text-white dark:text-slate-900 text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 pointer-events-none whitespace-nowrap shadow-xl z-20">
-                      {mood.label}
-                      <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800 dark:border-t-white"></span>
-                    </span>
-                  </button>
-                ))}
-              </div>
-            )}
+            </Show>
           </div>
         </Card>
       </div>

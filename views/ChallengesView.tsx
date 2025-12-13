@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Challenge, Habit } from '../types';
 import { CHALLENGES } from '../data/challenges';
 import { PageTitle } from '../modules/PageTitle';
-import { Button, Card } from '../core';
+import { Button, Card, Show } from '../core';
 import { Clock, Check, ArrowRight } from 'lucide-react';
 import { cn } from '../utils';
 import PageTransition from '../core/PageTransition';
@@ -89,18 +89,21 @@ export const ChallengesView: React.FC<ChallengesViewProps> = ({ habits, onJoinCh
                     </p>
 
                     <div className="flex items-center justify-between mt-auto">
-                      {isJoined ? (
+                      <Show
+                        when={isJoined}
+                        fallback={
+                          <div className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 md:group-hover:underline flex items-center gap-1">
+                            View Details <ArrowRight className="h-3 w-3" />
+                          </div>
+                        }
+                      >
                         <div className="flex items-center gap-2 text-sm font-bold text-green-600 dark:text-green-400">
                           <div className="w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
                             <Check className="h-3 w-3" />
                           </div>
                           {isCompleted ? 'Completed!' : 'Active'}
                         </div>
-                      ) : (
-                        <div className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 md:group-hover:underline flex items-center gap-1">
-                          View Details <ArrowRight className="h-3 w-3" />
-                        </div>
-                      )}
+                      </Show>
                     </div>
 
                     {/* Progress Bar for Active Challenges */}

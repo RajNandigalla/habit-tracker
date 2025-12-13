@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Challenge, Habit } from '../../types';
-import { Button, Modal, Select } from '../../core';
-import { Plus, Layers } from 'lucide-react';
+import { Button, Modal, Select, Show } from '../../core';
+import { Plus, Layers, AlertCircle } from 'lucide-react';
 import { cn } from '../../utils';
 
 interface ChallengeDetailsModalProps {
@@ -160,18 +160,22 @@ export const ChallengeDetailsModal: React.FC<ChallengeDetailsModalProps> = ({
 
               {linkMode === 'existing' && (
                 <div className="pl-8 pt-1 animate-slide-up">
-                  {eligibleHabits.length > 0 ? (
+                  <Show
+                    when={eligibleHabits.length > 0}
+                    fallback={
+                      <div className="text-sm text-red-500 flex items-center gap-2 p-2 bg-red-50 dark:bg-red-900/10 rounded-lg">
+                        <AlertCircle className="w-4 h-4" />
+                        No eligible habits found (must match challenge criteria)
+                      </div>
+                    }
+                  >
                     <Select
                       value={selectedHabitId}
                       onChange={val => setSelectedHabitId(val as string)}
                       options={habitOptions}
                       placeholder="Select a habit to link..."
                     />
-                  ) : (
-                    <p className="text-xs text-orange-500 italic">
-                      No eligible habits found (already in challenges).
-                    </p>
-                  )}
+                  </Show>
                 </div>
               )}
             </div>
@@ -182,19 +186,22 @@ export const ChallengeDetailsModal: React.FC<ChallengeDetailsModalProps> = ({
           <Button variant="ghost" onClick={handleClose}>
             Close
           </Button>
-          {getActiveHabitForChallenge(challenge.id) ? (
+          <Show
+            when={!!getActiveHabitForChallenge(challenge.id)}
+            fallback={
+              <Button
+                onClick={handleJoin}
+                className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20"
+                disabled={linkMode === 'existing' && !selectedHabitId}
+              >
+                Start Challenge
+              </Button>
+            }
+          >
             <Button disabled className="opacity-50 cursor-not-allowed">
               Already Joined
             </Button>
-          ) : (
-            <Button
-              onClick={handleJoin}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/20"
-              disabled={linkMode === 'existing' && !selectedHabitId}
-            >
-              Start Challenge
-            </Button>
-          )}
+          </Show>
         </div>
       </div>
     </Modal>

@@ -15,6 +15,7 @@ export * from './Slider';
 export * from './TimePicker';
 export * from './Text';
 export * from './Title';
+export * from './Show';
 export * from '../context/ToastContext';
 export { default as AnimatedNumber } from './AnimatedNumber';
 export { default as SideMenu } from './SideMenu';

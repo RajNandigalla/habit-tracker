@@ -14,7 +14,7 @@ import {
   Skull,
   AlertCircle,
 } from 'lucide-react';
-import { Button } from '../../core';
+import { Button, Show } from '../../core';
 import { useStore } from '../../context/Store';
 import HabitDetailsModal, { HabitActionProps } from './HabitDetailsModal';
 
@@ -92,21 +92,25 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
             )}
             title={isNegative ? 'Log Incident' : 'Complete Habit'}
           >
-            {isNegative ? (
-              isCompletedToday ? (
+            <Show
+              when={isNegative}
+              fallback={
+                <Check
+                  className={cn(
+                    'w-4 h-4 transition-transform duration-300 ease-spring',
+                    isCompletedToday ? 'scale-100' : 'scale-0'
+                  )}
+                  strokeWidth={3}
+                />
+              }
+            >
+              <Show
+                when={isCompletedToday}
+                fallback={<Skull className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />}
+              >
                 <AlertCircle className="w-4 h-4" />
-              ) : (
-                <Skull className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
-              )
-            ) : (
-              <Check
-                className={cn(
-                  'w-4 h-4 transition-transform duration-300 ease-spring',
-                  isCompletedToday ? 'scale-100' : 'scale-0'
-                )}
-                strokeWidth={3}
-              />
-            )}
+              </Show>
+            </Show>
           </button>
         </div>
 
@@ -154,29 +158,30 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
 
           <div className="flex items-center gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400">
             <span className={cn('flex items-center gap-1', isCompletedToday && 'opacity-75')}>
-              {isNegative ? (
-                <>
-                  <ShieldBan
-                    className={cn(
-                      'w-3.5 h-3.5',
-                      isCompletedToday ? 'text-red-500' : 'text-green-500'
-                    )}
-                  />
-                  {habit.streak} days clean
-                </>
-              ) : (
-                <>
-                  <Flame
-                    className={cn(
-                      'w-3.5 h-3.5 transition-colors',
-                      habit.streak > 0 && !isCompletedToday
-                        ? 'text-orange-500 fill-orange-500'
-                        : 'text-slate-400'
-                    )}
-                  />
-                  {habit.streak} streak
-                </>
-              )}
+              <Show
+                when={isNegative}
+                fallback={
+                  <>
+                    <Flame
+                      className={cn(
+                        'w-3.5 h-3.5 transition-colors',
+                        habit.streak > 0 && !isCompletedToday
+                          ? 'text-orange-500 fill-orange-500'
+                          : 'text-slate-400'
+                      )}
+                    />
+                    {habit.streak} streak
+                  </>
+                }
+              >
+                <ShieldBan
+                  className={cn(
+                    'w-3.5 h-3.5',
+                    isCompletedToday ? 'text-red-500' : 'text-green-500'
+                  )}
+                />
+                {habit.streak} days clean
+              </Show>
             </span>
 
             {weeklyStats && (

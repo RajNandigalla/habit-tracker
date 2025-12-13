@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '../../core';
+import { Card, Show } from '../../core';
 import {
   Smile,
   Meh,
@@ -74,47 +74,50 @@ const MoodCorrelationCard: React.FC<{ data: MoodCorrelationData[] }> = ({ data }
         )}
       </div>
 
-      {data.length === 0 ? (
+      <Show
+        when={data.length === 0}
+        fallback={
+          <div className="space-y-4">
+            {data.map(item => (
+              <div key={item.mood} className="group">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="p-1.5 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700 md:group-hover:scale-110 transition-transform">
+                    {getMoodIcon(item.mood)}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="font-semibold text-sm text-slate-700 dark:text-slate-300">
+                        {getMoodLabel(item.mood)}
+                      </span>
+                      <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                        {item.completionRate}% completion
+                      </span>
+                    </div>
+                    <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                      <div
+                        className={cn(
+                          'h-full rounded-full transition-all duration-1000',
+                          item.completionRate >= 80
+                            ? 'bg-green-500'
+                            : item.completionRate >= 50
+                              ? 'bg-indigo-500'
+                              : 'bg-orange-400'
+                        )}
+                        style={{ width: `${item.completionRate}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        }
+      >
         <div className="text-center py-8 text-slate-400 flex flex-col items-center">
           <BookOpen className="h-8 w-8 mb-2 opacity-50" />
           <p>Log your mood in the journal to see insights here.</p>
         </div>
-      ) : (
-        <div className="space-y-4">
-          {data.map(item => (
-            <div key={item.mood} className="group">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="p-1.5 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700 md:group-hover:scale-110 transition-transform">
-                  {getMoodIcon(item.mood)}
-                </div>
-                <div className="flex-1">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-semibold text-sm text-slate-700 dark:text-slate-300">
-                      {getMoodLabel(item.mood)}
-                    </span>
-                    <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
-                      {item.completionRate}% completion
-                    </span>
-                  </div>
-                  <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                    <div
-                      className={cn(
-                        'h-full rounded-full transition-all duration-1000',
-                        item.completionRate >= 80
-                          ? 'bg-green-500'
-                          : item.completionRate >= 50
-                            ? 'bg-indigo-500'
-                            : 'bg-orange-400'
-                      )}
-                      style={{ width: `${item.completionRate}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+      </Show>
 
       <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 italic">
         <AlertCircle className="w-3 h-3" />
