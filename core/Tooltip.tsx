@@ -1,14 +1,20 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import {
-  computePosition,
+  useFloating,
   autoUpdate,
   offset,
   flip,
   shift,
   arrow,
+  useHover,
+  useFocus,
+  useDismiss,
+  useRole,
+  useInteractions,
+  FloatingPortal,
+  FloatingArrow,
   Placement,
-  Strategy,
-} from '@floating-ui/dom';
+} from '@floating-ui/react';
 import { cn } from '../utils';
 
 export interface TooltipProps {
@@ -26,120 +32,56 @@ export const Tooltip: React.FC<TooltipProps> = ({
   className,
   delay = 200,
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const arrowRef = useRef(null);
 
-  const referenceRef = useRef<HTMLDivElement>(null);
-  const floatingRef = useRef<HTMLDivElement>(null);
-  const arrowRef = useRef<HTMLDivElement>(null);
-
-  const [floatingStyles, setFloatingStyles] = useState<{
-    x: number;
-    y: number;
-    strategy: Strategy;
-    placement: Placement;
-    arrow?: { x?: number; y?: number };
-  }>({
-    x: 0,
-    y: 0,
-    strategy: 'absolute',
+  const { refs, floatingStyles, context, middlewareData } = useFloating({
+    open: isOpen,
+    onOpenChange: setIsOpen,
     placement: position,
+    whileElementsMounted: autoUpdate,
+    middleware: [
+      offset(8),
+      flip(),
+      shift(),
+      arrow({
+        element: arrowRef,
+      }),
+    ],
   });
 
-  const updatePosition = () => {
-    if (referenceRef.current && floatingRef.current) {
-      computePosition(referenceRef.current, floatingRef.current, {
-        placement: position,
-        middleware: [
-          offset(8),
-          flip(),
-          shift({ padding: 5 }),
-          arrow({ element: arrowRef.current }),
-        ],
-      }).then(({ x, y, placement, strategy, middlewareData }) => {
-        setFloatingStyles({
-          x,
-          y,
-          strategy,
-          placement,
-          arrow: middlewareData.arrow,
-        });
-      });
-    }
-  };
+  const hover = useHover(context, { move: false, delay: { open: delay } });
+  const focus = useFocus(context);
+  const dismiss = useDismiss(context);
+  const role = useRole(context, { role: 'tooltip' });
 
-  useEffect(() => {
-    if (!isVisible || !referenceRef.current || !floatingRef.current) return;
-
-    // cleanup is returned by autoUpdate
-    const cleanup = autoUpdate(referenceRef.current, floatingRef.current, updatePosition);
-
-    return () => cleanup();
-  }, [isVisible, position]);
-
-  const showTooltip = () => {
-    const id = setTimeout(() => {
-      setIsVisible(true);
-    }, delay);
-    setTimeoutId(id);
-  };
-
-  const hideTooltip = () => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-      setTimeoutId(null);
-    }
-    setIsVisible(false);
-  };
-
-  // Determine arrow static side based on placement
-  const staticSide = {
-    top: 'bottom',
-    right: 'left',
-    bottom: 'top',
-    left: 'right',
-  }[floatingStyles.placement.split('-')[0]] as string;
+  const { getReferenceProps, getFloatingProps } = useInteractions([hover, focus, dismiss, role]);
 
   return (
     <>
-      <div
-        ref={referenceRef}
-        className="inline-flex"
-        onMouseEnter={showTooltip}
-        onMouseLeave={hideTooltip}
-        onFocus={showTooltip}
-        onBlur={hideTooltip}
-      >
+      <div ref={refs.setReference} {...getReferenceProps()} className="inline-flex">
         {children}
       </div>
 
-      {isVisible && (
-        <div
-          ref={floatingRef}
-          role="tooltip"
-          className={cn(
-            'z-50 px-2.5 py-1.5 text-xs font-medium text-white bg-slate-800 dark:bg-slate-700 rounded-md shadow-lg pointer-events-none whitespace-nowrap animate-fade-in',
-            className
-          )}
-          style={{
-            position: floatingStyles.strategy,
-            left: floatingStyles.x ?? 0,
-            top: floatingStyles.y ?? 0,
-          }}
-        >
-          {content}
-
-          {/* Arrow */}
+      {isOpen && (
+        <FloatingPortal>
           <div
-            ref={arrowRef}
-            className="absolute w-2 h-2 bg-slate-800 dark:bg-slate-700 rotate-45"
-            style={{
-              left: floatingStyles.arrow?.x != null ? `${floatingStyles.arrow.x}px` : '',
-              top: floatingStyles.arrow?.y != null ? `${floatingStyles.arrow.y}px` : '',
-              [staticSide]: '-4px',
-            }}
-          />
-        </div>
+            ref={refs.setFloating}
+            style={floatingStyles}
+            {...getFloatingProps()}
+            className={cn(
+              'z-50 px-2.5 py-1.5 text-xs font-medium text-white bg-slate-800 dark:bg-slate-700 rounded-md shadow-lg pointer-events-none whitespace-nowrap animate-fade-in',
+              className
+            )}
+          >
+            {content}
+            <FloatingArrow
+              ref={arrowRef}
+              context={context}
+              className="fill-slate-800 dark:fill-slate-700"
+            />
+          </div>
+        </FloatingPortal>
       )}
     </>
   );

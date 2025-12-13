@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@floating-ui/dom": "^1.7.4",
+    "@floating-ui/react": "^0.27.16",
     "@google/genai": "^1.31.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.19",
