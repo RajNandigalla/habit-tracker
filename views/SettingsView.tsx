@@ -17,6 +17,8 @@ import { cn } from '../utils';
 import { PageTitle } from '../modules/PageTitle';
 import PageTransition from '../core/PageTransition';
 import { ActionRow } from '../modules/settings';
+import { PrivacyModal } from '../modules/settings/PrivacyModal';
+import pkg from '../package.json';
 
 interface SettingsViewProps {
   preferences: UserPreferences;
@@ -25,7 +27,6 @@ interface SettingsViewProps {
   onImportData: (file: File) => void;
   onPopulateTestData: () => void;
   onClearAllData: () => void;
-  onPrivacyPolicy: () => void;
 }
 
 export const SettingsView: React.FC<SettingsViewProps> = ({
@@ -35,10 +36,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   onImportData,
   onPopulateTestData,
   onClearAllData,
-  onPrivacyPolicy,
 }) => {
   const [cloudSync, setCloudSync] = useState(false);
   const [notifications, setNotifications] = useState(true);
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
 
   const [confirmation, setConfirmation] = useState<{
     isOpen: boolean;
@@ -203,7 +204,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 </h2>
                 <Card className="space-y-1 divide-y divide-slate-100 dark:divide-slate-700/50">
                   <button
-                    onClick={onPrivacyPolicy}
+                    onClick={() => setIsPrivacyOpen(true)}
                     className="w-full flex items-center justify-between py-3 hover:bg-slate-50 dark:hover:bg-slate-700/30 rounded-lg px-2 -mx-2 transition-colors"
                   >
                     <div className="flex items-center gap-3">
@@ -225,7 +226,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                         App Version
                       </span>
                     </div>
-                    <span className="text-sm text-slate-400">v1.2.0 (Local)</span>
+                    <span className="text-sm text-slate-400">v{pkg.version}</span>
                   </div>
                 </Card>
               </section>
@@ -270,6 +271,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         onConfirm={confirmation.onConfirm}
         isDanger={confirmation.isDanger}
       />
+
+      <PrivacyModal isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
     </PageTransition>
   );
 };

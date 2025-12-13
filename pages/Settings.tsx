@@ -1,27 +1,30 @@
 import React from 'react';
 import { useStore } from '../context/Store';
 import { SettingsView } from '../views/SettingsView';
+import { exportUserData, parseImportFile } from '../utils/dataUtils';
 
 export const Settings: React.FC = () => {
-  const { preferences, toggleDarkMode, importData, populateTestData, clearAllData } = useStore();
+  const {
+    preferences,
+    habits,
+    journalEntries,
+    toggleDarkMode,
+    importData,
+    populateTestData,
+    clearAllData,
+  } = useStore();
 
   const handleImportData = async (file: File): Promise<void> => {
-    const reader = new FileReader();
-    reader.onload = async e => {
-      const content = e.target?.result as string;
+    try {
+      const content = await parseImportFile(file);
       await importData(content);
-    };
-    reader.readAsText(file);
+    } catch (err) {
+      console.error('Import failed', err);
+    }
   };
 
   const handleExportData = () => {
-    // TODO: Implement export functionality
-    console.log('Export data not yet implemented');
-  };
-
-  const handlePrivacyPolicy = () => {
-    // TODO: Implement privacy policy modal/page
-    console.log('Privacy policy not yet implemented');
+    exportUserData(habits, journalEntries, preferences);
   };
 
   return (
@@ -32,7 +35,6 @@ export const Settings: React.FC = () => {
       onImportData={handleImportData}
       onPopulateTestData={populateTestData}
       onClearAllData={clearAllData}
-      onPrivacyPolicy={handlePrivacyPolicy}
     />
   );
 };
