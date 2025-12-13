@@ -46,8 +46,7 @@ export const ChallengesView: React.FC<ChallengesViewProps> = ({ habits, onJoinCh
                 >
                   <Card
                     onClick={() => setSelectedChallenge(challenge)}
-                    className="relative h-full overflow-hidden cursor-pointer group md:hover:shadow-xl md:hover:-translate-y-1 transition-all duration-300 ease-ios border-l-4"
-                    style={{ borderLeftColor: challenge.color }}
+                    className="relative h-full overflow-hidden cursor-pointer group md:hover:shadow-xl md:hover:-translate-y-1 transition-all duration-300 ease-ios"
                   >
                     {/* Difficulty Badge */}
                     <div className="absolute top-4 right-4">

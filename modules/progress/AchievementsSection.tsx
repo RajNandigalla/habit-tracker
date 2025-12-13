@@ -7,18 +7,6 @@ import { Achievement } from '../../types';
 const AchievementsSection: React.FC<{ achievements: Achievement[] }> = ({ achievements }) => {
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <Medal className="h-5 w-5 text-indigo-500" />
-            Achievements
-          </h3>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            Unlock badges by staying consistent.
-          </p>
-        </div>
-      </div>
-
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
         {achievements.map((ach, index) => (
           <div

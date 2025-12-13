@@ -26,6 +26,7 @@ import {
   Flag,
   Cloud,
   Calendar,
+  PartyPopper,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -192,7 +193,17 @@ const PHOTO_LEVELS = [
 
 export const useAchievements = (habits: Habit[], journalEntries: JournalEntry[]) => {
   return useMemo(() => {
-    const list: Achievement[] = [];
+    const list: Achievement[] = [
+      {
+        id: 'welcome-aboard',
+        title: 'Welcome Aboard',
+        description: 'Thanks for joining us on this journey!',
+        icon: PartyPopper,
+        isUnlocked: true,
+        progress: 100,
+        color: 'text-indigo-500 bg-indigo-100 dark:bg-indigo-900/20 dark:text-indigo-400',
+      },
+    ];
 
     let totalCompletions = 0;
     let longestStreak = 0;

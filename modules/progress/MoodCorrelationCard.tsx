@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { cn } from '../../utils';
 import { MoodCorrelationData } from './types';
+import { EmptyMoodState } from './EmptyMoodState';
 
 const MoodCorrelationCard: React.FC<{ data: MoodCorrelationData[] }> = ({ data }) => {
   // Sort by completion rate descending
@@ -114,10 +115,7 @@ const MoodCorrelationCard: React.FC<{ data: MoodCorrelationData[] }> = ({ data }
           </div>
         }
       >
-        <div className="text-center py-8 text-slate-400 flex flex-col items-center">
-          <BookOpen className="h-8 w-8 mb-2 opacity-50" />
-          <p>Log your mood in the journal to see insights here.</p>
-        </div>
+        <EmptyMoodState />
       </Show>
 
       <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700 flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 italic">
