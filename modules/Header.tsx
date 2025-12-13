@@ -3,6 +3,7 @@ import { Activity, Sun, Moon } from 'lucide-react';
 import { cn } from '../utils';
 import { useNavigation } from '../context/NavigationContext';
 import { MenuIcon } from '../icons';
+import { useThemeTransition } from '../hooks/useThemeTransition';
 
 interface HeaderProps {
   className?: string;
@@ -18,6 +19,7 @@ export const Header: React.FC<HeaderProps> = ({
   children,
 }) => {
   const { toggleSideMenu } = useNavigation();
+  const handleThemeToggle = useThemeTransition(onToggleDarkMode || (() => {}));
 
   return (
     <header
@@ -52,7 +54,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {onToggleDarkMode && (
             <button
-              onClick={onToggleDarkMode}
+              onClick={handleThemeToggle}
               className="p-2 text-slate-500 hover:bg-slate-100 rounded-full dark:text-slate-400 dark:hover:bg-slate-800 transition-colors active:scale-95 duration-200"
               aria-label="Toggle theme"
             >

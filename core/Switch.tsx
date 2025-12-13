@@ -5,12 +5,24 @@ interface SwitchProps {
   onChange: (checked: boolean) => void;
   label?: string; // Optional label if used independently
   disabled?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export const Switch: React.FC<SwitchProps> = ({ checked, onChange, label, disabled = false }) => {
-  const toggle = () => {
+export const Switch: React.FC<SwitchProps> = ({
+  checked,
+  onChange,
+  label,
+  disabled = false,
+  onClick,
+}) => {
+  const toggle = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!disabled) {
-      onChange(!checked);
+      if (onClick) {
+        onClick(e);
+      }
+      if (!e.defaultPrevented) {
+        onChange(!checked);
+      }
     }
   };
 

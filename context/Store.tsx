@@ -81,15 +81,16 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
 
   useEffect(() => {
     storageService.setItem(STORAGE_KEYS.PREFS, preferences);
-    // Apply dark mode class to html element
-    if (preferences.darkMode) {
-      document.documentElement.classList.add('dark');
-      // Update audio manager
-      audioManager.setEnabled(preferences.soundEnabled);
-      return;
+    // Apply dark mode class to root element for cloning support
+    const root = document.getElementById('root');
+    if (root) {
+      if (preferences.darkMode) {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
     }
 
-    document.documentElement.classList.remove('dark');
     // Update audio manager
     audioManager.setEnabled(preferences.soundEnabled);
   }, [preferences]);

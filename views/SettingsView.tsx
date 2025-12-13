@@ -19,6 +19,7 @@ import PageTransition from '../core/PageTransition';
 import { ActionRow } from '../modules/settings';
 import { PrivacyModal } from '../modules/settings/PrivacyModal';
 import pkg from '../package.json';
+import { useThemeTransition } from '../hooks/useThemeTransition';
 
 interface SettingsViewProps {
   preferences: UserPreferences;
@@ -98,6 +99,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     });
   };
 
+  const handleThemeToggle = useThemeTransition(onToggleDarkMode);
+
   return (
     <PageTransition>
       <main className="flex-1">
@@ -140,7 +143,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                     title="Dark Mode"
                     description="Adjust the appearance for low light."
                   >
-                    <Switch checked={preferences.darkMode} onChange={onToggleDarkMode} />
+                    <Switch
+                      checked={preferences.darkMode}
+                      onChange={() => {}} // Handled by onClick for animation
+                      onClick={handleThemeToggle}
+                    />
                   </SettingsRow>
 
                   <div className="border-t border-slate-100 dark:border-slate-700/50 my-1"></div>
