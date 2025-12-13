@@ -1,3 +1,4 @@
+import filter from 'lodash/filter';
 import React from 'react';
 import { Modal, Button } from '../../core';
 import { Sparkles, TrendingUp, AlertCircle, ArrowUpRight, Crown } from 'lucide-react';
@@ -14,7 +15,7 @@ const AIReportModal: React.FC<{
   const renderReport = () => {
     if (!report) return null;
 
-    const lines = report.split('\n').filter(l => l.trim().length > 0);
+    const lines = filter(report.split('\n'), l => l.trim().length > 0);
 
     const sections: { title: string; content: string }[] = [];
     let currentSection: { title: string; content: string } | null = null;

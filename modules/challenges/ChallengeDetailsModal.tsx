@@ -1,3 +1,5 @@
+import find from 'lodash/find';
+import filter from 'lodash/filter';
 import React, { useState } from 'react';
 import { Challenge, Habit } from '../../types';
 import { Button, Modal, Select, Show } from '../../core';
@@ -23,7 +25,7 @@ export const ChallengeDetailsModal: React.FC<ChallengeDetailsModalProps> = ({
   const [selectedHabitId, setSelectedHabitId] = useState<string>('');
 
   const getActiveHabitForChallenge = (challengeId: string) => {
-    return habits.find(h => h.challengeId === challengeId);
+    return find(habits, { challengeId });
   };
 
   const handleJoin = () => {
@@ -47,7 +49,7 @@ export const ChallengeDetailsModal: React.FC<ChallengeDetailsModalProps> = ({
 
   if (!challenge) return null;
 
-  const eligibleHabits = habits.filter(h => !h.challengeId);
+  const eligibleHabits = filter(habits, h => !h.challengeId);
   const habitOptions = [
     { value: '', label: 'Select a habit...' },
     ...eligibleHabits.map(h => ({ value: h.id, label: h.name })),

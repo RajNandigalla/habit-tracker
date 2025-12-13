@@ -13,6 +13,7 @@ import {
   ShieldBan,
   Skull,
   AlertCircle,
+  ChevronRight,
 } from 'lucide-react';
 import { Button, Show } from '../../core';
 import { useStore } from '../../context/Store';
@@ -233,6 +234,11 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
           >
             <Trash2 className="h-4 w-4" />
           </button>
+        </div>
+
+        {/* Mobile Chevron Indicator */}
+        <div className="lg:hidden ml-2 text-slate-400 dark:text-slate-600">
+          <ChevronRight className="w-5 h-5" strokeWidth={2} />
         </div>
       </div>
 

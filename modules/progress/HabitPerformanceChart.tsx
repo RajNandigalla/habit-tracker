@@ -1,3 +1,4 @@
+import orderBy from 'lodash/orderBy';
 import React from 'react';
 import { Card, Show } from '../../core';
 import { BarChart2, Trophy } from 'lucide-react';
@@ -6,9 +7,7 @@ import { cn } from '../../utils';
 
 const HabitPerformanceChart: React.FC<{ habits: Habit[] }> = ({ habits }) => {
   // Sort habits by completion count (descending)
-  const sortedHabits = [...habits].sort(
-    (a, b) => b.completedDates.length - a.completedDates.length
-  );
+  const sortedHabits = orderBy(habits, [h => h.completedDates.length], ['desc']);
   const maxCompletions = sortedHabits[0]?.completedDates.length || 1;
 
   return (

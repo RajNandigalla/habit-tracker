@@ -1,3 +1,4 @@
+import orderBy from 'lodash/orderBy';
 import React from 'react';
 import { Card, Show } from '../../core';
 import {
@@ -17,7 +18,7 @@ import { MoodCorrelationData } from './types';
 
 const MoodCorrelationCard: React.FC<{ data: MoodCorrelationData[] }> = ({ data }) => {
   // Sort by completion rate descending
-  const sortedData = [...data].sort((a, b) => b.completionRate - a.completionRate);
+  const sortedData = orderBy(data, ['completionRate'], ['desc']);
   const bestMood = sortedData[0];
 
   const getMoodIcon = (mood: string) => {

@@ -1,3 +1,6 @@
+import filter from 'lodash/filter';
+import find from 'lodash/find';
+import maxBy from 'lodash/maxBy';
 import React, { useMemo, useEffect, useState } from 'react';
 import { Card, Show } from '../core';
 import { Habit, JournalEntry } from '../types';
@@ -39,12 +42,12 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
   }, [currentHour]);
 
   // Progress Logic
-  const activeHabits = habits.filter(h => h.frequency === 'daily');
+  const activeHabits = filter(habits, { frequency: 'daily' });
   const totalHabits = activeHabits.length;
-  const completedHabits = activeHabits.filter(h => h.completedDates.includes(todayISO)).length;
+  const completedHabits = filter(activeHabits, h => h.completedDates.includes(todayISO)).length;
   const progressPercentage =
     totalHabits > 0 ? Math.round((completedHabits / totalHabits) * 100) : 0;
-  const bestStreak = habits.reduce((max, h) => Math.max(max, h.streak), 0);
+  const bestStreak = maxBy(habits, 'streak')?.streak || 0;
 
   useEffect(() => {
     // Slight delay to trigger animation after mount
@@ -55,7 +58,7 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
   }, [progressPercentage]);
 
   // Mood Logic
-  const todayEntry = journalEntries.find(j => j.date.startsWith(todayISO));
+  const todayEntry = find(journalEntries, j => j.date.startsWith(todayISO));
   const currentMood = todayEntry?.mood;
 
   const moodOptions = [
@@ -97,7 +100,7 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
   ];
 
   const CurrentMoodIcon = currentMood
-    ? moodOptions.find(m => m.value === currentMood)?.icon || Smile
+    ? find(moodOptions, { value: currentMood })?.icon || Smile
     : Smile;
 
   return (
@@ -332,8 +335,8 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
                 <div
                   className={cn(
                     'flex items-center gap-2 font-bold px-2 py-0.5 rounded-md text-sm',
-                    moodOptions.find(m => m.value === currentMood)?.color,
-                    moodOptions.find(m => m.value === currentMood)?.bg
+                    find(moodOptions, { value: currentMood })?.color,
+                    find(moodOptions, { value: currentMood })?.bg
                   )}
                 >
                   <CurrentMoodIcon className="w-4 h-4" />
