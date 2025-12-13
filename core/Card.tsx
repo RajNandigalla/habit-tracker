@@ -12,7 +12,7 @@ export const Card: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({
       className={twMerge(
         clsx(
           'rounded-xl bg-white p-4 shadow-sm border border-slate-100 transition-all duration-300 ease-ios md:hover:shadow-md will-change-transform',
-          'dark:bg-slate-800 dark:border-slate-700/50'
+          'dark:bg-slate-900 dark:border-slate-800/50'
         ),
         className
       )}

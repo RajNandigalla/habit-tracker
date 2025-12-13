@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Habit, ViewMode, HabitCategory, JournalEntry } from '../types';
 import { HabitListItem, AddHabitModal } from '../modules/habits';
 import { Button, Chip, Modal, Show, FAB } from '../core';
@@ -102,19 +103,24 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 when={filteredHabits.length === 0}
                 fallback={
                   <div className="space-y-3">
-                    {filteredHabits.map((habit, index) => (
-                      <div
-                        key={habit.id}
-                        className="animate-slide-up"
-                        style={{ animationDelay: `${index * 50}ms` }}
-                      >
-                        <HabitListItem
-                          habit={habit}
-                          toggleHabitCompletion={onToggleCompletion}
-                          onFocus={setFocusHabit}
-                        />
-                      </div>
-                    ))}
+                    <AnimatePresence mode="popLayout">
+                      {filteredHabits.map(habit => (
+                        <motion.div
+                          key={habit.id}
+                          layout
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.95 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <HabitListItem
+                            habit={habit}
+                            toggleHabitCompletion={onToggleCompletion}
+                            onFocus={setFocusHabit}
+                          />
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
                   </div>
                 }
               >

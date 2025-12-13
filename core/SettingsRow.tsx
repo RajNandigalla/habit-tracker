@@ -12,7 +12,7 @@ export const SettingsRow: React.FC<{
     className={`flex items-center justify-between gap-4 py-4 transition-opacity ${disabled ? 'opacity-50' : 'opacity-100'}`}
   >
     <div className="flex items-start gap-4">
-      <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-lg">
+      <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-slate-100 dark:bg-slate-800 rounded-lg">
         <Icon className="w-5 h-5 text-slate-500 dark:text-slate-400" />
       </div>
       <div>

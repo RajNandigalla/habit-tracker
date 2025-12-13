@@ -116,7 +116,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                   Data & Storage
                 </h2>
                 <Card className="p-0 overflow-hidden">
-                  <div className="p-4 bg-white dark:bg-slate-800 space-y-1">
+                  <div className="p-4 space-y-1">
                     <SettingsRow
                       icon={CloudIcon}
                       title="Automatic Cloud Backup"
@@ -207,7 +207,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                     className="w-full flex items-center justify-between py-3 hover:bg-slate-50 dark:hover:bg-slate-700/30 rounded-lg px-2 -mx-2 transition-colors"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-slate-100 dark:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-300">
+                      <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300">
                         <ShieldCheckIcon className="h-5 w-5" />
                       </div>
                       <span className="font-medium text-slate-900 dark:text-white">
@@ -218,7 +218,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                   </button>
                   <div className="w-full flex items-center justify-between py-3 px-2 -mx-2">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-slate-100 dark:bg-slate-700 rounded-lg text-slate-600 dark:text-slate-300">
+                      <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300">
                         <SmartphoneIcon className="h-5 w-5" />
                       </div>
                       <span className="font-medium text-slate-900 dark:text-white">

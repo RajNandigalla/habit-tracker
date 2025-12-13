@@ -80,7 +80,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose, children }) => {
     >
       <div
         ref={menuRef}
-        className={`bg-white dark:bg-slate-950 h-full w-full max-w-xs flex flex-col transform transition-transform duration-500 ease-ios will-change-transform shadow-2xl ${isActive ? 'translate-x-0' : '-translate-x-full'}`}
+        className={`bg-white dark:bg-slate-900 h-full w-full max-w-xs flex flex-col transform transition-transform duration-500 ease-ios will-change-transform shadow-2xl ${isActive ? 'translate-x-0' : '-translate-x-full'}`}
       >
         {children}
       </div>

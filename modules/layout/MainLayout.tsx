@@ -69,7 +69,7 @@ export const MainLayout: React.FC = () => {
 
         {/* Mobile Side Menu */}
         <SideMenu isOpen={isSideMenuOpen} onClose={closeSideMenu}>
-          <div className="flex flex-col h-full bg-white dark:bg-slate-950">
+          <div className="flex flex-col h-full bg-white dark:bg-slate-900">
             <div className="px-4 py-3 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-md">
