@@ -84,9 +84,12 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
     // Apply dark mode class to html element
     if (preferences.darkMode) {
       document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+      // Update audio manager
+      audioManager.setEnabled(preferences.soundEnabled);
+      return;
     }
+
+    document.documentElement.classList.remove('dark');
     // Update audio manager
     audioManager.setEnabled(preferences.soundEnabled);
   }, [preferences]);
@@ -162,26 +165,27 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         })
       );
       addToast(`Challenge linked to existing habit!`, 'success');
-    } else {
-      // Create new habit
-      const newHabit: Habit = {
-        id: generateId(),
-        name: challenge.habitTemplate.name,
-        description: challenge.habitTemplate.description,
-        category: challenge.habitTemplate.category,
-        frequency: 'daily',
-        habitType: 'positive',
-        color: challenge.habitTemplate.color,
-        completedDates: [],
-        createdAt: getTodayISO(),
-        streak: 0,
-        challengeId: challenge.id,
-        challengeDuration: challenge.durationDays,
-      };
-
-      setHabits(prev => [newHabit, ...prev]);
-      addToast(`Joined ${challenge.title}!`, 'success');
+      return;
     }
+
+    // Create new habit
+    const newHabit: Habit = {
+      id: generateId(),
+      name: challenge.habitTemplate.name,
+      description: challenge.habitTemplate.description,
+      category: challenge.habitTemplate.category,
+      frequency: 'daily',
+      habitType: 'positive',
+      color: challenge.habitTemplate.color,
+      completedDates: [],
+      createdAt: getTodayISO(),
+      streak: 0,
+      challengeId: challenge.id,
+      challengeDuration: challenge.durationDays,
+    };
+
+    setHabits(prev => [newHabit, ...prev]);
+    addToast(`Joined ${challenge.title}!`, 'success');
   };
 
   const addJournalEntry = (entry: JournalEntry) => {

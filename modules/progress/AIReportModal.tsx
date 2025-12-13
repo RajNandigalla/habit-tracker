@@ -38,13 +38,17 @@ const AIReportModal: React.FC<{
         if (content.startsWith('-')) content = content.substring(1).trim();
 
         currentSection = { title, content };
-      } else if (currentSection) {
+        return;
+      }
+
+      if (currentSection) {
         // Append to current section
         currentSection.content += (currentSection.content ? ' ' : '') + line.trim();
-      } else {
-        // General text (intro/outro)
-        generalText.push(line);
+        return;
       }
+
+      // General text (intro/outro)
+      generalText.push(line);
     });
 
     if (currentSection) {

@@ -27,14 +27,16 @@ export const ChallengeDetailsModal: React.FC<ChallengeDetailsModalProps> = ({
   };
 
   const handleJoin = () => {
-    if (challenge) {
-      if (linkMode === 'existing' && selectedHabitId) {
-        onJoinChallenge(challenge, selectedHabitId);
-      } else {
-        onJoinChallenge(challenge);
-      }
+    if (!challenge) return;
+
+    if (linkMode === 'existing' && selectedHabitId) {
+      onJoinChallenge(challenge, selectedHabitId);
       handleClose();
+      return;
     }
+
+    onJoinChallenge(challenge);
+    handleClose();
   };
 
   const handleClose = () => {

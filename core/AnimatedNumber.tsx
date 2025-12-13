@@ -47,10 +47,11 @@ const AnimatedNumber: React.FC<{ value: number; format: (val: number) => string 
 
       if (progress < 1) {
         animationFrameRef.current = requestAnimationFrame(animate);
-      } else {
-        // Ensure the final value is set exactly once the animation is complete.
-        setDisplayValue(endValue);
+        return;
       }
+
+      // Ensure the final value is set exactly once the animation is complete.
+      setDisplayValue(endValue);
     };
 
     // Start the animation.

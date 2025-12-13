@@ -55,17 +55,18 @@ export const TagsInput: React.FC<TagsInputProps> = ({
   }, []);
 
   useEffect(() => {
-    if (isDropdownOpen) {
-      updatePosition();
-      window.addEventListener('scroll', updatePosition, true);
-      window.addEventListener('resize', updatePosition);
-      return () => {
-        window.removeEventListener('scroll', updatePosition, true);
-        window.removeEventListener('resize', updatePosition);
-      };
-    } else {
+    if (!isDropdownOpen) {
       setDropdownStyles(prev => ({ ...prev, opacity: 0, pointerEvents: 'none' }));
+      return;
     }
+
+    updatePosition();
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+    };
   }, [isDropdownOpen, updatePosition]);
 
   useOnClickOutside([inputRef, dropdownRef], () => setIsDropdownOpen(false));
@@ -108,14 +109,18 @@ export const TagsInput: React.FC<TagsInputProps> = ({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      if (inputValue.trim()) {
-        if (exactMatch) {
-          handleAddTag(exactMatch);
-        } else {
-          handleCreateAndAddTag();
-        }
+      if (!inputValue.trim()) return;
+
+      if (exactMatch) {
+        handleAddTag(exactMatch);
+        return;
       }
-    } else if (e.key === 'Backspace' && inputValue === '' && selectedTags.length > 0) {
+
+      handleCreateAndAddTag();
+      return;
+    }
+
+    if (e.key === 'Backspace' && inputValue === '' && selectedTags.length > 0) {
       handleRemoveTag(selectedTags[selectedTags.length - 1].id);
     }
   };

@@ -17,11 +17,10 @@ export const generateId = () => {
 // Check if a habit is scheduled for today
 export const isHabitScheduledForDate = (habit: Habit, date: string): boolean => {
   if (habit.frequency === 'daily' || habit.frequency === 'weekly') return true;
-  if (habit.frequency === 'specific_days' && habit.targetDays) {
-    const dayOfWeek = dayjs(date).day();
-    return habit.targetDays.includes(dayOfWeek);
-  }
-  return true;
+  if (habit.frequency !== 'specific_days' || !habit.targetDays) return true;
+
+  const dayOfWeek = dayjs(date).day();
+  return habit.targetDays.includes(dayOfWeek);
 };
 
 export const calculateStreak = (habit: Habit): number => {
@@ -53,42 +52,40 @@ export const calculateStreak = (habit: Habit): number => {
     const target = targetCount || 1;
     let currentStreakWeeks = 0;
     let checkWeek = today.startOf('isoWeek');
+    let isStreaking = true;
 
     // Iterate backwards by week
-    while (true) {
-      // Count completions in this ISO week
-      // Not actually used for weekStart/weekEnd logic but kept for logic consistency if needed later
-      // const weekStart = checkWeek.format('YYYY-MM-DD');
-      // const weekEnd = checkWeek.endOf('isoWeek').format('YYYY-MM-DD');
-
-      const weekCompletions = sortedDates.filter(d => {
-        const dObj = dayjs(d);
-        return (
-          dObj.isAfter(checkWeek.subtract(1, 'second')) &&
-          dObj.isBefore(checkWeek.endOf('isoWeek').add(1, 'second'))
-        );
-      }).length;
-
-      if (weekCompletions >= target) {
-        currentStreakWeeks++;
-        checkWeek = checkWeek.subtract(1, 'week');
-      } else {
-        // If it's the CURRENT week, we haven't failed yet unless the week is over (which it isn't if it's "today")
-        // BUT, we don't count the current week towards streak unless it IS completed.
-        // So if current week is incomplete, we just check the previous week.
-        // If previous week is complete, streak continues. If not, streak ends.
-
-        if (checkWeek.isSame(today.startOf('isoWeek'), 'day')) {
-          checkWeek = checkWeek.subtract(1, 'week');
-          continue;
-        } else {
-          // A past week failed
-          break;
-        }
+    while (isStreaking) {
+      if (dayjs(createdAt).diff(checkWeek, 'week') > 1) {
+        isStreaking = false;
       }
 
-      // Safety break
-      if (dayjs(createdAt).diff(checkWeek, 'week') > 1) break;
+      if (isStreaking) {
+        const weekCompletions = sortedDates.filter(d => {
+          const dObj = dayjs(d);
+          return (
+            dObj.isAfter(checkWeek.subtract(1, 'second')) &&
+            dObj.isBefore(checkWeek.endOf('isoWeek').add(1, 'second'))
+          );
+        }).length;
+
+        let processedThisWeek = false;
+
+        if (weekCompletions >= target) {
+          currentStreakWeeks++;
+          checkWeek = checkWeek.subtract(1, 'week');
+          processedThisWeek = true;
+        }
+
+        if (!processedThisWeek && checkWeek.isSame(today.startOf('isoWeek'), 'day')) {
+          checkWeek = checkWeek.subtract(1, 'week');
+          processedThisWeek = true;
+        }
+
+        if (!processedThisWeek) {
+          isStreaking = false;
+        }
+      }
     }
     return currentStreakWeeks;
   }
@@ -101,46 +98,45 @@ export const calculateStreak = (habit: Habit): number => {
   let currentStreak = 0;
   let checkDate = today;
 
-  // If today is completed, start check from today.
-  // If today is NOT completed, but today is NOT a scheduled day, check yesterday.
-  // If today is NOT completed and IS scheduled, check yesterday (streak is 0 unless we implemented a grace period, usually 0).
-  // Actually, standard logic:
-  // If I did it today -> streak includes today.
-  // If I didn't do it today -> streak is calculated from yesterday.
-  //   If I didn't do it yesterday (and it was scheduled) -> streak 0.
-
   const isCompletedToday = sortedDates.includes(todayISO);
 
   if (!isCompletedToday) {
     // If not completed today, we start checking from yesterday
     checkDate = today.subtract(1, 'day');
-
-    // Edge case: If today IS scheduled and missed, streak is potentially broken,
-    // but usually we display the streak from yesterday until today is "over".
-    // Most apps show streak X (from yesterday) and if you miss today it becomes 0 tomorrow.
   }
 
   // Max iterations (e.g. 365 days or until creation)
+  let isCounting = true;
   for (let i = 0; i < 365 * 2; i++) {
+    if (!isCounting) break;
+
     const dateStr = checkDate.format('YYYY-MM-DD');
 
     // Stop if before creation
-    if (checkDate.isBefore(dayjs(createdAt), 'day')) break;
-
-    const isScheduled = isHabitScheduledForDate(habit, dateStr);
-
-    if (!isScheduled) {
-      // If not scheduled, we skip this day and continue streak check backwards
-      checkDate = checkDate.subtract(1, 'day');
-      continue;
+    if (checkDate.isBefore(dayjs(createdAt), 'day')) {
+      isCounting = false;
     }
 
-    if (sortedDates.includes(dateStr)) {
-      currentStreak++;
-      checkDate = checkDate.subtract(1, 'day');
-    } else {
-      // Missed a scheduled day
-      break;
+    if (isCounting) {
+      const isScheduled = isHabitScheduledForDate(habit, dateStr);
+      let proceedToNextDay = false;
+
+      if (!isScheduled) {
+        proceedToNextDay = true;
+      }
+
+      if (isScheduled && sortedDates.includes(dateStr)) {
+        currentStreak++;
+        proceedToNextDay = true;
+      }
+
+      if (proceedToNextDay) {
+        checkDate = checkDate.subtract(1, 'day');
+      }
+
+      if (!proceedToNextDay) {
+        isCounting = false;
+      }
     }
   }
 
@@ -156,27 +152,47 @@ export const calculateHabitStats = (habit: Habit) => {
 
   let longestStreak = 0;
 
-  if (habit.frequency === 'daily' && habit.habitType === 'positive') {
-    let currentCount = 0;
-    const sortedDatesAscData = [...completedDates].sort(sortDatesAsc);
+  // Fallback for complex habits
+  if (habit.frequency !== 'daily' || habit.habitType !== 'positive') {
+    return {
+      totalCompletions,
+      longestStreak: habit.streak,
+      completionRate: Math.round(
+        (completedDates.filter(d =>
+          Array.from({ length: 30 }, (_, i) =>
+            dayjs().subtract(i, 'day').format('YYYY-MM-DD')
+          ).includes(d)
+        ).length /
+          30) *
+          100
+      ),
+    };
+  }
 
-    for (let i = 0; i < sortedDatesAscData.length; i++) {
-      if (i === 0) {
-        currentCount = 1;
-      } else {
-        const prev = dayjs(sortedDatesAscData[i - 1]);
-        const curr = dayjs(sortedDatesAscData[i]);
-        if (curr.diff(prev, 'day') === 1) {
-          currentCount++;
-        } else if (curr.diff(prev, 'day') > 1) {
-          currentCount = 1;
-        }
-      }
-      if (currentCount > longestStreak) longestStreak = currentCount;
+  // Daily Positive Logic
+  longestStreak = 0;
+  let currentCount = 0;
+  const sortedDatesAscData = [...completedDates].sort(sortDatesAsc);
+
+  if (sortedDatesAscData.length > 0) {
+    currentCount = 1;
+    longestStreak = 1;
+  }
+
+  for (let i = 1; i < sortedDatesAscData.length; i++) {
+    const prev = dayjs(sortedDatesAscData[i - 1]);
+    const curr = dayjs(sortedDatesAscData[i]);
+    const diff = curr.diff(prev, 'day');
+
+    if (diff === 1) {
+      currentCount++;
     }
-  } else {
-    // Fallback for complex habits: just use current streak as best guess or 0
-    longestStreak = habit.streak;
+
+    if (diff > 1) {
+      currentCount = 1;
+    }
+
+    longestStreak = Math.max(longestStreak, currentCount);
   }
 
   // Completion Rate (last 30 days)

@@ -238,9 +238,9 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       const params = new URLSearchParams(location.search);
       params.delete('datePickerFor');
       navigate({ search: params.toString() }, { replace: true });
-    } else {
-      setIsPopoverOpen(false);
+      return;
     }
+    setIsPopoverOpen(false);
   }, [isMobile, location.search, navigate]);
 
   useEffect(() => {
@@ -253,21 +253,22 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   }, [isOpen, value]);
 
   useEffect(() => {
-    if (isOpen && !isMobile) {
-      const positionTimer = setTimeout(() => {
-        updatePosition();
-      }, 0);
-
-      window.addEventListener('scroll', updatePosition, true);
-      window.addEventListener('resize', updatePosition);
-      return () => {
-        clearTimeout(positionTimer);
-        window.removeEventListener('scroll', updatePosition, true);
-        window.removeEventListener('resize', updatePosition);
-      };
-    } else {
+    if (!isOpen || isMobile) {
       setDropdownStyles(prev => ({ ...prev, opacity: 0, pointerEvents: 'none' }));
+      return;
     }
+
+    const positionTimer = setTimeout(() => {
+      updatePosition();
+    }, 0);
+
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
+    return () => {
+      clearTimeout(positionTimer);
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+    };
   }, [isOpen, isMobile, currentView, updatePosition]);
 
   useOnClickOutside<HTMLElement>([buttonRef, dropdownRef], () => {
@@ -282,9 +283,9 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       const params = new URLSearchParams(location.search);
       params.set('datePickerFor', id);
       navigate({ search: params.toString() }, { replace: true });
-    } else {
-      setIsPopoverOpen(true);
+      return;
     }
+    setIsPopoverOpen(true);
   };
 
   const handleDayClick = useCallback(
@@ -312,23 +313,21 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   };
 
   const handlePrev = () => {
+    setAnimationClass('animate-slide-in-from-left');
     if (currentView === 'day') {
-      setAnimationClass('animate-slide-in-from-left');
       setViewDate(viewDate.subtract(1, 'month'));
-    } else {
-      setAnimationClass('animate-slide-in-from-left');
-      setViewDate(viewDate.subtract(100, 'year'));
+      return;
     }
+    setViewDate(viewDate.subtract(100, 'year'));
   };
 
   const handleNext = () => {
+    setAnimationClass('animate-slide-in-from-right');
     if (currentView === 'day') {
-      setAnimationClass('animate-slide-in-from-right');
       setViewDate(viewDate.add(1, 'month'));
-    } else {
-      setAnimationClass('animate-slide-in-from-right');
-      setViewDate(viewDate.add(100, 'year'));
+      return;
     }
+    setViewDate(viewDate.add(100, 'year'));
   };
 
   const handleHeaderClick = () => {

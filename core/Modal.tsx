@@ -27,13 +27,7 @@ export const Modal: React.FC<ModalProps> = ({
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      setIsMounted(true);
-      acquireScrollLock();
-      // Slight delay to allow DOM mount before triggering transition
-      const timer = setTimeout(() => setIsVisible(true), 10);
-      return () => clearTimeout(timer);
-    } else {
+    if (!isOpen) {
       setIsVisible(false);
       // Wait for animation to finish before unmounting
       const timer = setTimeout(() => {
@@ -42,6 +36,12 @@ export const Modal: React.FC<ModalProps> = ({
       }, 300);
       return () => clearTimeout(timer);
     }
+
+    setIsMounted(true);
+    acquireScrollLock();
+    // Slight delay to allow DOM mount before triggering transition
+    const timer = setTimeout(() => setIsVisible(true), 10);
+    return () => clearTimeout(timer);
   }, [isOpen]);
 
   // Handle ESC key

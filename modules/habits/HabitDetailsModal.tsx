@@ -80,9 +80,9 @@ const HabitDetailsModal: React.FC<{
   const handleCancelDelete = () => {
     if (initialMode === 'delete') {
       onClose();
-    } else {
-      setShowDeleteConfirm(false);
+      return;
     }
+    setShowDeleteConfirm(false);
   };
 
   const handleStartFocus = () => {

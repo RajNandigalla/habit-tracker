@@ -75,23 +75,7 @@ export const Select: React.FC<SelectProps> = ({
   }, []);
 
   useEffect(() => {
-    if (isOpen) {
-      const positionTimer = setTimeout(() => {
-        updatePosition();
-        if (showSearch) {
-          searchInputRef.current?.focus();
-        }
-      }, 0);
-
-      window.addEventListener('scroll', updatePosition, true);
-      window.addEventListener('resize', updatePosition);
-
-      return () => {
-        clearTimeout(positionTimer);
-        window.removeEventListener('scroll', updatePosition, true);
-        window.removeEventListener('resize', updatePosition);
-      };
-    } else {
+    if (!isOpen) {
       setDropdownStyles({
         position: 'fixed',
         top: 0,
@@ -99,7 +83,24 @@ export const Select: React.FC<SelectProps> = ({
         opacity: 0,
         pointerEvents: 'none',
       });
+      return;
     }
+
+    const positionTimer = setTimeout(() => {
+      updatePosition();
+      if (showSearch) {
+        searchInputRef.current?.focus();
+      }
+    }, 0);
+
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
+
+    return () => {
+      clearTimeout(positionTimer);
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+    };
   }, [isOpen, updatePosition, showSearch]);
 
   useEffect(() => {

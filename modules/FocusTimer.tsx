@@ -32,7 +32,9 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({ habit, isOpen, onClose, 
       interval = setInterval(() => {
         setTimeLeft(prev => prev - 1);
       }, 1000);
-    } else if (timeLeft === 0 && isActive) {
+    }
+
+    if (timeLeft === 0 && isActive) {
       setIsActive(false);
       setIsFinished(true);
       if (habit) onComplete(habit.id);

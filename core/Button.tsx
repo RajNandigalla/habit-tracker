@@ -107,15 +107,15 @@ export const Button: React.FC<ButtonProps> = ({
         {content}
       </a>
     );
-  } else {
-    const isDisabled = (props as ButtonAsButton).disabled || isLoading;
-    const { type = 'button', ...rest } = props as ButtonAsButton;
-    return (
-      <button type={type} className={combinedClasses} disabled={isDisabled} {...rest}>
-        {content}
-      </button>
-    );
   }
+
+  const isDisabled = (props as ButtonAsButton).disabled || isLoading;
+  const { type = 'button', ...rest } = props as ButtonAsButton;
+  return (
+    <button type={type} className={combinedClasses} disabled={isDisabled} {...rest}>
+      {content}
+    </button>
+  );
 };
 
 export default Button;

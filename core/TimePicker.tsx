@@ -219,17 +219,18 @@ export const TimePicker: React.FC<TimePickerProps> = ({
   }, [value]);
 
   useEffect(() => {
-    if (isOpen && !isMobile) {
-      updatePosition();
-      window.addEventListener('scroll', updatePosition, true);
-      window.addEventListener('resize', updatePosition);
-      return () => {
-        window.removeEventListener('scroll', updatePosition, true);
-        window.removeEventListener('resize', updatePosition);
-      };
-    } else {
+    if (!isOpen || isMobile) {
       setDropdownStyles(prev => ({ ...prev, opacity: 0, pointerEvents: 'none' }));
+      return;
     }
+
+    updatePosition();
+    window.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true);
+      window.removeEventListener('resize', updatePosition);
+    };
   }, [isOpen, isMobile, updatePosition]);
 
   useOnClickOutside<HTMLElement>([buttonRef, dropdownRef], () => {
@@ -242,9 +243,9 @@ export const TimePicker: React.FC<TimePickerProps> = ({
     setStagedValue(parseTime(value));
     if (isMobile) {
       setIsMobileModalOpen(true);
-    } else {
-      setIsOpen(true);
+      return;
     }
+    setIsOpen(true);
   };
 
   const handleClose = () => {

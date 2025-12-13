@@ -17,19 +17,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose, children }) => {
   useEffect(() => {
     let closingTimer: ReturnType<typeof setTimeout>;
 
-    if (isOpen) {
-      if (!isLockedRef.current) {
-        acquireScrollLock();
-        isLockedRef.current = true;
-      }
-      setIsMounted(true);
-      // Small delay to allow mount before starting transition
-      const openingTimer = setTimeout(() => {
-        setIsActive(true);
-      }, 20);
-
-      return () => clearTimeout(openingTimer);
-    } else {
+    if (!isOpen) {
       setIsActive(false);
       // Wait for transition to finish before unmounting
       closingTimer = setTimeout(() => {
@@ -39,8 +27,20 @@ const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose, children }) => {
           isLockedRef.current = false;
         }
       }, 500); // Matches the duration-500
+      return () => clearTimeout(closingTimer);
     }
-    return () => clearTimeout(closingTimer);
+
+    if (!isLockedRef.current) {
+      acquireScrollLock();
+      isLockedRef.current = true;
+    }
+    setIsMounted(true);
+    // Small delay to allow mount before starting transition
+    const openingTimer = setTimeout(() => {
+      setIsActive(true);
+    }, 20);
+
+    return () => clearTimeout(openingTimer);
   }, [isOpen]);
 
   useEffect(() => {
