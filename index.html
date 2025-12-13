@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TickOff - Habit Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Nunito Sans"', 'sans-serif'],
+            },
+            transitionTimingFunction: {
+              'ios': 'cubic-bezier(0.25, 1, 0.5, 1)',
+              'spring': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+            },
+            animation: {
+              'enter': 'enter 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards',
+              'pop': 'pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+              'slide-up': 'slideUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards',
+              'fade-scale': 'fadeScale 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards',
+              'fade-in': 'fadeIn 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards',
+              'shimmer': 'shimmer 2.5s linear infinite',
+            },
+            keyframes: {
+              enter: {
+                '0%': { opacity: '0', transform: 'scale(0.98) translateY(10px)' },
+                '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+              },
+              pop: {
+                '0%': { transform: 'scale(0.8)' },
+                '40%': { transform: 'scale(1.15)' },
+                '100%': { transform: 'scale(1)' },
+              },
+              slideUp: {
+                '0%': { transform: 'translateY(20px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              },
+              fadeScale: {
+                 '0%': { opacity: '0', transform: 'scale(0.95)' },
+                 '100%': { opacity: '1', transform: 'scale(1)' },
+              },
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              shimmer: {
+                '0%': { transform: 'translateX(-100%)' },
+                '100%': { transform: 'translateX(100%)' }
+              }
+            }
+          }
+        },
+        plugins: [
+          function({ addBase, theme }) {
+            addBase({
+              '::-webkit-scrollbar': { width: '8px', height: '8px' },
+              '::-webkit-scrollbar-track': { background: 'transparent' },
+              '::-webkit-scrollbar-thumb': { 
+                backgroundColor: theme('colors.slate.300'), 
+                borderRadius: '4px' 
+              },
+              '::-webkit-scrollbar-thumb:hover': { 
+                backgroundColor: theme('colors.slate.400') 
+              },
+              '.dark ::-webkit-scrollbar-thumb': { 
+                backgroundColor: theme('colors.slate.700') 
+              },
+              '.dark ::-webkit-scrollbar-thumb:hover': { 
+                backgroundColor: theme('colors.slate.600') 
+              },
+              'html': {
+                  scrollBehavior: 'smooth',
+              }
+            })
+          }
+        ]
+      }
+    </script>
+    <style>
+      body {
+        font-family: 'Nunito Sans', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .will-change-transform {
+        will-change: transform;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.10.1",
+    "tailwind-merge": "https://aistudiocdn.com/tailwind-merge@^3.4.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.556.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0",
+    "clsx": "https://aistudiocdn.com/clsx@^2.1.1",
+    "dayjs/": "https://aistudiocdn.com/dayjs@^1.11.19/",
+    "dayjs": "https://aistudiocdn.com/dayjs@^1.11.19",
+    "react-dom": "https://aistudiocdn.com/react-dom@^19.2.1",
+    "@floating-ui/dom": "https://aistudiocdn.com/@floating-ui/dom@^1.7.4"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
