@@ -17,7 +17,6 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
   const [color, setColor] = useState('#6366f1');
   const [reminderTime, setReminderTime] = useState('');
 
-  // New Fields
   const [habitType, setHabitType] = useState<HabitType>('positive');
   const [frequency, setFrequency] = useState<HabitFrequency>('daily');
   const [targetCount, setTargetCount] = useState(3); // Default for weekly

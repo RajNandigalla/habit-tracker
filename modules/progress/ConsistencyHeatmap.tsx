@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card } from '../../core';
+import { Calendar } from 'lucide-react';
 import HeatmapGrid from './HeatmapGrid';
 import { HeatmapData } from './types';
 

@@ -194,7 +194,6 @@ export const useAchievements = (habits: Habit[], journalEntries: JournalEntry[])
   return useMemo(() => {
     const list: Achievement[] = [];
 
-    // --- Calculate stats internally ---
     let totalCompletions = 0;
     let longestStreak = 0;
 
@@ -205,7 +204,6 @@ export const useAchievements = (habits: Habit[], journalEntries: JournalEntry[])
 
     const stats = { totalCompletions, longestStreak };
 
-    // --- Helper Stats for Achievements ---
     const categoryCounts: Record<string, number> = {};
     Object.values(HabitCategory).forEach(c => (categoryCounts[c] = 0));
 
@@ -218,7 +216,6 @@ export const useAchievements = (habits: Habit[], journalEntries: JournalEntry[])
     const photoJournalCount = journalEntries.filter(j => j.imageUrl).length;
     const distinctCategories = new Set(habits.map(h => h.category)).size;
 
-    // --- 1. Milestone Levels (Total Checks) ---
     MILESTONE_LEVELS.forEach(m => {
       list.push({
         id: `milestone-${m.count}`,
@@ -231,7 +228,6 @@ export const useAchievements = (habits: Habit[], journalEntries: JournalEntry[])
       });
     });
 
-    // --- 2. Streak Mastery ---
     STREAK_MILESTONES.forEach(m => {
       list.push({
         id: `streak-${m.count}`,
@@ -244,7 +240,6 @@ export const useAchievements = (habits: Habit[], journalEntries: JournalEntry[])
       });
     });
 
-    // --- 3. Category Mastery ---
     Object.values(HabitCategory).forEach(cat => {
       const currentCount = categoryCounts[cat] || 0;
       CATEGORY_LEVELS.forEach(level => {
@@ -259,8 +254,6 @@ export const useAchievements = (habits: Habit[], journalEntries: JournalEntry[])
         });
       });
     });
-
-    // --- 4. Journaling ---
     JOURNAL_LEVELS.forEach(l => {
       list.push({
         id: `journal-${l.count}`,
@@ -273,7 +266,6 @@ export const useAchievements = (habits: Habit[], journalEntries: JournalEntry[])
       });
     });
 
-    // --- 5. Photo Journaling ---
     PHOTO_LEVELS.forEach(l => {
       list.push({
         id: `photo-${l.count}`,
@@ -286,7 +278,6 @@ export const useAchievements = (habits: Habit[], journalEntries: JournalEntry[])
       });
     });
 
-    // --- 6. Specials ---
     list.push({
       id: 'polymath',
       title: 'Polymath',

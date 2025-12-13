@@ -6,6 +6,15 @@ import { JournalEntry, Habit } from '../../types';
 import { analyzeJournalEntry } from '../../services/geminiService';
 import { clsx } from 'clsx';
 
+const ImageIcon = ImageIconLucide;
+
+interface AddJournalEntryModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onAdd: (entry: JournalEntry) => void;
+  habits: Habit[];
+}
+
 const AddJournalEntryModal: React.FC<AddJournalEntryModalProps> = ({
   isOpen,
   onClose,

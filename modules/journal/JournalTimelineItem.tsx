@@ -1,8 +1,15 @@
 import React from 'react';
 import { Card } from '../../core';
-import { Smile, Meh, Frown, Calendar } from 'lucide-react';
+import { Smile, Meh, Frown, Calendar, Sparkles } from 'lucide-react';
 import { cn, formatDate } from '../../utils';
 import { JournalEntry, Habit } from '../../types';
+import { clsx } from 'clsx';
+
+interface JournalTimelineItemProps {
+  entry: JournalEntry;
+  habit?: Habit;
+  index: number;
+}
 
 const JournalTimelineItem: React.FC<JournalTimelineItemProps> = ({ entry, habit, index }) => {
   return (

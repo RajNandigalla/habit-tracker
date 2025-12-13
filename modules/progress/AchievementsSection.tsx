@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card } from '../../core';
-import { Medal, Lock, Trophy, Crown } from 'lucide-react';
+import { Medal, Lock, Trophy, Crown, Check } from 'lucide-react';
 import { cn } from '../../utils';
 import { Achievement } from '../../types';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Button } from '../../core';
-import { Sparkles, TrendingUp, AlertCircle, ArrowUpRight } from 'lucide-react';
+import { Sparkles, TrendingUp, AlertCircle, ArrowUpRight, Crown } from 'lucide-react';
 import { clsx } from 'clsx';
 
 const AIReportModal: React.FC<{

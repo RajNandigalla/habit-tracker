@@ -1,12 +1,10 @@
 import React from 'react';
-import { cn } from '../../utils';
+import { cn, formatDate } from '../../utils';
 import { HeatmapData } from './types';
 
 const HeatmapGrid: React.FC<{ data: HeatmapData[] }> = ({ data }) => {
   // Determine max completions in a single day to normalize colors
   const maxCount = Math.max(...data.map(d => d.count), 1);
-
-  // Helper to get color intensity
   const getColorClass = (count: number) => {
     if (count === 0) return 'bg-slate-200 dark:bg-slate-700'; // Increased visibility for empty state
     const intensity = count / maxCount;

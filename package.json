@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "tsc && vite build",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "prepare": "husky install",
@@ -40,10 +40,11 @@
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
-    "@types/lodash": "^4.17.21",
     "@commitlint/cli": "^20.2.0",
     "@commitlint/config-conventional": "^20.2.0",
+    "@types/lodash": "^4.17.21",
     "@types/node": "^22.14.0",
+    "@types/react": "^19.2.7",
     "@vitejs/plugin-react": "^5.0.0",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",

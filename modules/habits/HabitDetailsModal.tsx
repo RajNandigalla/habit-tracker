@@ -32,18 +32,12 @@ const HabitDetailsModal: React.FC<{
 }> = ({ habit, isOpen, onClose, onUpdate, onDelete, onFocus, initialMode = 'view' }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
-  // View State
   const [viewDate, setViewDate] = useState(dayjs());
-
-  // Edit State
   const [editName, setEditName] = useState('');
   const [editDesc, setEditDesc] = useState('');
   const [editColor, setEditColor] = useState('');
   const [editCategory, setEditCategory] = useState<HabitCategory>(HabitCategory.HEALTH);
   const [editReminder, setEditReminder] = useState('');
-
-  // Reset state when modal opens
   React.useEffect(() => {
     if (isOpen && habit) {
       setEditName(habit.name);
@@ -97,8 +91,6 @@ const HabitDetailsModal: React.FC<{
       onClose();
     }
   };
-
-  // Heatmap Data Generation (Last 15 weeks)
   const heatmapData: HeatmapData[] = React.useMemo(() => {
     const days = 105;
     const data: HeatmapData[] = [];
@@ -114,8 +106,6 @@ const HabitDetailsModal: React.FC<{
     }
     return data;
   }, [habit.completedDates]);
-
-  // Calendar Renderer
   const renderCalendar = () => {
     const currentMonth = viewDate;
     const daysInMonth = currentMonth.daysInMonth();
@@ -168,8 +158,6 @@ const HabitDetailsModal: React.FC<{
     : isEditing
       ? 'Edit Habit'
       : 'Habit Details';
-
-  // Format reminder time for display (e.g. 14:00 -> 2:00 PM)
   const formatTimeDisplay = (time: string) => {
     if (!time) return '';
     const [hours, minutes] = time.split(':');

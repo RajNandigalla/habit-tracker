@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card } from '../../core';
-import { BarChart2 } from 'lucide-react';
+import { BarChart2, Trophy } from 'lucide-react';
 import { Habit } from '../../types';
 import { cn } from '../../utils';
 

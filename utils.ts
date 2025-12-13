@@ -50,7 +50,6 @@ export const calculateStreak = (habit: Habit): number => {
     (a, b) => new Date(b).getTime() - new Date(a).getTime()
   );
 
-  // --- Negative Habits (To-Don't) ---
   if (habitType === 'negative') {
     // completedDates represents "Incidents" (failures)
     if (sortedDates.length === 0) {
@@ -66,8 +65,6 @@ export const calculateStreak = (habit: Habit): number => {
 
     return today.diff(lastIncident, 'day');
   }
-
-  // --- Positive Habits ---
 
   // 1. Weekly Frequency (X times per week)
   if (frequency === 'weekly') {

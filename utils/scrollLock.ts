@@ -1,4 +1,3 @@
-// --- Global Scroll Lock Manager ---
 // This centralized manager ensures that multiple components (modals, side menus, etc.)
 // opening and closing in quick succession don't conflict with each other's
 // scroll-locking effects.

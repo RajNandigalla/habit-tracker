@@ -1,6 +1,17 @@
 import React from 'react';
 import { Card } from '../../core';
-import { Smile, Meh, Frown, Sun, Moon } from 'lucide-react';
+import {
+  Smile,
+  Meh,
+  Frown,
+  Sun,
+  Moon,
+  Zap,
+  TrendingUp,
+  BookOpen,
+  AlertCircle,
+  Sparkles,
+} from 'lucide-react';
 import { cn } from '../../utils';
 import { MoodCorrelationData } from './types';
 

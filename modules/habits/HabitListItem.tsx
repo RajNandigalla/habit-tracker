@@ -33,8 +33,6 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
   const isChallenge = !!habit.challengeId;
   const isNegative = habit.habitType === 'negative';
   const isScheduledToday = isHabitScheduledForDate(habit, today);
-
-  // Weekly Progress Calculation
   const weeklyStats = calculateWeeklyProgress(habit);
 
   const handleFocus = (e: React.MouseEvent) => {

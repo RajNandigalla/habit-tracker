@@ -2,7 +2,6 @@
 import React, { createContext, useState, useCallback, useContext, ReactNode, useMemo } from 'react';
 import ReactDOM from 'react-dom';
 
-// --- Icons for Toast ---
 const CheckCircleIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +52,6 @@ const InformationCircleIcon: React.FC<{ className?: string }> = ({ className }) 
     />
   </svg>
 );
-// --- End Icons ---
 
 type ToastType = 'success' | 'error' | 'info';
 
