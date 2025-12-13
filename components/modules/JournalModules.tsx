@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { JournalEntry, Habit } from '../../types';
 import { cn, formatDate, generateId, toBase64 } from '../../utils';
-import { Button, Textarea, Card, Modal, Select } from '../UI';
+import { Button, Textarea, Card, Modal, Select } from '../core';
 import { analyzeJournalEntry } from '../../services/geminiService';
 import { Image as ImageIcon, Sparkles, Smile, Meh, Frown, Calendar } from 'lucide-react';
 import { clsx } from 'clsx';

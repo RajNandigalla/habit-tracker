@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Card, Switch, Button, SettingsRow, Modal } from '../UI';
+import { Card, Switch, Button, SettingsRow, Modal } from '../core';
 import {
   CloudIcon,
   MoonIcon,

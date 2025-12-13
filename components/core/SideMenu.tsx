@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
-import { acquireScrollLock, releaseScrollLock } from './../../lib/scrollLock';
+import { acquireScrollLock, releaseScrollLock } from './../../utils/scrollLock';
 
 interface SideMenuProps {
   isOpen: boolean;

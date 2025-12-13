@@ -2,7 +2,7 @@ import React from 'react';
 import { Habit } from '../../types';
 import { PageTitle } from '../modules/PageTitle';
 import { Sparkles } from 'lucide-react';
-import { Button } from '../UI';
+import { Button } from '../core';
 import {
   GlobalStatsGrid,
   ConsistencyHeatmap,

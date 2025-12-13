@@ -27,7 +27,7 @@ import {
   Skull,
   AlertCircle,
 } from 'lucide-react';
-import { Button, Input, Select, Modal, Textarea, TimePicker, Switch, Slider } from '../UI';
+import { Button, Input, Select, Modal, Textarea, TimePicker, Switch, Slider } from '../core';
 import dayjs from 'dayjs';
 import { useStore } from '../../context/Store';
 import { HeatmapGrid, HeatmapData } from './ProgressModules';

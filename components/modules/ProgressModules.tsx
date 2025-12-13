@@ -1,7 +1,7 @@
 import React from 'react';
 import { Habit, Achievement } from '../../types';
 import { cn, formatDate } from '../../utils';
-import { Card, Button, Modal } from '../UI';
+import { Card, Button, Modal } from '../core';
 import {
   Flame,
   Trophy,

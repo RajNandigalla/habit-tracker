@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { XIcon } from '../icons';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { acquireScrollLock, releaseScrollLock } from '../../lib/scrollLock';
+import { acquireScrollLock, releaseScrollLock } from '../../utils/scrollLock';
 
 interface ModalProps {
   isOpen: boolean;

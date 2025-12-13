@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect, useState } from 'react';
-import { Card, Modal } from '../UI';
+import { Card, Modal } from '../core';
 import { Habit, JournalEntry } from '../../types';
 import { getTodayISO, cn } from '../../utils';
 import { Smile, Meh, Frown, Zap, Trophy, CloudRain, Sun, Moon, Flame } from 'lucide-react';

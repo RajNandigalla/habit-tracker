@@ -20,7 +20,7 @@ import {
   Trophy,
 } from 'lucide-react';
 import { cn } from './utils';
-import { SideMenu } from './components/UI';
+import { SideMenu } from './components/core';
 import { Header } from './components/modules/Header';
 
 const NavItem: React.FC<{

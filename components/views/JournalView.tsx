@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { JournalEntry, Habit } from '../../types';
-import { Button } from '../UI';
+import { Button } from '../core';
 import { Plus, Sparkles } from 'lucide-react';
 import { JournalTimelineItem, AddJournalEntryModal } from '../modules/JournalModules';
 import { PageTitle } from '../modules/PageTitle';

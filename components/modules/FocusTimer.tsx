@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Habit } from '../../types';
-import { Modal, Button, Slider } from '../UI';
+import { Modal, Button, Slider } from '../core';
 import { Play, Pause, RotateCcw, CheckCircle2 } from 'lucide-react';
 import { cn } from '../../utils';
 
