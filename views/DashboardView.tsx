@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Habit, ViewMode, HabitCategory, JournalEntry } from '../types';
 import { HabitListItem, AddHabitModal } from '../modules/habits';
 import { Button, Chip, Modal, Show } from '../core';
+import { dayjs } from '../utils';
 import { Plus, Sparkles, AlertTriangle } from 'lucide-react';
 import { cn, getTodayISO, generateId } from '../utils';
 import { PageTitle } from '../modules/PageTitle';
@@ -42,7 +43,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const handleQuickMoodLog = (mood: 'happy' | 'motivated' | 'neutral' | 'sad' | 'tired') => {
     const entry: JournalEntry = {
       id: generateId(),
-      date: new Date().toISOString(),
+      date: dayjs().toISOString(),
       content: `Daily check-in: Feeling ${mood}.`,
       mood: mood,
     };

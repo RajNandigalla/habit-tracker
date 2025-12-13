@@ -1,33 +1,17 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import calendar from 'dayjs/plugin/calendar';
-import isoWeek from 'dayjs/plugin/isoWeek';
 import { Habit } from './types';
+import { dayjs, getTodayISO, sortDatesDesc, sortDatesAsc, getCurrentTimestamp } from './utils/date';
 
-dayjs.extend(relativeTime);
-dayjs.extend(calendar);
-dayjs.extend(isoWeek);
+export * from './utils/date';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export const generateId = () => {
-  return Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
-};
-
-export const formatDate = (date: string | Date, format: string = 'MMM D, YYYY') => {
-  return dayjs(date).format(format);
-};
-
-export const getRelativeTime = (date: string | Date) => {
-  return dayjs(date).fromNow();
-};
-
-export const getTodayISO = () => {
-  return dayjs().format('YYYY-MM-DD');
+  // Use getCurrentTimestamp helper instead of Date.now()
+  return Math.random().toString(36).substring(2, 9) + getCurrentTimestamp().toString(36);
 };
 
 // Check if a habit is scheduled for today
@@ -45,10 +29,8 @@ export const calculateStreak = (habit: Habit): number => {
   const today = dayjs();
   const todayISO = today.format('YYYY-MM-DD');
 
-  // Sort dates descending
-  const sortedDates = [...completedDates].sort(
-    (a, b) => new Date(b).getTime() - new Date(a).getTime()
-  );
+  // Sort dates descending logic replaced with helper
+  const sortedDates = [...completedDates].sort(sortDatesDesc);
 
   if (habitType === 'negative') {
     // completedDates represents "Incidents" (failures)
@@ -75,8 +57,9 @@ export const calculateStreak = (habit: Habit): number => {
     // Iterate backwards by week
     while (true) {
       // Count completions in this ISO week
-      const weekStart = checkWeek.format('YYYY-MM-DD');
-      const weekEnd = checkWeek.endOf('isoWeek').format('YYYY-MM-DD');
+      // Not actually used for weekStart/weekEnd logic but kept for logic consistency if needed later
+      // const weekStart = checkWeek.format('YYYY-MM-DD');
+      // const weekEnd = checkWeek.endOf('isoWeek').format('YYYY-MM-DD');
 
       const weekCompletions = sortedDates.filter(d => {
         const dObj = dayjs(d);
@@ -169,29 +152,20 @@ export const calculateHabitStats = (habit: Habit) => {
   const totalCompletions = completedDates.length;
 
   // Calculate Longest Streak (Simplified approximation using current calculateStreak logic iteratively would be slow)
-  // We'll stick to a simple daily consecutive check for "Longest Streak" statistic for now,
-  // or just use the basic logic for daily habits as a fallback for complex ones to avoid heavy computation.
-  // Ideally this should be robust, but for this demo, we can use the `streak` field which is updated on toggle.
-  // However, `longestStreak` is usually derived.
-
-  // Simple iteration for "Best Streak" on daily habits.
-  // For complex schedules, "Best Streak" calculation is complex.
-  // We will return the current streak as best streak if calculation is too complex, or implemented simple consecutive sort.
+  // We'll stick to a simple daily consecutive check for "Longest Streak" statistic for now.
 
   let longestStreak = 0;
 
   if (habit.frequency === 'daily' && habit.habitType === 'positive') {
     let currentCount = 0;
-    const sortedDatesAsc = [...completedDates].sort(
-      (a, b) => new Date(a).getTime() - new Date(b).getTime()
-    );
+    const sortedDatesAscData = [...completedDates].sort(sortDatesAsc);
 
-    for (let i = 0; i < sortedDatesAsc.length; i++) {
+    for (let i = 0; i < sortedDatesAscData.length; i++) {
       if (i === 0) {
         currentCount = 1;
       } else {
-        const prev = dayjs(sortedDatesAsc[i - 1]);
-        const curr = dayjs(sortedDatesAsc[i]);
+        const prev = dayjs(sortedDatesAscData[i - 1]);
+        const curr = dayjs(sortedDatesAscData[i]);
         if (curr.diff(prev, 'day') === 1) {
           currentCount++;
         } else if (curr.diff(prev, 'day') > 1) {

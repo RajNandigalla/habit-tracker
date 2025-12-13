@@ -7,6 +7,7 @@ import { computePosition, flip, shift, offset } from '@floating-ui/dom';
 import Button from './Button';
 import useIsMobile from '../hooks/useIsMobile';
 import Modal from './Modal';
+import { dayjs, Dayjs, MONTH_NAMES, DAYS_OF_WEEK } from '../utils'; // Use centralized dayjs
 
 interface DatePickerProps {
   id?: string;
@@ -15,30 +16,14 @@ interface DatePickerProps {
   disabled?: boolean;
 }
 
-const MONTH_NAMES = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-];
-const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
 const YearView: React.FC<{
-  viewDate: Date;
+  viewDate: Dayjs;
   stagedValue: string;
   handleYearClick: (year: number) => void;
 }> = ({ viewDate, stagedValue, handleYearClick }) => {
   const yearGridRef = useRef<HTMLDivElement>(null);
 
-  const currentNavYear = viewDate.getFullYear();
+  const currentNavYear = viewDate.year();
   const startYear = Math.floor(currentNavYear / 100) * 100;
   const years = Array.from({ length: 100 }, (_, i) => startYear + i);
 
@@ -90,7 +75,7 @@ const YearView: React.FC<{
 };
 
 const DatePickerContent: React.FC<{
-  viewDate: Date;
+  viewDate: Dayjs;
   stagedValue: string;
   currentView: 'day' | 'year';
   animationClass: string;
@@ -123,8 +108,8 @@ const DatePickerContent: React.FC<{
   isMobile,
 }) => {
   const headerTitle = useMemo(() => {
-    const year = viewDate.getFullYear();
-    if (currentView === 'day') return `${MONTH_NAMES[viewDate.getMonth()]} ${year}`;
+    const year = viewDate.year();
+    if (currentView === 'day') return `${MONTH_NAMES[viewDate.month()]} ${year}`;
     const startYear = Math.floor(year / 100) * 100;
     return `${startYear} - ${startYear + 99}`;
   }, [viewDate, currentView]);
@@ -164,12 +149,12 @@ const DatePickerContent: React.FC<{
 
       <div className="min-h-[220px] overflow-hidden">
         {currentView === 'day' && (
-          <div key={`${viewDate.getFullYear()}-${viewDate.getMonth()}`} className={animationClass}>
+          <div key={`${viewDate.year()}-${viewDate.month()}`} className={animationClass}>
             {renderDayView()}
           </div>
         )}
         {currentView === 'year' && (
-          <div key={Math.floor(viewDate.getFullYear() / 100)} className={animationClass}>
+          <div key={Math.floor(viewDate.year() / 100)} className={animationClass}>
             <YearView
               viewDate={viewDate}
               stagedValue={stagedValue}
@@ -214,7 +199,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   const isModalOpen = searchParams.get('datePickerFor') === id; // For mobile modal
   const isOpen = isMobile ? isModalOpen : isPopoverOpen;
 
-  const [viewDate, setViewDate] = useState(() => new Date());
+  // Initialize with Dayjs
+  const [viewDate, setViewDate] = useState<Dayjs>(() => dayjs());
   const [stagedValue, setStagedValue] = useState(value);
   const [currentView, setCurrentView] = useState<'day' | 'year'>('day');
   const [animationClass, setAnimationClass] = useState('');
@@ -259,8 +245,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 
   useEffect(() => {
     if (isOpen) {
-      const initialDate =
-        value && /^\d{4}-\d{2}-\d{2}$/.test(value) ? new Date(value + 'T00:00:00') : new Date();
+      const initialDate = value && /^\d{4}-\d{2}-\d{2}$/.test(value) ? dayjs(value) : dayjs();
       setViewDate(initialDate);
       setStagedValue(value);
       setCurrentView('day');
@@ -304,8 +289,9 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 
   const handleDayClick = useCallback(
     (day: number) => {
-      const newDate = new Date(Date.UTC(viewDate.getFullYear(), viewDate.getMonth(), day));
-      const newDateString = newDate.toISOString().split('T')[0];
+      // Create new date preserving current view year/month but setting specific day
+      const newDate = viewDate.set('date', day);
+      const newDateString = newDate.format('YYYY-MM-DD');
       setStagedValue(newDateString);
       if (!isMobile) {
         onChange(newDateString);
@@ -328,20 +314,20 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   const handlePrev = () => {
     if (currentView === 'day') {
       setAnimationClass('animate-slide-in-from-left');
-      setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1));
+      setViewDate(viewDate.subtract(1, 'month'));
     } else {
       setAnimationClass('animate-slide-in-from-left');
-      setViewDate(new Date(viewDate.getFullYear() - 100, viewDate.getMonth(), 1));
+      setViewDate(viewDate.subtract(100, 'year'));
     }
   };
 
   const handleNext = () => {
     if (currentView === 'day') {
       setAnimationClass('animate-slide-in-from-right');
-      setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1));
+      setViewDate(viewDate.add(1, 'month'));
     } else {
       setAnimationClass('animate-slide-in-from-right');
-      setViewDate(new Date(viewDate.getFullYear() + 100, viewDate.getMonth(), 1));
+      setViewDate(viewDate.add(100, 'year'));
     }
   };
 
@@ -354,36 +340,27 @@ export const DatePicker: React.FC<DatePickerProps> = ({
 
   const handleYearClick = (year: number) => {
     setAnimationClass('animate-fade-in-fast');
-    setViewDate(new Date(year, viewDate.getMonth(), 1));
+    setViewDate(viewDate.year(year));
     setCurrentView('day');
   };
 
   const formattedValue = useMemo(() => {
     if (value && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
-      return new Date(value + 'T00:00:00').toLocaleDateString(undefined, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      });
+      return dayjs(value).format('MMM D, YYYY');
     }
     return 'Select a date';
   }, [value]);
 
   const formattedStagedDate = useMemo(() => {
     if (stagedValue && /^\d{4}-\d{2}-\d{2}$/.test(stagedValue)) {
-      return new Date(stagedValue + 'T00:00:00').toLocaleDateString(undefined, {
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      });
+      return dayjs(stagedValue).format('ddd, MMM D, YYYY');
     }
     return null;
   }, [stagedValue]);
 
   const jumpToStagedDate = () => {
     if (stagedValue) {
-      const stagedDate = new Date(stagedValue + 'T00:00:00');
+      const stagedDate = dayjs(stagedValue);
       setViewDate(stagedDate);
       setCurrentView('day');
       setAnimationClass('animate-fade-in-fast');
@@ -405,14 +382,16 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   }, [isMobile, formattedStagedDate]);
 
   const renderDayView = useCallback(() => {
-    const currentYear = viewDate.getFullYear();
-    const currentMonth = viewDate.getMonth();
-    const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const currentYear = viewDate.year();
+    const currentMonth = viewDate.month(); // 0-11
 
-    let stagedDateObj: Date | null = null;
+    // Get first day of month (0-6, Sun-Sat)
+    const firstDayOfMonth = viewDate.startOf('month').day();
+    const daysInMonth = viewDate.daysInMonth();
+
+    let stagedDateObj: Dayjs | null = null;
     if (stagedValue && /^\d{4}-\d{2}-\d{2}$/.test(stagedValue)) {
-      stagedDateObj = new Date(stagedValue + 'T00:00:00');
+      stagedDateObj = dayjs(stagedValue);
     }
 
     const grid = [];
@@ -420,16 +399,14 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       grid.push(<div key={`empty-${i}`} className="w-9 h-9" />);
     }
 
-    const today = new Date();
+    const today = dayjs();
     for (let day = 1; day <= daysInMonth; day++) {
       const isSelected =
-        stagedDateObj?.getFullYear() === currentYear &&
-        stagedDateObj?.getMonth() === currentMonth &&
-        stagedDateObj?.getDate() === day;
+        stagedDateObj?.year() === currentYear &&
+        stagedDateObj?.month() === currentMonth &&
+        stagedDateObj?.date() === day;
       const isToday =
-        today.getFullYear() === currentYear &&
-        today.getMonth() === currentMonth &&
-        today.getDate() === day;
+        today.year() === currentYear && today.month() === currentMonth && today.date() === day;
 
       grid.push(
         <button
@@ -451,9 +428,13 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     return (
       <>
         <div className="grid grid-cols-7 gap-1 text-center text-base text-slate-500 dark:text-slate-400 mb-2">
-          {DAY_NAMES.map(day => (
-            <div key={day}>{day}</div>
-          ))}
+          {DAYS_OF_WEEK.map(
+            (
+              day // Changed from DAY_NAMES
+            ) => (
+              <div key={day}>{day}</div>
+            )
+          )}
         </div>
         <div className="grid grid-cols-7 gap-1 place-items-center">{grid}</div>
       </>

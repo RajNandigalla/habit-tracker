@@ -1,9 +1,8 @@
 import React, { useMemo, useEffect, useState } from 'react';
 import { Card, Show } from '../core';
 import { Habit, JournalEntry } from '../types';
-import { getTodayISO, cn } from '../utils';
+import { getTodayISO, cn, dayjs } from '../utils';
 import { Smile, Meh, Frown, Zap, Trophy, CloudRain, Sun, Moon, Flame } from 'lucide-react';
-import dayjs from 'dayjs';
 import { MoodSelectionModal } from './dashboard';
 
 interface DailyOverviewProps {
@@ -20,7 +19,7 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
   username = 'Achiever',
 }) => {
   const todayISO = getTodayISO();
-  const currentHour = new Date().getHours();
+  const currentHour = dayjs().hour();
   const [isMoodModalOpen, setIsMoodModalOpen] = useState(false);
 
   // Animation state for progress ring

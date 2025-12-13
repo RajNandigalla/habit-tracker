@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Modal, Button, Textarea, Select } from '../../core';
+import { Modal, Button, Show, Select, Textarea } from '../../core';
+import { dayjs } from '../../utils';
 import { ImageIcon as ImageIconLucide, Sparkles, Smile, Meh, Frown } from 'lucide-react';
 import { cn, generateId, toBase64 } from '../../utils';
 import { JournalEntry, Habit } from '../../types';
@@ -48,7 +49,7 @@ const AddJournalEntryModal: React.FC<AddJournalEntryModalProps> = ({
 
     const newEntry: JournalEntry = {
       id: generateId(),
-      date: new Date().toISOString(),
+      date: dayjs().toISOString(),
       content,
       habitId: habitId || undefined,
       mood: mood as any,

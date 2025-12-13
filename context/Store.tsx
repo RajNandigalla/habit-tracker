@@ -1,9 +1,15 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Habit, JournalEntry, UserPreferences, ViewMode, HabitCategory, Challenge } from '../types';
-import { calculateStreak, generateId, getTodayISO, audioManager } from '../utils';
+import {
+  calculateStreak,
+  generateId,
+  getTodayISO,
+  audioManager,
+  sortDatesDesc,
+  dayjs,
+} from '../utils';
 import { storageService } from '../services/storageService';
 import { useToast } from './ToastContext';
-import dayjs from 'dayjs';
 
 interface StoreContextType {
   habits: Habit[];
@@ -304,7 +310,7 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
       });
     }
 
-    dummyEntries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    dummyEntries.sort((a, b) => sortDatesDesc(a.date, b.date));
 
     setHabits(dummyHabits);
     setJournalEntries(dummyEntries);

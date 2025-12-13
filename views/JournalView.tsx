@@ -5,6 +5,7 @@ import { Plus, Sparkles } from 'lucide-react';
 import { JournalTimelineItem, AddJournalEntryModal } from '../modules/journal';
 import { PageTitle } from '../modules/PageTitle';
 import PageTransition from '../core/PageTransition';
+import { sortDatesDesc } from '../utils'; // Added this import
 
 interface JournalViewProps {
   entries: JournalEntry[];
@@ -16,9 +17,7 @@ interface JournalViewProps {
 
 export const JournalView: React.FC<JournalViewProps> = ({ entries, habits, onAddEntry }) => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const sortedEntries = [...entries].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+  const sortedEntries = [...entries].sort((a, b) => sortDatesDesc(a.date, b.date));
 
   return (
     <PageTransition className="bg-slate-50 dark:bg-slate-950">

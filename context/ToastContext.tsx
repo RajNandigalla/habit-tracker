@@ -1,5 +1,15 @@
 // Fix: Import 'useMemo' from 'react' to resolve reference error.
-import React, { createContext, useState, useCallback, useContext, ReactNode, useMemo } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useRef,
+  ReactNode,
+  useMemo,
+} from 'react';
+import { X, CheckCircle, AlertCircle, Info } from 'lucide-react';
+import { getCurrentTimestamp } from '../utils';
 import ReactDOM from 'react-dom';
 
 const CheckCircleIcon: React.FC<{ className?: string }> = ({ className }) => (
@@ -175,7 +185,8 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   const addToast = useCallback((message: string, type: ToastType = 'info') => {
-    setToasts(prevToasts => [...prevToasts, { id: Date.now(), message, type }]);
+    // Use centralized timestamp for ID
+    setToasts(prevToasts => [...prevToasts, { id: getCurrentTimestamp(), message, type }]);
   }, []);
 
   const removeToast = useCallback((id: number) => {
