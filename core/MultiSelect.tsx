@@ -269,14 +269,21 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                 >
                   {option.icon && <span className="text-sm">{option.icon}</span>}
                   <span className="truncate max-w-[120px]">{option.label}</span>
-                  <button
-                    type="button"
+                  <span
                     onClick={e => handleRemoveOption(option.value, e)}
-                    className="flex-shrink-0 hover:text-indigo-900 dark:hover:text-indigo-100 transition-colors"
+                    className="flex-shrink-0 hover:text-indigo-900 dark:hover:text-indigo-100 transition-colors cursor-pointer"
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleRemoveOption(option.value, e as any);
+                      }
+                    }}
                     aria-label={`Remove ${option.label}`}
                   >
                     <X size={12} />
-                  </button>
+                  </span>
                 </span>
               ))}
               {remainingCount > 0 && (
