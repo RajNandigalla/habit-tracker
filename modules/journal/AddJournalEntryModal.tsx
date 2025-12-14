@@ -111,7 +111,7 @@ const AddJournalEntryModal: React.FC<AddJournalEntryModalProps> = ({
           />
 
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+            <label className="mb-1.5 block text-base font-medium text-slate-700 dark:text-slate-300">
               Photo Evidence
             </label>
             <div className="relative group">
@@ -133,7 +133,7 @@ const AddJournalEntryModal: React.FC<AddJournalEntryModalProps> = ({
                 />
                 <span
                   className={cn(
-                    'text-sm truncate',
+                    'text-base truncate',
                     image && 'text-indigo-600 dark:text-indigo-400 font-medium'
                   )}
                 >

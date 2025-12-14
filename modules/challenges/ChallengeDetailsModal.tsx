@@ -69,7 +69,7 @@ export const ChallengeDetailsModal: React.FC<ChallengeDetailsModalProps> = ({
                 {challenge.category}
               </span>
             </h4>
-            <p className="text-slate-600 dark:text-slate-300 text-sm mt-1">
+            <p className="text-slate-600 dark:text-slate-300 text-base mt-1">
               {challenge.description}
             </p>
           </div>
@@ -99,7 +99,7 @@ export const ChallengeDetailsModal: React.FC<ChallengeDetailsModalProps> = ({
 
         {!getActiveHabitForChallenge(challenge.id) && (
           <div className="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl p-4">
-            <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-3">
+            <h4 className="text-base font-bold text-slate-900 dark:text-white mb-3">
               How do you want to track this?
             </h4>
 
@@ -122,7 +122,7 @@ export const ChallengeDetailsModal: React.FC<ChallengeDetailsModalProps> = ({
                   {linkMode === 'new' && <div className="w-2.5 h-2.5 rounded-full bg-indigo-500" />}
                 </div>
                 <div className="flex-1">
-                  <div className="font-semibold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                  <div className="font-semibold text-base text-slate-900 dark:text-white flex items-center gap-2">
                     <Plus className="h-4 w-4" />
                     Create New Habit
                   </div>
@@ -152,7 +152,7 @@ export const ChallengeDetailsModal: React.FC<ChallengeDetailsModalProps> = ({
                   )}
                 </div>
                 <div className="flex-1">
-                  <div className="font-semibold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                  <div className="font-semibold text-base text-slate-900 dark:text-white flex items-center gap-2">
                     <Layers className="h-4 w-4" />
                     Link Existing Habit
                   </div>
@@ -167,7 +167,7 @@ export const ChallengeDetailsModal: React.FC<ChallengeDetailsModalProps> = ({
                   <Show
                     when={eligibleHabits.length > 0}
                     fallback={
-                      <div className="text-sm text-red-500 flex items-center gap-2 p-2 bg-red-50 dark:bg-red-900/10 rounded-lg">
+                      <div className="text-base text-red-500 flex items-center gap-2 p-2 bg-red-50 dark:bg-red-900/10 rounded-lg">
                         <AlertCircle className="w-4 h-4" />
                         No eligible habits found (must match challenge criteria)
                       </div>

@@ -133,7 +133,7 @@ const HabitDetailsModal: React.FC<{
         <div key={date} className="flex items-center justify-center aspect-square">
           <div
             className={cn(
-              'w-8 h-8 rounded-lg flex items-center justify-center text-sm font-medium transition-all duration-200',
+              'w-8 h-8 rounded-lg flex items-center justify-center text-base font-medium transition-all duration-200',
               isBadDay
                 ? 'bg-red-500 text-white shadow-sm'
                 : isGoodDay
@@ -206,7 +206,7 @@ const HabitDetailsModal: React.FC<{
                 </div>
 
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+                  <label className="mb-1.5 block text-base font-medium text-slate-700 dark:text-slate-300">
                     Color
                   </label>
                   <div className="flex items-center gap-3 h-[42px]">
@@ -318,7 +318,7 @@ const HabitDetailsModal: React.FC<{
 
                 {/* Challenge Info */}
                 {habit.challengeId && habit.challengeDuration && (
-                  <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 rounded-lg text-sm font-semibold border border-yellow-200 dark:border-yellow-800/50">
+                  <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 rounded-lg text-base font-semibold border border-yellow-200 dark:border-yellow-800/50">
                     <Crown className="h-4 w-4" />
                     Day {Math.min(habit.streak, habit.challengeDuration)} of{' '}
                     {habit.challengeDuration} Challenge
@@ -363,7 +363,7 @@ const HabitDetailsModal: React.FC<{
                   {/* Heatmap Section */}
                   <div className="pt-2">
                     <div className="flex items-baseline justify-between mb-3">
-                      <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wide opacity-80 flex items-center gap-2">
+                      <h4 className="text-base font-bold text-slate-900 dark:text-white uppercase tracking-wide opacity-80 flex items-center gap-2">
                         Recent Activity
                       </h4>
                       <span className="text-xs font-medium text-slate-500 dark:text-slate-400">
@@ -378,38 +378,40 @@ const HabitDetailsModal: React.FC<{
 
                 {/* Right Column: Calendar */}
                 <div className="md:col-span-5 md:pl-6 pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-slate-100 dark:border-slate-800 h-full">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wide opacity-80 flex items-center gap-2">
-                      <CalendarIcon className="h-4 w-4" />
-                      Monthly
-                    </h4>
-                    <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 rounded-lg p-1">
-                      <button
-                        onClick={() => setViewDate(d => d.subtract(1, 'month'))}
-                        className="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded-md shadow-sm transition-all text-slate-600 dark:text-slate-300"
-                      >
-                        <ChevronLeft className="h-4 w-4" />
-                      </button>
-                      <span className="text-xs font-bold w-24 text-center text-slate-700 dark:text-slate-200 select-none">
-                        {viewDate.format('MMMM YYYY')}
-                      </span>
-                      <button
-                        onClick={() => setViewDate(d => d.add(1, 'month'))}
-                        className="p-1.5 hover:bg-white dark:hover:bg-slate-700 rounded-md shadow-sm transition-all text-slate-600 dark:text-slate-300"
-                      >
-                        <ChevronRight className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-7 gap-1 mb-2 text-center">
-                    {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => (
-                      <div key={d} className="text-[10px] font-bold text-slate-400 uppercase">
-                        {d}
+                  <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 h-full">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="text-base font-bold text-slate-900 dark:text-white uppercase tracking-wide opacity-80 flex items-center gap-2">
+                        <CalendarIcon className="h-4 w-4" />
+                        Monthly
+                      </h4>
+                      <div className="flex items-center gap-1 bg-white dark:bg-slate-800 rounded-lg p-1 shadow-sm border border-slate-200/50 dark:border-slate-700/50">
+                        <button
+                          onClick={() => setViewDate(d => d.subtract(1, 'month'))}
+                          className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md transition-all text-slate-600 dark:text-slate-300"
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                        </button>
+                        <span className="text-xs font-bold w-24 text-center text-slate-700 dark:text-slate-200 select-none">
+                          {viewDate.format('MMMM YYYY')}
+                        </span>
+                        <button
+                          onClick={() => setViewDate(d => d.add(1, 'month'))}
+                          className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-md transition-all text-slate-600 dark:text-slate-300"
+                        >
+                          <ChevronRight className="h-4 w-4" />
+                        </button>
                       </div>
-                    ))}
+                    </div>
+
+                    <div className="grid grid-cols-7 gap-1 mb-2 text-center">
+                      {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => (
+                        <div key={d} className="text-[10px] font-bold text-slate-400 uppercase">
+                          {d}
+                        </div>
+                      ))}
+                    </div>
+                    <div className="grid grid-cols-7 gap-1">{renderCalendar()}</div>
                   </div>
-                  <div className="grid grid-cols-7 gap-1">{renderCalendar()}</div>
                 </div>
               </div>
             </div>
@@ -425,7 +427,7 @@ const HabitDetailsModal: React.FC<{
               <h4 className="font-bold text-red-900 dark:text-red-100 mb-1">
                 Are you absolutely sure?
               </h4>
-              <p className="text-sm text-red-700 dark:text-red-300 leading-relaxed">
+              <p className="text-base text-red-700 dark:text-red-300 leading-relaxed">
                 This will permanently delete <strong>{habit.name}</strong> and remove all your
                 progress history. This action cannot be undone.
               </p>

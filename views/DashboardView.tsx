@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Habit, ViewMode, HabitCategory, JournalEntry } from '../types';
 import { HabitListItem, AddHabitModal } from '../modules/habits';
@@ -50,6 +50,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       mood: mood,
     };
     addJournalEntry(entry);
+  };
+
+  const handleFABClick = () => {
+    setModalOpen(true);
   };
 
   return (
@@ -134,18 +138,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </Show>
             }
           >
-            <EmptyDashboardState onCreateHabit={() => setModalOpen(true)} />
+            <EmptyDashboardState onCreateHabit={handleFABClick} />
           </Show>
         </div>
       </main>
 
       {/* Mobile FAB */}
-      <FAB
-        onClick={() => setModalOpen(true)}
-        ariaLabel="Create new habit"
-        isParentOpen={isModalOpen}
-      />
+      <FAB onClick={handleFABClick} ariaLabel="Create new habit" isParentOpen={isModalOpen} />
 
+      {/* Modal with genie animation */}
       <AddHabitModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} onAdd={onAddHabit} />
 
       <FocusTimer

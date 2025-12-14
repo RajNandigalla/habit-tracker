@@ -86,7 +86,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         className={twMerge(
           'text-slate-600 dark:text-slate-400',
           'mt-0 mb-4 max-w-md mx-auto',
-          'leading-relaxed text-sm font-semibold'
+          'leading-relaxed text-base font-semibold'
         )}
       >
         {description}

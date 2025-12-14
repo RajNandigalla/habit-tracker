@@ -51,7 +51,7 @@ const MoodCorrelationCard: React.FC<{ data: MoodCorrelationData[] }> = ({ data }
             <TrendingUp className="h-5 w-5 text-indigo-500" />
             Mood & Performance
           </h3>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-base text-slate-500 dark:text-slate-400">
             How your mood affects your habits
           </p>
         </div>
@@ -61,7 +61,7 @@ const MoodCorrelationCard: React.FC<{ data: MoodCorrelationData[] }> = ({ data }
             <div className="p-1.5 bg-white dark:bg-slate-800 rounded-full shadow-sm">
               <Sparkles className="w-4 h-4 text-indigo-500" />
             </div>
-            <div className="text-sm">
+            <div className="text-base">
               <span className="block text-xs font-bold text-indigo-600 dark:text-indigo-300 uppercase">
                 Power Mood
               </span>
@@ -88,7 +88,7 @@ const MoodCorrelationCard: React.FC<{ data: MoodCorrelationData[] }> = ({ data }
                   </div>
                   <div className="flex-1">
                     <div className="flex justify-between items-center mb-1">
-                      <span className="font-semibold text-sm text-slate-700 dark:text-slate-300">
+                      <span className="font-semibold text-base text-slate-700 dark:text-slate-300">
                         {getMoodLabel(item.mood)}
                       </span>
                       <span className="text-xs font-bold text-slate-500 dark:text-slate-400">

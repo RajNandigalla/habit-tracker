@@ -20,7 +20,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           </label>
         )}
         <textarea id={id} ref={ref} rows={3} className={baseClasses} {...props} />
-        {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+        {error && <p className="text-red-500 text-base mt-1">{error}</p>}
       </div>
     );
   }

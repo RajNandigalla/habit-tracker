@@ -118,7 +118,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             <div className="space-y-6">
               {/* Data & Storage */}
               <section>
-                <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">
+                <h2 className="text-base font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">
                   Data & Storage
                 </h2>
                 <Card className="p-0 overflow-hidden">
@@ -136,7 +136,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
               {/* App Preferences */}
               <section>
-                <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">
+                <h2 className="text-base font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">
                   Preferences
                 </h2>
                 <Card className="space-y-1">
@@ -169,7 +169,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             <div className="space-y-6">
               {/* Data Management */}
               <section>
-                <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">
+                <h2 className="text-base font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">
                   Data Management
                 </h2>
                 <Card className="space-y-4">
@@ -208,7 +208,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
               {/* Support & About */}
               <section>
-                <h2 className="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">
+                <h2 className="text-base font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">
                   Support
                 </h2>
                 <Card className="space-y-1 divide-y divide-slate-100 dark:divide-slate-700/50">
@@ -235,7 +235,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                         App Version
                       </span>
                     </div>
-                    <span className="text-sm text-slate-400">v{pkg.version}</span>
+                    <span className="text-base text-slate-400">v{pkg.version}</span>
                   </div>
                 </Card>
               </section>

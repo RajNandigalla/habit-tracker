@@ -12,7 +12,7 @@ import {
   Check,
   ChevronDown,
   Search,
-  Menu,
+  AlignLeft, // Changed from Menu
   Flame,
   Trash2,
   Play,
@@ -45,7 +45,7 @@ export const FabTransferIcon = ArrowRightLeft;
 export const CheckIcon = Check;
 export const ChevronDownIcon = ChevronDown;
 export const SearchIcon = Search;
-export const MenuIcon = Menu;
+export const MenuIcon = AlignLeft;
 export const FireIcon = Flame;
 export const TrashIcon = Trash2;
 export const PlayIcon = Play;

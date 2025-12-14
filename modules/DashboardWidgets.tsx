@@ -213,7 +213,7 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
               <h2 className="text-xl font-bold truncate">
                 {greeting}, {username}
               </h2>
-              <p className="text-indigo-100/90 text-sm mt-0.5 truncate">
+              <p className="text-indigo-100/90 text-base mt-0.5 truncate">
                 {progressPercentage === 100
                   ? "All goals crushed! You're on fire."
                   : progressPercentage >= 50
@@ -276,7 +276,7 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
               </div>
               <div>
                 <h3 className="font-bold text-slate-900 dark:text-white text-base">Mood Check</h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <p className="text-base text-slate-500 dark:text-slate-400">
                   How are you feeling right now?
                 </p>
               </div>
@@ -290,7 +290,7 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
                   <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider leading-none mb-0.5">
                     Current Streak
                   </div>
-                  <div className="text-sm font-bold text-slate-900 dark:text-white leading-none">
+                  <div className="text-base font-bold text-slate-900 dark:text-white leading-none">
                     {bestStreak} Days
                   </div>
                 </div>
@@ -331,10 +331,10 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
               }
             >
               <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-800 px-5 py-2.5 rounded-xl border border-slate-100 dark:border-slate-700 animate-fade-in">
-                <span className="text-sm text-slate-600 dark:text-slate-300">You're feeling</span>
+                <span className="text-base text-slate-600 dark:text-slate-300">You're feeling</span>
                 <div
                   className={cn(
-                    'flex items-center gap-2 font-bold px-2 py-0.5 rounded-md text-sm',
+                    'flex items-center gap-2 font-bold px-2 py-0.5 rounded-md text-base',
                     find(moodOptions, { value: currentMood })?.color,
                     find(moodOptions, { value: currentMood })?.bg
                   )}

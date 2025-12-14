@@ -13,6 +13,8 @@ interface ModalProps {
   center?: boolean;
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
   mobileFullScreen?: boolean;
+  bottomSheet?: boolean;
+  fabPosition?: { x: number; y: number }; // For genie animation
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -22,9 +24,12 @@ export const Modal: React.FC<ModalProps> = ({
   children,
   size = 'md',
   mobileFullScreen = false,
+  bottomSheet = false,
+  fabPosition,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const hasGenieAnimation = !!fabPosition;
 
   useEffect(() => {
     if (!isOpen) {
@@ -68,8 +73,9 @@ export const Modal: React.FC<ModalProps> = ({
   return ReactDOM.createPortal(
     <div
       className={clsx(
-        'fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ease-ios',
-        mobileFullScreen ? 'p-0 md:p-4' : 'p-4',
+        'fixed inset-0 z-50 flex justify-center transition-opacity duration-300 ease-ios',
+        bottomSheet ? 'items-end' : 'items-center',
+        mobileFullScreen ? 'p-0 md:p-4' : bottomSheet ? 'p-0 md:p-4' : 'p-4',
         isVisible ? 'opacity-100' : 'opacity-0'
       )}
       aria-modal="true"
@@ -84,13 +90,36 @@ export const Modal: React.FC<ModalProps> = ({
             'relative w-full flex flex-col overflow-hidden bg-white shadow-2xl border border-slate-100',
             mobileFullScreen
               ? 'h-full rounded-none md:h-auto md:max-h-[85vh] md:rounded-2xl'
-              : 'max-h-[85vh] rounded-2xl',
+              : bottomSheet
+                ? 'max-h-[85vh] rounded-t-2xl rounded-b-none md:rounded-2xl md:mb-auto'
+                : 'max-h-[85vh] rounded-2xl',
+            // On desktop, even if bottomSheet is true, we might want it centered or at least respected size.
+            // Usually bottom sheet is mobile pattern. Let's make it full width on mobile if bottomSheet.
+            bottomSheet ? 'w-full md:w-auto' : '',
             sizeClasses[size],
-            'transform transition-all duration-300 ease-ios will-change-transform',
-            isVisible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-8 scale-95 opacity-0',
+            hasGenieAnimation
+              ? isVisible
+                ? 'genie-enter'
+                : 'genie-exit'
+              : twMerge(
+                  'transform transition-all duration-300 ease-ios will-change-transform',
+                  isVisible
+                    ? 'translate-y-0 scale-100 opacity-100'
+                    : bottomSheet
+                      ? 'translate-y-full opacity-100' // Slide from bottom
+                      : 'translate-y-8 scale-95 opacity-0'
+                ),
             'dark:bg-slate-900 dark:border-slate-800'
           )
         )}
+        style={
+          hasGenieAnimation && fabPosition
+            ? ({
+                '--genie-translate-x': `${fabPosition.x - window.innerWidth / 2}px`,
+                '--genie-translate-y': `${fabPosition.y - window.innerHeight / 2}px`,
+              } as React.CSSProperties)
+            : undefined
+        }
       >
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 dark:border-slate-800 shrink-0">
           <div className="text-lg font-bold text-slate-900 dark:text-white">{title}</div>

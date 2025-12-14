@@ -135,7 +135,7 @@ export const TagsInput: React.FC<TagsInputProps> = ({
         {inputValue.trim() && !exactMatch && (
           <button
             onClick={handleCreateAndAddTag}
-            className="w-full flex items-center gap-2 text-left px-3 py-2 text-sm text-indigo-600 dark:text-indigo-400 font-semibold hover:bg-slate-100 dark:hover:bg-slate-700"
+            className="w-full flex items-center gap-2 text-left px-3 py-2 text-base text-indigo-600 dark:text-indigo-400 font-semibold hover:bg-slate-100 dark:hover:bg-slate-700"
           >
             <PlusIcon className="w-4 h-4" /> Create "{inputValue.trim()}"
           </button>
@@ -144,7 +144,7 @@ export const TagsInput: React.FC<TagsInputProps> = ({
           <button
             key={tag.id}
             onClick={() => handleAddTag(tag)}
-            className="w-full text-left px-3 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
+            className="w-full text-left px-3 py-2 text-base text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700"
           >
             {tag.name}
           </button>
@@ -165,7 +165,7 @@ export const TagsInput: React.FC<TagsInputProps> = ({
         {selectedTags.map(tag => (
           <div
             key={tag.id}
-            className="flex items-center gap-1.5 bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-sm font-semibold px-2 py-0.5 rounded-full"
+            className="flex items-center gap-1.5 bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-base font-semibold px-2 py-0.5 rounded-full"
           >
             <span>{tag.name}</span>
             <button

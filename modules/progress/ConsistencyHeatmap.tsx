@@ -13,7 +13,7 @@ const ConsistencyHeatmap: React.FC<{ data: HeatmapData[] }> = ({ data }) => {
             <Calendar className="h-5 w-5 text-indigo-500" />
             Consistency Heatmap
           </h3>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-base text-slate-500 dark:text-slate-400">
             Activity over the last 90 days
           </p>
         </div>

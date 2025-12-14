@@ -14,7 +14,7 @@ export const NavItem: React.FC<{
     end={to === '/'}
     className={({ isActive }) =>
       cn(
-        'group flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all duration-200',
+        'group flex items-center gap-3 px-4 py-3 rounded-xl text-base transition-all duration-200',
         isActive
           ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 shadow-sm relative overflow-hidden font-bold'
           : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-white dark:hover:bg-slate-800 hover:ring-1 hover:ring-slate-200 dark:hover:ring-slate-700 hover:shadow-sm font-semibold'

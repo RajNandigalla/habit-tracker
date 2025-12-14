@@ -83,7 +83,7 @@ export const ChallengesView: React.FC<ChallengesViewProps> = ({ habits, onJoinCh
                       </div>
                     </div>
 
-                    <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-2 mb-6">
+                    <p className="text-base text-slate-600 dark:text-slate-300 line-clamp-2 mb-6">
                       {challenge.description}
                     </p>
 
@@ -91,12 +91,12 @@ export const ChallengesView: React.FC<ChallengesViewProps> = ({ habits, onJoinCh
                       <Show
                         when={isJoined}
                         fallback={
-                          <div className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 md:group-hover:underline flex items-center gap-1">
+                          <div className="text-base font-semibold text-indigo-600 dark:text-indigo-400 md:group-hover:underline flex items-center gap-1">
                             View Details <ArrowRight className="h-3 w-3" />
                           </div>
                         }
                       >
-                        <div className="flex items-center gap-2 text-sm font-bold text-green-600 dark:text-green-400">
+                        <div className="flex items-center gap-2 text-base font-bold text-green-600 dark:text-green-400">
                           <div className="w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
                             <Check className="h-3 w-3" />
                           </div>

@@ -15,6 +15,15 @@
     - Optimize screenshot capture (currently serializes entire DOM tree)
   - Status: Working but not perfect, deferred for future optimization
 
+## FAB → Modal Animation
+
+- **Genie animation (macOS-style)**
+  - Attempted to implement circular/elastic animation from FAB to Modal
+  - CSS keyframes created (`index.css` - genie-enter/genie-exit)
+  - Challenges: Modal component structure doesn't easily support external animation classes
+  - Decision: Deferred - current simple scale animation on FAB works well
+  - Future: Could revisit with custom Modal wrapper or View Transitions API
+
 ## General
 
 - Add more items as needed

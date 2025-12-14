@@ -54,7 +54,7 @@ export const Slider: React.FC<SliderProps> = ({
       {(label || showValue) && (
         <div className="flex justify-between items-end mb-3">
           {label && (
-            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 tracking-tight transition-colors">
+            <label className="text-base font-bold text-slate-700 dark:text-slate-300 tracking-tight transition-colors">
               {label}
             </label>
           )}

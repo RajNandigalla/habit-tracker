@@ -27,10 +27,10 @@ export const Text: React.FC<TextProps> = ({
 }) => {
   const variantClasses: Record<TextVariant, string> = {
     body: 'text-base leading-relaxed',
-    small: 'text-sm leading-normal',
+    small: 'text-base leading-normal',
     caption: 'text-xs leading-tight',
-    label: 'text-sm font-medium leading-tight',
-    code: 'text-sm font-mono bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded',
+    label: 'text-base font-medium leading-tight',
+    code: 'text-base font-mono bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded',
   };
 
   const weightClasses: Record<TextWeight, string> = {

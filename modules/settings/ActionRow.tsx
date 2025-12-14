@@ -44,7 +44,7 @@ export const ActionRow: React.FC<ActionRowProps> = ({
         >
           {title}
         </h3>
-        <p className="text-sm text-slate-500 dark:text-slate-400 leading-snug">{description}</p>
+        <p className="text-base text-slate-500 dark:text-slate-400 leading-snug">{description}</p>
       </div>
     </div>
     <div className="flex-shrink-0">

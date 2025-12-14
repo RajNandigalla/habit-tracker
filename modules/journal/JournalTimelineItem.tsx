@@ -107,7 +107,7 @@ const JournalTimelineItem: React.FC<JournalTimelineItemProps> = ({ entry, habit,
               <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-1 uppercase tracking-wide">
                 Coach Insight
               </p>
-              <p className="text-sm text-slate-700 dark:text-slate-300 italic font-medium">
+              <p className="text-base text-slate-700 dark:text-slate-300 italic font-medium">
                 "{entry.aiAnalysis}"
               </p>
             </div>

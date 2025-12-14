@@ -60,7 +60,7 @@ export const MainLayout: React.FC = () => {
                 </span>
               </div>
 
-              <blockquote className="font-serif text-sm leading-relaxed italic text-white/95">
+              <blockquote className="font-serif text-base leading-relaxed italic text-white/95">
                 "Consistency is what transforms average into excellence."
               </blockquote>
             </div>
@@ -121,7 +121,7 @@ export const MainLayout: React.FC = () => {
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">
                   Daily Quote
                 </p>
-                <p className="text-sm text-slate-600 dark:text-slate-300 italic font-serif leading-relaxed">
+                <p className="text-base text-slate-600 dark:text-slate-300 italic font-serif leading-relaxed">
                   "Consistency is what transforms average into excellence."
                 </p>
               </div>

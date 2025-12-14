@@ -16,7 +16,7 @@ const HabitPerformanceChart: React.FC<{ habits: Habit[] }> = ({ habits }) => {
         <Trophy className="h-5 w-5 text-yellow-500" />
         Habit Performance
       </h3>
-      <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
+      <p className="text-base text-slate-500 dark:text-slate-400 mb-6">
         Ranking your habits by total completions
       </p>
 
@@ -29,7 +29,7 @@ const HabitPerformanceChart: React.FC<{ habits: Habit[] }> = ({ habits }) => {
                 const percentage = Math.round((habit.completedDates.length / maxCompletions) * 100);
                 return (
                   <div key={habit.id} className="group">
-                    <div className="flex justify-between text-sm font-medium mb-1">
+                    <div className="flex justify-between text-base font-medium mb-1">
                       <span className="text-slate-700 dark:text-slate-300 truncate pr-4">
                         {habit.name}
                       </span>

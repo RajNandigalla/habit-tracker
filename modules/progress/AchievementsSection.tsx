@@ -48,7 +48,7 @@ const AchievementsSection: React.FC<{ achievements: Achievement[] }> = ({ achiev
                 </div>
                 <h4
                   className={cn(
-                    'font-bold text-sm mb-1',
+                    'font-bold text-base mb-1',
                     ach.isUnlocked
                       ? 'text-slate-900 dark:text-white'
                       : 'text-slate-500 dark:text-slate-500'

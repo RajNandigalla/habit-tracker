@@ -19,8 +19,8 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
 
   const [habitType, setHabitType] = useState<HabitType>('positive');
   const [frequency, setFrequency] = useState<HabitFrequency>('daily');
-  const [targetCount, setTargetCount] = useState(3); // Default for weekly
-  const [targetDays, setTargetDays] = useState<number[]>([1, 2, 3, 4, 5]); // Default Mon-Fri
+  const [targetCount, setTargetCount] = useState(3);
+  const [targetDays, setTargetDays] = useState<number[]>([1, 2, 3, 4, 5]);
 
   const colors = ['#6366f1', '#ef4444', '#f59e0b', '#10b981', '#ec4899', '#8b5cf6', '#3b82f6'];
   const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -118,7 +118,7 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
                   type="button"
                   onClick={() => setFrequency(f)}
                   className={cn(
-                    'py-2 px-1 text-sm rounded-lg border text-center transition-all capitalize',
+                    'py-2 px-1 text-base rounded-lg border text-center transition-all capitalize',
                     frequency === f
                       ? 'border-indigo-500 bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:border-indigo-400 dark:text-indigo-300 font-bold'
                       : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
@@ -138,7 +138,7 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
                     type="button"
                     onClick={() => toggleTargetDay(i)}
                     className={cn(
-                      'w-9 h-9 rounded-full text-sm font-bold flex items-center justify-center transition-all',
+                      'w-9 h-9 rounded-full text-base font-bold flex items-center justify-center transition-all',
                       targetDays.includes(i)
                         ? 'bg-indigo-600 text-white shadow-md'
                         : 'bg-slate-100 dark:bg-slate-800 text-slate-400 hover:bg-slate-200'
@@ -173,7 +173,7 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
           </div>
 
           <div>
-            <label className="mb-3 block text-sm font-medium text-slate-700 dark:text-slate-300">
+            <label className="mb-3 block text-base font-medium text-slate-700 dark:text-slate-300">
               Color
             </label>
             <div className="flex flex-wrap gap-3">

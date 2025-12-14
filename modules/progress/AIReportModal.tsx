@@ -75,7 +75,7 @@ const AIReportModal: React.FC<{
                   </h3>
                 );
               return (
-                <p key={i} className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                <p key={i} className="text-slate-600 dark:text-slate-400 text-base leading-relaxed">
                   {t}
                 </p>
               );
@@ -95,7 +95,7 @@ const AIReportModal: React.FC<{
                 <Sparkles className="h-4 w-4" />
                 {section.title}
               </h4>
-              <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-sm">
+              <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-base">
                 {section.content}
               </p>
             </div>
@@ -142,7 +142,9 @@ const AIReportModal: React.FC<{
               <p className="font-semibold text-slate-900 dark:text-white">
                 Analyzing your habits...
               </p>
-              <p className="text-sm text-slate-500">Finding your biggest wins and opportunities.</p>
+              <p className="text-base text-slate-500">
+                Finding your biggest wins and opportunities.
+              </p>
             </div>
           </div>
         )}
@@ -154,7 +156,7 @@ const AIReportModal: React.FC<{
                 <Crown className="h-5 w-5 text-yellow-300" />
                 Coach Report
               </div>
-              <p className="text-indigo-100 text-sm">
+              <p className="text-indigo-100 text-base">
                 Based on your activity from the last 30 days.
               </p>
             </div>

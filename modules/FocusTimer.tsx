@@ -208,7 +208,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({ habit, isOpen, onClose, 
                 onClick={() => handlePresetChange(p.val)}
                 disabled={isActive}
                 className={cn(
-                  'px-3 py-1 text-sm font-medium rounded-full transition-colors border',
+                  'px-3 py-1 text-base font-medium rounded-full transition-colors border',
                   duration === p.val
                     ? 'bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-indigo-900/30 dark:border-indigo-800 dark:text-indigo-300'
                     : 'bg-transparent border-slate-200 text-slate-500 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800',
