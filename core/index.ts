@@ -29,4 +29,5 @@ export * from './IconButton';
 export * from './Tooltip';
 export * from './EmptyState';
 export * from './IconPicker';
-export * from './CategoryColorPicker';
+
+export * from './ColorPicker';

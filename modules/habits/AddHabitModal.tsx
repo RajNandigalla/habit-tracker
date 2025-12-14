@@ -12,6 +12,7 @@ import {
   Slider,
   MultiSelect,
   MultiSelectOption,
+  ColorPicker,
 } from '../../core';
 import { useStore } from '../../context/Store';
 import { CategoryManager } from '../categories/CategoryManager';
@@ -228,25 +229,7 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
             </div>
 
             <div>
-              <label className="mb-3 block text-base font-medium text-slate-700 dark:text-slate-300">
-                Color
-              </label>
-              <div className="flex flex-wrap gap-3">
-                {colors.map(c => (
-                  <button
-                    key={c}
-                    type="button"
-                    onClick={() => setColor(c)}
-                    className={cn(
-                      'w-8 h-8 rounded-full transition-transform duration-300 ease-spring focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-slate-900',
-                      color === c
-                        ? 'ring-2 ring-offset-2 ring-slate-400 scale-110'
-                        : 'ring-transparent md:hover:scale-110'
-                    )}
-                    style={{ backgroundColor: c }}
-                  />
-                ))}
-              </div>
+              <ColorPicker colors={colors} selectedColor={color} onChange={setColor} />
             </div>
           </div>
 

@@ -219,3 +219,28 @@ export { calculateWeeklyProgress } from './utils/habitUtils';
 
 // Audio playback - using centralized AudioManager to prevent memory leaks
 export { audioManager } from './utils/audioManager';
+
+/**
+ * Converts a color value to CSS variable format
+ * Supports both Tailwind color names (new) and hex colors (legacy)
+ */
+export const getColorValue = (color: string): string => {
+  // Check if it's a hex color (legacy)
+  if (color.startsWith('#')) {
+    return color;
+  }
+
+  // It's a Tailwind color name, convert to CSS variable
+  return `var(--color-${color})`;
+};
+
+/**
+ * Gets the Tailwind class name for a color
+ */
+export const getColorClassName = (color: string): string => {
+  if (color.startsWith('#')) {
+    return ''; // No class for hex colors
+  }
+
+  return `bg-${color}`;
+};

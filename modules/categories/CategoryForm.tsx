@@ -3,7 +3,8 @@ import toLower from 'lodash/toLower';
 import trim from 'lodash/trim';
 import find from 'lodash/find';
 import { Category } from '../../types';
-import { Button, Input, IconPicker, CategoryColorPicker } from '../../core';
+import { CATEGORY_COLORS } from '../../constants';
+import { Button, Input, IconPicker, ColorPicker } from '../../core';
 import { X } from 'lucide-react';
 
 interface CategoryFormProps {
@@ -97,10 +98,12 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-          Color Tag
-        </label>
-        <CategoryColorPicker selectedColor={color} onColorSelect={setColor} />
+        <ColorPicker
+          colors={CATEGORY_COLORS.map(c => c.name)}
+          selectedColor={color}
+          onChange={setColor}
+          label="Color Tag"
+        />
       </div>
 
       <div className="pt-4 flex justify-end">

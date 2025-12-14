@@ -5,7 +5,7 @@ import { Category } from '../../types';
 import { Button } from '../../core';
 import { Edit2, Trash2, Check } from 'lucide-react';
 import { cn } from '../../utils';
-import { getColorValue } from '../../constants';
+import { getColorValue } from '../../utils';
 
 interface CategoryListProps {
   categories: Category[];
