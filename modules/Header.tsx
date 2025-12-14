@@ -3,7 +3,7 @@ import { Activity, Sun, Moon } from 'lucide-react';
 import { cn } from '../utils';
 import { useNavigation } from '../context/NavigationContext';
 import { MenuIcon } from '../icons';
-import { useThemeTransition } from '../hooks/useThemeTransition';
+// import { useThemeTransition } from '../hooks/useThemeTransition'; // Commented out as per instruction
 
 interface HeaderProps {
   className?: string;
@@ -19,7 +19,9 @@ export const Header: React.FC<HeaderProps> = ({
   children,
 }) => {
   const { toggleSideMenu } = useNavigation();
-  const handleThemeToggle = useThemeTransition(onToggleDarkMode || (() => {}));
+  // TODO: Re-enable when theme transition is optimized
+  // const handleThemeToggle = useThemeTransition(onToggleDarkMode || (() => {}));
+  const handleThemeToggle = onToggleDarkMode || (() => {});
 
   return (
     <header

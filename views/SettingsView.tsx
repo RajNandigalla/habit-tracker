@@ -99,7 +99,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     });
   };
 
-  const handleThemeToggle = useThemeTransition(onToggleDarkMode);
+  // TODO: Re-enable when theme transition is optimized
+  // const handleThemeToggle = useThemeTransition(onToggleDarkMode);
+  const handleThemeToggle = onToggleDarkMode;
 
   return (
     <PageTransition>

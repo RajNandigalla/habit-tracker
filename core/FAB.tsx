@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { PlusIcon } from '../icons';
 import { useScrollAwareFab } from '../hooks/useScrollAwareFab';
 
@@ -28,7 +29,7 @@ const FAB: React.FC<FABProps> = ({ onClick, ariaLabel, isParentOpen }) => {
     }, 200); // This duration should match the scale-out animation
   };
 
-  return (
+  const fabButton = (
     <button
       onClick={handleClick}
       aria-label={ariaLabel}
@@ -39,6 +40,9 @@ const FAB: React.FC<FABProps> = ({ onClick, ariaLabel, isParentOpen }) => {
       <PlusIcon className="w-7 h-7" />
     </button>
   );
+
+  // Render FAB in portal to ensure it's on top of everything
+  return createPortal(fabButton, document.body);
 };
 
 export default FAB;

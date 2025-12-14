@@ -1,0 +1,133 @@
+@import 'tailwindcss';
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Nunito Sans', sans-serif;
+
+  --ease-ios: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  --animate-enter: enter 0.4s var(--ease-ios) forwards;
+  --animate-pop: pop 0.4s var(--ease-spring) forwards;
+  --animate-slide-up: slideUp 0.6s var(--ease-ios) forwards;
+  --animate-fade-scale: fadeScale 0.3s var(--ease-ios) forwards;
+  --animate-fade-in: fadeIn 0.3s var(--ease-ios) forwards;
+
+  @keyframes enter {
+    0% {
+      opacity: 0;
+      transform: scale(0.98) translateY(10px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  @keyframes pop {
+    0% {
+      transform: scale(0.8);
+    }
+    40% {
+      transform: scale(1.15);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  @keyframes slideUp {
+    0% {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  @keyframes fadeScale {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}
+
+/* Custom Scrollbar Utilities (Manual implementation since plugin support varies) */
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .will-change-transform {
+    will-change: transform;
+  }
+  .disable-transitions * {
+    transition:
+      color 0s,
+      background-color 0s,
+      border-color 0s,
+      fill 0s,
+      stroke 0s,
+      filter 0s,
+      backdrop-filter 0s,
+      transform 0s,
+      opacity 0s,
+      box-shadow 0s !important;
+  }
+
+  /* Force blur decorations to stay static and prevent GPU re-compositing */
+  .disable-transitions [class*='blur'] {
+    will-change: auto !important;
+    backface-visibility: hidden !important;
+  }
+
+  /* Disable specific animation classes during theme switch to prevent restart */
+  .disable-transitions .animate-slide-up,
+  .disable-transitions .animate-enter,
+  .disable-transitions .animate-pop,
+  .disable-transitions .animate-fade-scale,
+  .disable-transitions .animate-fade-in {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
+
+/* Base styles */
+html {
+  font-size: 14px;
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-y: scroll;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-slate-300);
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background-color: var(--color-slate-700);
+}

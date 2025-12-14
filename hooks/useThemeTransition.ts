@@ -21,20 +21,21 @@ export const useThemeTransition = (onToggleTheme: () => void) => {
       // The clone represents the state *before* the toggle.
       const clone = root.cloneNode(true) as HTMLElement;
 
-      // 2. Setup Clone Styling
-      // We position it fixed exactly over the viewport to act as the "old layer"
+      // 2. Setup Clone Styling - match exact bounding box from original node
       const rect = root.getBoundingClientRect();
+
       clone.style.position = 'fixed';
       clone.style.top = `${rect.top}px`;
       clone.style.left = `${rect.left}px`;
       clone.style.width = `${rect.width}px`;
       clone.style.height = `${rect.height}px`;
-      // We put the clone at z-index 0.
       clone.style.zIndex = '0';
-      clone.style.overflow = 'hidden';
-      // Disable interaction on the clone
       clone.style.pointerEvents = 'none';
       clone.id = 'root-clone';
+
+      // Optimize clone for better performance
+      clone.style.willChange = 'auto';
+      clone.style.transform = 'translateZ(0)'; // Force GPU acceleration
 
       // 3. Prepare Real Root (NEW state)
       // The real root will change theme immediately.
@@ -42,6 +43,8 @@ export const useThemeTransition = (onToggleTheme: () => void) => {
       // We will clip it to 0 initially, then expand the clip.
       root.style.position = 'relative';
       root.style.zIndex = '10';
+      root.style.willChange = 'clip-path';
+      root.style.transform = 'translateZ(0)'; // Force GPU acceleration
 
       // Calculate the radius for the circular reveal
       // It needs to be large enough to cover the furthest corner from the click
@@ -59,7 +62,7 @@ export const useThemeTransition = (onToggleTheme: () => void) => {
       // This switches the React state, causing the real root to re-render with the NEW theme.
       onToggleTheme();
 
-      // 6. Animate Real Root
+      // 7. Animate Real Root
       // The real root (New Theme) is revealed over the clone (Old Theme)
       const animation = root.animate(
         [
@@ -67,8 +70,8 @@ export const useThemeTransition = (onToggleTheme: () => void) => {
           { clipPath: `circle(${endRadius}px at ${x}px ${y}px)` },
         ],
         {
-          duration: 500,
-          easing: 'ease-in',
+          duration: 1000,
+          easing: 'linear',
           fill: 'forwards',
         }
       );
@@ -82,6 +85,8 @@ export const useThemeTransition = (onToggleTheme: () => void) => {
         root.style.zIndex = '';
         root.style.position = '';
         root.style.clipPath = '';
+        root.style.willChange = '';
+        root.style.transform = '';
         animation.cancel();
       };
     },

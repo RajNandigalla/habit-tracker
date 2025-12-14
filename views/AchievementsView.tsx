@@ -20,7 +20,7 @@ export const AchievementsView: React.FC<AchievementsViewProps> = ({ achievements
             className="mb-8"
           />
 
-          <div className="animate-slide-up" style={{ animationDelay: '100ms' }}>
+          <div className="animate-slide-up">
             <AchievementsSection achievements={achievements} />
           </div>
         </div>

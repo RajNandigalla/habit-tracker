@@ -200,7 +200,17 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
   };
 
   const toggleDarkMode = () => {
+    const root = document.documentElement;
+    root.classList.add('disable-transitions');
+
     setPreferences(prev => ({ ...prev, darkMode: !prev.darkMode }));
+
+    // 2. New DOM nodes to mount (~50ms)
+    // 3. Animation duration to pass (600ms for slideUp)
+    // Total: 700ms to be safe
+    setTimeout(() => {
+      root.classList.remove('disable-transitions');
+    }, 1000);
   };
 
   const toggleSound = () => {
