@@ -1,5 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Habit, JournalEntry, UserPreferences, ViewMode, HabitCategory, Challenge } from '../types';
+import {
+  Habit,
+  JournalEntry,
+  UserPreferences,
+  ViewMode,
+  Category,
+  DEFAULT_CATEGORIES,
+  Challenge,
+} from '../types';
 import {
   calculateStreak,
   generateId,
@@ -28,6 +36,11 @@ interface StoreContextType {
   populateTestData: () => void;
   clearAllData: () => void;
   importData: (jsonData: string) => Promise<boolean>;
+  categories: Category[];
+  addCategory: (category: Omit<Category, 'id' | 'isArchived'>) => void;
+  updateCategory: (category: Category) => void;
+  archiveCategory: (id: string) => void;
+  restoreCategory: (id: string) => void;
 }
 
 const StoreContext = createContext<StoreContextType | undefined>(undefined);
@@ -70,6 +83,65 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
     });
   });
 
+  const [categoriesState, setCategoriesState] = useState<Category[]>(() => {
+    const stored = storageService.getItem<Category[] | string[]>('tickoff_categories', []);
+
+    // Migration: If no categories or old string array, initialize with defaults
+    if (!stored || stored.length === 0) return DEFAULT_CATEGORIES;
+
+    // Check if it's the old string array format
+    if (typeof stored[0] === 'string') {
+      // Migrate old strings to new Category objects
+      const oldStrings = stored as string[];
+      const migrated: Category[] = DEFAULT_CATEGORIES.map(c => c); // Start with defaults
+
+      oldStrings.forEach(str => {
+        // If not one of the defaults, add as custom
+        if (!migrated.find(c => c.label === str)) {
+          migrated.push({
+            id: generateId(),
+            label: str,
+            icon: '🏷️',
+            color: '#6366f1',
+            isArchived: false,
+            isDefault: false,
+          });
+        }
+      });
+      return migrated;
+    }
+
+    return stored as Category[];
+  });
+
+  // Migration for Habits: Convert single 'category' string to 'categoryIds' array
+  useEffect(() => {
+    // Run this once on mount/init if needed, typically handled in useState initializer but doing it here for safety on hot reload
+    // Note: useState initializer for habits handles the reading, but let's ensure structure is correct
+    setHabits(prev =>
+      prev.map(h => {
+        // @ts-ignore - checking for old property
+        if (h.category && !h.categoryIds) {
+          // Find matching category ID
+          // @ts-ignore
+          const catLabel = h.category;
+          const match = categoriesState.find(c => c.label === catLabel);
+          const catId = match
+            ? match.id
+            : DEFAULT_CATEGORIES.find(c => c.label === 'Other')?.id || 'cat_other';
+
+          return {
+            ...h,
+            categoryIds: [catId],
+            // @ts-ignore
+            category: undefined, // Remove old prop
+          };
+        }
+        return h;
+      })
+    );
+  }, []); // Run once
+
   // Effects for persistence
   useEffect(() => {
     storageService.setItem(STORAGE_KEYS.HABITS, habits);
@@ -93,7 +165,36 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
     audioManager.setEnabled(preferences.soundEnabled);
   }, [preferences]);
 
+  useEffect(() => {
+    storageService.setItem('tickoff_categories', categoriesState);
+  }, [categoriesState]);
+
   // Actions
+  const addCategory = (categoryData: Omit<Category, 'id' | 'isArchived'>) => {
+    const newCategory: Category = {
+      id: generateId(),
+      ...categoryData,
+      isArchived: false,
+    };
+    setCategoriesState(prev => [...prev, newCategory]);
+    addToast(`Category "${newCategory.label}" created!`, 'success');
+  };
+
+  const updateCategory = (category: Category) => {
+    setCategoriesState(prev => prev.map(c => (c.id === category.id ? category : c)));
+    addToast('Category updated.', 'success');
+  };
+
+  const archiveCategory = (id: string) => {
+    setCategoriesState(prev => prev.map(c => (c.id === id ? { ...c, isArchived: true } : c)));
+    addToast('Category archived.', 'info');
+  };
+
+  const restoreCategory = (id: string) => {
+    setCategoriesState(prev => prev.map(c => (c.id === id ? { ...c, isArchived: false } : c)));
+    addToast('Category restored.', 'success');
+  };
+
   const addHabit = (habit: Habit) => {
     setHabits(prev => [habit, ...prev]);
     addToast('Habit created successfully!', 'success');
@@ -172,7 +273,12 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
       id: generateId(),
       name: challenge.habitTemplate.name,
       description: challenge.habitTemplate.description,
-      category: challenge.habitTemplate.category,
+      // Find category ID by matching label essentially, or default to other
+      categoryIds: [
+        DEFAULT_CATEGORIES.find(c => c.label === challenge.habitTemplate.category)?.id ||
+          DEFAULT_CATEGORIES[0].id,
+      ],
+
       frequency: 'daily',
       habitType: 'positive',
       color: challenge.habitTemplate.color,
@@ -240,7 +346,8 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         id: generateId(),
         name: 'Morning Jog',
         description: 'Run 5km every morning to boost energy.',
-        category: HabitCategory.FITNESS,
+        categoryIds: [DEFAULT_CATEGORIES[4].id], // Fitness
+
         frequency: 'daily',
         habitType: 'positive',
         completedDates: generateDates(0.65), // 65% consistent
@@ -252,7 +359,8 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         id: generateId(),
         name: 'No Sugar',
         description: 'Avoid processed sugar.',
-        category: HabitCategory.HEALTH,
+        categoryIds: [DEFAULT_CATEGORIES[0].id], // Health
+
         frequency: 'daily',
         habitType: 'negative',
         completedDates: [today.subtract(5, 'day').format('YYYY-MM-DD')], // One failure 5 days ago
@@ -264,7 +372,8 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         id: generateId(),
         name: 'Gym (3x/Week)',
         description: 'Strength training.',
-        category: HabitCategory.FITNESS,
+        categoryIds: [DEFAULT_CATEGORIES[4].id], // Fitness
+
         frequency: 'weekly',
         habitType: 'positive',
         targetCount: 3,
@@ -277,7 +386,8 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         id: generateId(),
         name: 'Read (Weekends)',
         description: 'Read on Sat/Sun.',
-        category: HabitCategory.LEARNING,
+        categoryIds: [DEFAULT_CATEGORIES[2].id], // Learning
+
         frequency: 'specific_days',
         habitType: 'positive',
         targetDays: [0, 6], // Sun, Sat
@@ -379,6 +489,11 @@ export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
         populateTestData,
         clearAllData,
         importData,
+        categories: categoriesState,
+        addCategory,
+        updateCategory,
+        archiveCategory,
+        restoreCategory,
       }}
     >
       {children}

@@ -1,6 +1,7 @@
 export * from './Button';
 export * from './Input';
 export * from './Select';
+export * from './MultiSelect';
 export * from './Textarea';
 export * from './Switch';
 export * from './Card';
@@ -27,3 +28,5 @@ export { default as FAB } from './FAB';
 export * from './IconButton';
 export * from './Tooltip';
 export * from './EmptyState';
+export * from './IconPicker';
+export * from './CategoryColorPicker';

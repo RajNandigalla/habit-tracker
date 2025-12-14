@@ -8,6 +8,7 @@ import { Settings } from '../../pages/Settings';
 import { Progress } from '../../pages/Progress';
 import { Challenges } from '../../pages/Challenges';
 import { Achievements } from '../../pages/Achievements';
+import { Categories } from '../../pages/Categories';
 import {
   ListTodo,
   BookText,
@@ -18,6 +19,7 @@ import {
   Swords,
   Trophy,
   QuoteIcon,
+  Tags,
 } from 'lucide-react';
 import { SideMenu, Container } from '../../core';
 import { Header } from '../Header';
@@ -46,6 +48,8 @@ export const MainLayout: React.FC = () => {
             <NavItem to="/journal" icon={<BookText />} label="Journal" />
             <NavItem to="/progress" icon={<BarChartBigIcon />} label="Progress" />
             <NavItem to="/settings" icon={<Settings2 />} label="Settings" />
+            <div className="my-2 border-t border-slate-100 dark:border-slate-800" />
+            <NavItem to="/categories" icon={<Tags />} label="Categories" />
           </nav>
 
           <div className="relative mx-4 mb-4 overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 p-5 text-white shadow-lg shadow-indigo-500/20">
@@ -114,6 +118,13 @@ export const MainLayout: React.FC = () => {
                 label="Settings"
                 onClick={closeSideMenu}
               />
+              <div className="my-2 border-t border-slate-100 dark:border-slate-800" />
+              <NavItem
+                to="/categories"
+                icon={<Tags />}
+                label="Categories"
+                onClick={closeSideMenu}
+              />
             </nav>
 
             <div className="p-5 mt-auto border-t border-slate-100 dark:border-slate-800">
@@ -139,6 +150,7 @@ export const MainLayout: React.FC = () => {
               <Route path="/journal" element={<Journal />} />
               <Route path="/progress" element={<Progress />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/categories" element={<Categories />} />
             </Routes>
           </div>
         </div>

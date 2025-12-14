@@ -4,7 +4,7 @@ export interface Habit {
   id: string;
   name: string;
   description: string;
-  category: HabitCategory;
+  categoryIds: string[]; // Linked Category IDs
   frequency: HabitFrequency;
   habitType: HabitType;
   targetDays?: number[]; // 0 = Sunday, 1 = Monday, etc.
@@ -22,14 +22,68 @@ export interface Habit {
 export type HabitType = 'positive' | 'negative';
 export type HabitFrequency = 'daily' | 'weekly' | 'specific_days';
 
-export enum HabitCategory {
-  HEALTH = 'Health',
-  WORK = 'Work',
-  LEARNING = 'Learning',
-  MINDFULNESS = 'Mindfulness',
-  FITNESS = 'Fitness',
-  OTHER = 'Other',
+export interface Category {
+  id: string;
+  label: string;
+  icon?: string; // Emoji or icon name
+  color?: string; // Tailwind color name (e.g., 'red-500') or hex (legacy)
+  isArchived: boolean;
+  isDefault?: boolean; // If true, cannot be renamed/deleted?
 }
+
+// Default Categories for initialization
+export const DEFAULT_CATEGORIES: Category[] = [
+  {
+    id: 'cat_health',
+    label: 'Health',
+    icon: '❤️',
+    color: 'red-500',
+    isArchived: false,
+    isDefault: true,
+  },
+  {
+    id: 'cat_work',
+    label: 'Work',
+    icon: '💼',
+    color: 'blue-500',
+    isArchived: false,
+    isDefault: true,
+  },
+  {
+    id: 'cat_learning',
+    label: 'Learning',
+    icon: '📚',
+    color: 'violet-500',
+    isArchived: false,
+    isDefault: true,
+  },
+  {
+    id: 'cat_mindfulness',
+    label: 'Mindfulness',
+    icon: '🧘',
+    color: 'emerald-500',
+    isArchived: false,
+    isDefault: true,
+  },
+  {
+    id: 'cat_fitness',
+    label: 'Fitness',
+    icon: '💪',
+    color: 'amber-500',
+    isArchived: false,
+    isDefault: true,
+  },
+  {
+    id: 'cat_other',
+    label: 'Other',
+    icon: '✨',
+    color: 'indigo-600',
+    isArchived: false,
+    isDefault: true,
+  },
+];
+
+export type HabitCategory = string; // Keeping for backward compatibility types for now if needed, but should rely on Category interface
 
 export interface JournalEntry {
   id: string;

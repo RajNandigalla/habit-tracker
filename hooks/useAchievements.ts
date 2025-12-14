@@ -150,24 +150,24 @@ const CATEGORY_LEVELS = [
   { count: 2000, suffix: 'Sage' },
 ];
 
+const LEGACY_CATEGORIES = ['Health', 'Work', 'Learning', 'Mindfulness', 'Fitness', 'Other'];
+
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
-  [HabitCategory.HEALTH]: Heart,
-  [HabitCategory.WORK]: Briefcase,
-  [HabitCategory.LEARNING]: Brain,
-  [HabitCategory.MINDFULNESS]: Leaf,
-  [HabitCategory.FITNESS]: Dumbbell,
-  [HabitCategory.OTHER]: Layers,
+  Health: Heart,
+  Work: Briefcase,
+  Learning: Brain,
+  Mindfulness: Leaf,
+  Fitness: Dumbbell,
+  Other: Layers,
 };
 
 const CATEGORY_COLORS: Record<string, string> = {
-  [HabitCategory.HEALTH]: 'text-red-600 bg-red-100 dark:bg-red-900/20 dark:text-red-400',
-  [HabitCategory.WORK]: 'text-blue-600 bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400',
-  [HabitCategory.LEARNING]:
-    'text-purple-600 bg-purple-100 dark:bg-purple-900/20 dark:text-purple-400',
-  [HabitCategory.MINDFULNESS]: 'text-teal-600 bg-teal-100 dark:bg-teal-900/20 dark:text-teal-400',
-  [HabitCategory.FITNESS]:
-    'text-orange-600 bg-orange-100 dark:bg-orange-900/20 dark:text-orange-400',
-  [HabitCategory.OTHER]: 'text-slate-600 bg-slate-100 dark:bg-slate-800 dark:text-slate-400',
+  Health: 'text-red-600 bg-red-100 dark:bg-red-900/20 dark:text-red-400',
+  Work: 'text-blue-600 bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400',
+  Learning: 'text-purple-600 bg-purple-100 dark:bg-purple-900/20 dark:text-purple-400',
+  Mindfulness: 'text-teal-600 bg-teal-100 dark:bg-teal-900/20 dark:text-teal-400',
+  Fitness: 'text-orange-600 bg-orange-100 dark:bg-orange-900/20 dark:text-orange-400',
+  Other: 'text-slate-600 bg-slate-100 dark:bg-slate-800 dark:text-slate-400',
 };
 
 const JOURNAL_LEVELS = [
@@ -216,15 +216,18 @@ export const useAchievements = (habits: Habit[], journalEntries: JournalEntry[])
     const stats = { totalCompletions, longestStreak };
 
     const categoryCounts: Record<string, number> = {};
-    Object.values(HabitCategory).forEach(c => (categoryCounts[c] = 0));
+    LEGACY_CATEGORIES.forEach(c => (categoryCounts[c] = 0));
 
     habits.forEach(h => {
-      if (categoryCounts[h.category] !== undefined) {
-        categoryCounts[h.category] += h.completedDates.length;
+      // @ts-ignore
+      const cat = h.category;
+      if (cat && categoryCounts[cat] !== undefined) {
+        categoryCounts[cat] += h.completedDates.length;
       }
     });
 
     const photoJournalCount = journalEntries.filter(j => j.imageUrl).length;
+    // @ts-ignore
     const distinctCategories = new Set(habits.map(h => h.category)).size;
 
     MILESTONE_LEVELS.forEach(m => {
@@ -251,7 +254,7 @@ export const useAchievements = (habits: Habit[], journalEntries: JournalEntry[])
       });
     });
 
-    Object.values(HabitCategory).forEach(cat => {
+    LEGACY_CATEGORIES.forEach(cat => {
       const currentCount = categoryCounts[cat] || 0;
       CATEGORY_LEVELS.forEach(level => {
         list.push({

@@ -24,7 +24,7 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
   toggleHabitCompletion,
   onFocus,
 }) => {
-  const { updateHabit, deleteHabit } = useStore();
+  const { updateHabit, deleteHabit, categories } = useStore();
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [initialMode, setInitialMode] = useState<'view' | 'edit' | 'delete'>('view');
 
@@ -132,14 +132,13 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
               {habit.name}
             </h3>
 
-            {/* Visual Badges */}
+            {/* Visual Badges - show primary category color */}
             <div
               className={cn(
                 'w-2 h-2 rounded-full flex-shrink-0 transition-all',
                 isCompletedToday ? 'opacity-50 grayscale' : ''
               )}
               style={{ backgroundColor: habit.color }}
-              title={habit.category}
             />
 
             {isChallenge && (
@@ -157,7 +156,7 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
             )}
           </div>
 
-          <div className="flex items-center gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400">
+          <div className="flex items-center gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400 overflow-hidden">
             <span className={cn('flex items-center gap-1', isCompletedToday && 'opacity-75')}>
               <Show
                 when={isNegative}
@@ -192,16 +191,47 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
               </span>
             )}
 
-            <span
-              className={cn(
-                'hidden sm:inline-block px-1.5 py-0.5 rounded',
-                isCompletedToday
-                  ? 'bg-slate-100 dark:bg-slate-800 text-slate-400'
-                  : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+            <div className="hidden sm:flex gap-1 overflow-x-auto no-scrollbar">
+              {(() => {
+                const displayCats = [];
+                // Resolve IDs
+                if (habit.categoryIds && habit.categoryIds.length > 0) {
+                  habit.categoryIds.forEach(id => {
+                    const cat = categories.find(c => c.id === id);
+                    if (cat) displayCats.push(cat);
+                  });
+                }
+                // Fallback
+                // Fallback for legacy 'category' string field
+                const legacyCategory = (habit as any).category;
+                if (displayCats.length === 0 && legacyCategory) {
+                  const match = categories.find(c => c.label === legacyCategory);
+                  if (match) displayCats.push(match);
+                  else displayCats.push({ label: legacyCategory, icon: '🏷️' } as any);
+                }
+                if (displayCats.length === 0) return null;
+
+                return displayCats.slice(0, 2).map((cat, i) => (
+                  <span
+                    key={i}
+                    className={cn(
+                      'inline-flex items-center gap-1 px-1.5 py-0.5 rounded whitespace-nowrap',
+                      isCompletedToday
+                        ? 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+                        : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                    )}
+                  >
+                    <span>{cat.icon}</span> {cat.label}
+                  </span>
+                ));
+              })()}
+              {/* Check if there are more than 2 */}
+              {(habit.categoryIds?.length || 0) > 2 && (
+                <span className="text-[10px] bg-slate-100 dark:bg-slate-800 px-1 rounded text-slate-400">
+                  +{habit.categoryIds!.length - 2}
+                </span>
               )}
-            >
-              {habit.category}
-            </span>
+            </div>
           </div>
         </div>
 

@@ -30,17 +30,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onDeleteHabit,
   onToggleCompletion,
 }) => {
-  const { journalEntries, addJournalEntry } = useStore();
+  const { journalEntries, addJournalEntry, categories: storeCategories } = useStore();
   const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<HabitCategory | 'All'>('All');
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [focusHabit, setFocusHabit] = useState<Habit | null>(null);
 
   const filteredHabits = useMemo(() => {
     if (selectedCategory === 'All') return habits;
-    return habits.filter(h => h.category === selectedCategory);
-  }, [habits, selectedCategory]);
 
-  const categories = ['All', ...Object.values(HabitCategory)];
+    // Find ID for the selected label
+    const targetCat = storeCategories.find(c => c.label === selectedCategory);
+    const targetId = targetCat?.id;
+
+    return habits.filter(h => {
+      // Check new array system
+      if (targetId && h.categoryIds && h.categoryIds.includes(targetId)) return true;
+      // Check legacy system
+      if ((h as any).category === selectedCategory) return true;
+      return false;
+    });
+  }, [habits, selectedCategory, storeCategories]);
+
+  const categories = ['All', ...storeCategories.map(c => c.label)];
 
   const handleQuickMoodLog = (mood: 'happy' | 'motivated' | 'neutral' | 'sad' | 'tired') => {
     const entry: JournalEntry = {

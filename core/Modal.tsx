@@ -15,6 +15,7 @@ interface ModalProps {
   mobileFullScreen?: boolean;
   bottomSheet?: boolean;
   fabPosition?: { x: number; y: number }; // For genie animation
+  className?: string;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -26,6 +27,7 @@ export const Modal: React.FC<ModalProps> = ({
   mobileFullScreen = false,
   bottomSheet = false,
   fabPosition,
+  className,
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -110,7 +112,8 @@ export const Modal: React.FC<ModalProps> = ({
                       : 'translate-y-8 scale-95 opacity-0'
                 ),
             'dark:bg-slate-900 dark:border-slate-800'
-          )
+          ),
+          className
         )}
         style={
           hasGenieAnimation && fabPosition
