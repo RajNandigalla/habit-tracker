@@ -81,13 +81,22 @@ const HabitListItem: React.FC<{ habit: Habit; selectedDate?: string } & HabitAct
           !isActiveForView && !isCompletedSelectedDate && 'opacity-70 grayscale-[0.5]'
         )}
       >
-        {/* Checkbox / Action Area */}
-        <div className="flex-shrink-0 mr-3 pl-2">
+        {/* Checkbox / Action Area - Full height click target
+            Using self-stretch to fill the parent height while keeping parent items-center for content
+        */}
+        <div
+          className="flex-shrink-0 mr-3 pl-2 flex items-center cursor-pointer self-stretch"
+          onClick={handleToggle}
+        >
           <button
-            onClick={handleToggle}
+            type="button"
             disabled={!isActiveForView && !isCompletedSelectedDate && habit.frequency !== 'weekly'}
             className={cn(
-              'w-6 h-6 rounded-lg flex items-center justify-center transition-all duration-300 ease-spring border-2 relative overflow-hidden',
+              'w-6 h-6 rounded-lg flex items-center justify-center transition-all duration-300 ease-spring border-2 relative overflow-hidden pointer-events-none', // pointer-events-none helps let the click pass to the div, or we just rely on parent div click. Actually disabling button click is safer to avoid double triggering if they click the button directly?
+              // Wait, if I click button, it bubbles to div.
+              // If button has onClick, it fires button onClick then div onClick.
+              // If I remove onClick from button, button behaves like a static element.
+              // I should allow the button to just be visual (pointer-events-none) or remove its onClick.
               isNegative
                 ? isCompletedSelectedDate
                   ? 'bg-red-500 border-red-500 text-white'
@@ -121,8 +130,9 @@ const HabitListItem: React.FC<{ habit: Habit; selectedDate?: string } & HabitAct
         </div>
 
         {/* Content Area */}
-        <div className={cn('flex-grow min-w-0')}>
-          <div className="flex items-center gap-2 mb-1">
+        <div className={cn('flex-grow min-w-0 flex flex-col gap-1')}>
+          {/* Row 1: Title & Badges */}
+          <div className="flex items-center gap-2">
             <h3
               className={cn(
                 'font-bold text-base truncate transition-all duration-300',
@@ -150,10 +160,6 @@ const HabitListItem: React.FC<{ habit: Habit; selectedDate?: string } & HabitAct
               <Crown className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500 animate-pulse" />
             )}
 
-            {habit.reminderTime && !isCompletedSelectedDate && isActiveForView && (
-              <Bell className="h-3 w-3 text-slate-400" />
-            )}
-
             {!isActiveForView && !isCompletedSelectedDate && habit.frequency !== 'weekly' && (
               <span className="text-[10px] uppercase font-bold bg-slate-100 dark:bg-slate-800 text-slate-400 px-1.5 rounded">
                 Rest Day
@@ -161,7 +167,23 @@ const HabitListItem: React.FC<{ habit: Habit; selectedDate?: string } & HabitAct
             )}
           </div>
 
-          <div className="flex items-center gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400 overflow-hidden">
+          {/* Row 2: Description (if exists) */}
+          {habit.description && (
+            <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-1 font-medium">
+              {habit.description}
+            </p>
+          )}
+
+          {/* Row 3: Metadata (Time + Stats) */}
+          <div className="flex items-center gap-3 text-xs font-semibold text-slate-500 dark:text-slate-400 overflow-hidden mt-0.5">
+            {/* Time Badge - Visible if set */}
+            {habit.reminderTime && (
+              <div className="flex items-center gap-1 text-indigo-500 font-medium">
+                <Bell className="h-3 w-3" />
+                {habit.reminderTime}
+              </div>
+            )}
+
             <span
               className={cn('flex items-center gap-1', isCompletedSelectedDate && 'opacity-75')}
             >
@@ -274,8 +296,8 @@ const HabitListItem: React.FC<{ habit: Habit; selectedDate?: string } & HabitAct
         </div>
 
         {/* Mobile Chevron Indicator */}
-        <div className="lg:hidden ml-2 text-slate-400 dark:text-slate-600">
-          <ChevronRight className="w-5 h-5" strokeWidth={2} />
+        <div className="lg:hidden ml-2 text-slate-300 dark:text-slate-600">
+          <ChevronRight className="w-6 h-6" strokeWidth={2} />
         </div>
       </div>
 
