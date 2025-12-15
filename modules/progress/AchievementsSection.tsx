@@ -25,13 +25,13 @@ const AchievementsSection: React.FC<{ achievements: Achievement[] }> = ({ achiev
               <Show
                 when={ach.isUnlocked}
                 fallback={
-                  <div className="absolute top-0 right-0 p-1 bg-slate-200 dark:bg-slate-700 text-slate-400 rounded-bl-lg">
-                    <Lock className="h-3 w-3" />
+                  <div className="absolute top-0 right-0 p-2.5 bg-slate-200 dark:bg-slate-700 text-slate-400 rounded-bl-2xl">
+                    <Lock className="h-4 w-4 translate-x-0 translate-y-0" />
                   </div>
                 }
               >
-                <div className="absolute top-0 right-0 p-1 bg-green-500 text-white rounded-bl-lg shadow-sm">
-                  <Check className="h-3 w-3" />
+                <div className="absolute top-0 right-0 p-2.5 bg-green-500 text-white rounded-bl-2xl shadow-sm z-10">
+                  <Check className="h-4 w-4 translate-x-0 translate-y-0" />
                 </div>
               </Show>
 
