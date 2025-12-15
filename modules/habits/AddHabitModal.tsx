@@ -15,7 +15,7 @@ import {
   ColorPicker,
 } from '../../core';
 import { useStore } from '../../context/Store';
-import { CategoryManager } from '../categories/CategoryManager';
+import { useNavigate } from 'react-router-dom';
 
 interface AddHabitModalProps {
   isOpen: boolean;
@@ -38,9 +38,9 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
   const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   const { categories, addCategory } = useStore();
+  const navigate = useNavigate();
 
   const [categoryIds, setCategoryIds] = useState<string[]>([]);
-  const [isCategoryManagerOpen, setIsCategoryManagerOpen] = useState(false);
 
   // Prepare category options for MultiSelect
   const categoryOptions: MultiSelectOption[] = useMemo(
@@ -86,8 +86,7 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
       name,
       description,
       categoryIds,
-      // @ts-ignore
-      category: categories.find(c => c.id === categoryIds[0])?.label || 'Other',
+
       frequency,
       habitType,
       targetCount: frequency === 'weekly' ? targetCount : undefined,
@@ -154,7 +153,10 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
 
               <button
                 type="button"
-                onClick={() => setIsCategoryManagerOpen(true)}
+                onClick={() => {
+                  onClose();
+                  navigate('/categories');
+                }}
                 className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:underline transition-colors flex items-center gap-1"
               >
                 <Plus size={14} />
@@ -243,13 +245,6 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
           </div>
         </form>
       </Modal>
-
-      <CategoryManager
-        isOpen={isCategoryManagerOpen}
-        onClose={() => setIsCategoryManagerOpen(false)}
-        selectedCategoryIds={categoryIds}
-        onSelect={handleCategoryToggle}
-      />
     </>
   );
 };

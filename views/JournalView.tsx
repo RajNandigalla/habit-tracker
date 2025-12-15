@@ -25,13 +25,15 @@ export const JournalView: React.FC<JournalViewProps> = ({ entries, habits, onAdd
         <div className="max-w-7xl mx-auto px-4 py-6 md:px-8 pb-24 md:pb-8">
           <div className="flex items-center justify-between mb-8">
             <PageTitle title="Journey Log" description="Reflect on your progress and milestones." />
-            <Button
-              size="sm"
-              onClick={() => setModalOpen(true)}
-              className="hidden md:flex shadow-md px-4 py-2.5"
-            >
-              <Plus className="h-4 w-4 mr-2" /> New Entry
-            </Button>
+            {sortedEntries.length > 0 && (
+              <Button
+                size="sm"
+                onClick={() => setModalOpen(true)}
+                className="hidden md:flex shadow-md px-4 py-2.5"
+              >
+                <Plus className="h-4 w-4 mr-2" /> New Entry
+              </Button>
+            )}
           </div>
 
           <Show

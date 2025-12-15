@@ -18,7 +18,7 @@ import { Button, Input, Select, Modal, Textarea, TimePicker, Show } from '../../
 import dayjs from 'dayjs';
 import { HeatmapGrid, HeatmapData } from '../progress';
 import { useStore } from '../../context/Store';
-import { CategoryManager } from '../categories/CategoryManager';
+import { useNavigate } from 'react-router-dom';
 
 export interface HabitActionProps {
   toggleHabitCompletion: (id: string, date: string) => void;
@@ -45,8 +45,8 @@ const HabitDetailsModal: React.FC<{
 
   // Custom Category State
   const { categories, addCategory } = useStore();
+  const navigate = useNavigate();
   const [editCategoryIds, setEditCategoryIds] = useState<string[]>([]);
-  const [isCategoryManagerOpen, setIsCategoryManagerOpen] = useState(false);
 
   React.useEffect(() => {
     if (isOpen && habit) {
@@ -83,8 +83,6 @@ const HabitDetailsModal: React.FC<{
       description: editDesc,
       color: editColor,
       categoryIds: editCategoryIds,
-      // @ts-ignore
-      category: categories.find(c => c.id === editCategoryIds[0])?.label || 'Other',
       reminderTime: editReminder,
     });
     setIsEditing(false);
@@ -257,10 +255,13 @@ const HabitDetailsModal: React.FC<{
                       })}
                       <button
                         type="button"
-                        onClick={() => setIsCategoryManagerOpen(true)}
+                        onClick={() => {
+                          onClose();
+                          navigate('/categories');
+                        }}
                         className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-600 border border-indigo-200 hover:bg-indigo-100 transition-colors"
                       >
-                        <Plus size={12} /> Add Category
+                        <Plus size={12} /> Manage Categories
                       </button>
                     </div>
                   </div>
@@ -524,13 +525,6 @@ const HabitDetailsModal: React.FC<{
           </div>
         </Show>
       </Modal>
-
-      <CategoryManager
-        isOpen={isCategoryManagerOpen}
-        onClose={() => setIsCategoryManagerOpen(false)}
-        selectedCategoryIds={editCategoryIds}
-        onSelect={handleCategoryToggle}
-      />
     </>
   );
 };

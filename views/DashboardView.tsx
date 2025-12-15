@@ -85,15 +85,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             />
 
             {/* Desktop Actions Toolbar */}
-            <div className="hidden md:flex items-center gap-3">
-              <Button
-                onClick={() => setModalOpen(true)}
-                size="sm"
-                className="shadow-lg shadow-indigo-500/20 dark:shadow-indigo-900/20 h-10 px-4 py-2.5"
-              >
-                <Plus className="h-4 w-4" /> New Habit
-              </Button>
-            </div>
+            {habits.length > 0 && (
+              <div className="hidden md:flex items-center gap-3">
+                <Button
+                  onClick={() => setModalOpen(true)}
+                  size="sm"
+                  className="shadow-lg shadow-indigo-500/20 dark:shadow-indigo-900/20 h-10 px-4 py-2.5"
+                >
+                  <Plus className="h-4 w-4" /> New Habit
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Category Filter - Increased Spacing */}

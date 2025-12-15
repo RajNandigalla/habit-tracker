@@ -37,27 +37,7 @@ export const CategoriesProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         return;
       }
 
-      // Migration: handle old string array format
-      if (typeof loaded[0] === 'string') {
-        const oldStrings = loaded as string[];
-        const migrated: Category[] = DEFAULT_CATEGORIES.map(c => c);
-
-        oldStrings.forEach(str => {
-          if (!migrated.find(c => c.label === str)) {
-            migrated.push({
-              id: generateId(),
-              label: str,
-              icon: '🏷️',
-              color: '#6366f1',
-              isArchived: false,
-              isDefault: false,
-            });
-          }
-        });
-        setCategories(migrated);
-      } else {
-        setCategories(loaded as Category[]);
-      }
+      setCategories(loaded as Category[]);
       setLoading(false);
     };
     loadCategories();

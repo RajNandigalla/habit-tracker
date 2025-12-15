@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import filter from 'lodash/filter';
 import { Category } from '../types';
 import { Button, Container, Modal } from '../core';
-import { Plus, AlertTriangle } from 'lucide-react';
+import { Plus, AlertTriangle, Tags, Layers, Archive } from 'lucide-react';
 import { PageTitle } from '../modules/PageTitle';
 import { CategoryForm } from '../modules/categories/CategoryForm';
 import { CategoryList } from '../modules/categories/CategoryList';
@@ -37,6 +37,22 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({
 
   const activeCategories = filter(categories, c => !c.isArchived);
   const archivedCategories = filter(categories, c => c.isArchived);
+
+  // Helper to robustly check if a category is default
+  const isDefaultCategory = (cat: Category) => {
+    if (cat.isDefault) return true;
+    return [
+      'cat_health',
+      'cat_work',
+      'cat_learning',
+      'cat_mindfulness',
+      'cat_fitness',
+      'cat_other',
+    ].includes(cat.id);
+  };
+
+  const defaultCategories = filter(activeCategories, isDefaultCategory);
+  const customCategories = filter(activeCategories, c => !isDefaultCategory(c));
 
   const handleFormSubmit = (data: { label: string; icon: string; color: string }) => {
     if (view === 'create') {
@@ -80,14 +96,28 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({
   return (
     <Container className="py-6">
       <div className="max-w-4xl mx-auto">
-        <PageTitle
-          title="Categories"
-          description="Organize your habits with custom categories"
-          className="mb-6"
-        />
+        <div className="flex justify-between items-start mb-6">
+          <PageTitle
+            title="Categories"
+            description="Organize your habits with custom categories"
+            className="mb-0"
+          />
+          {view === 'list' && customCategories.length > 0 && (
+            <Button
+              size="sm"
+              onClick={() => {
+                resetForm();
+                setView('create');
+              }}
+              className="shadow-sm"
+            >
+              <Plus className="w-4 h-4 mr-1" /> New Category
+            </Button>
+          )}
+        </div>
 
-        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
-          {view !== 'list' ? (
+        {view !== 'list' ? (
+          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
             <CategoryForm
               mode={view}
               existingCategories={categories}
@@ -95,42 +125,73 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({
               onSubmit={handleFormSubmit}
               onCancel={resetForm}
             />
-          ) : (
-            <div className="space-y-6">
-              <div className="flex justify-between items-center bg-indigo-50 dark:bg-indigo-900/10 p-4 rounded-xl">
-                <div>
-                  <h4 className="font-bold text-indigo-900 dark:text-indigo-100">
-                    Manage Your Categories
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {/* User Custom Categories */}
+            {customCategories.length > 0 ? (
+              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-md font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                    <Tags className="w-5 h-5 text-indigo-500" />
+                    Your Categories
+                  </h3>
+                </div>
+                <CategoryList
+                  categories={customCategories}
+                  onEdit={startEdit}
+                  onArchive={handleArchive}
+                />
+              </div>
+            ) : (
+              <div className="flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div className="flex-shrink-0 w-10 h-10 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-sm text-indigo-500">
+                  <Tags className="w-5 h-5" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-bold text-slate-800 dark:text-slate-200">
+                    No Custom Categories
                   </h4>
-                  <p className="text-xs text-indigo-700 dark:text-indigo-300 mt-1">
-                    Create unique labels for your habits
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+                    Create your own categories to organize your habits.
                   </p>
                 </div>
-                <Button
-                  size="sm"
-                  onClick={() => {
-                    resetForm();
-                    setView('create');
-                  }}
-                >
-                  <Plus className="w-4 h-4 mr-1" /> New
+                <Button onClick={() => setView('create')} size="sm" className="shadow-sm">
+                  <Plus className="w-4 h-4 mr-1.5" />
+                  Create
                 </Button>
               </div>
+            )}
 
-              <CategoryList
-                categories={activeCategories}
-                onEdit={startEdit}
-                onArchive={handleArchive}
-              />
-            </div>
-          )}
-        </div>
+            {/* Application Defaults Card */}
+            {defaultCategories.length > 0 && (
+              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                <div className="mb-4">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-md font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                      <Layers className="w-5 h-5 text-slate-400" />
+                      Default Categories
+                    </h3>
+                  </div>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 ml-3">
+                    These are the built-in categories provided by the app.
+                  </p>
+                </div>
+                <CategoryList
+                  categories={defaultCategories}
+                  onEdit={startEdit}
+                  onArchive={handleArchive}
+                />
+              </div>
+            )}
+          </div>
+        )}
 
         {view === 'list' && archivedCategories.length > 0 && (
           <div className="mt-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
             <div className="flex items-center gap-2 mb-4">
-              <AlertTriangle className="w-5 h-5 text-slate-400" />
-              <h3 className="text-lg font-bold text-slate-700 dark:text-slate-300">
+              <h3 className="text-md font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                <Archive className="w-5 h-5 text-slate-400" />
                 Archived Categories
               </h3>
               <span className="text-xs text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full">

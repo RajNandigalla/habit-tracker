@@ -3,7 +3,6 @@ import { Habit, Challenge, DEFAULT_CATEGORIES } from '../types';
 import { storageService } from '../services/storageService';
 import { useToast } from './ToastContext';
 import { usePreferences } from './PreferencesProvider';
-import { useCategories } from './CategoriesProvider';
 import { calculateStreak, generateId, getTodayISO, audioManager, dayjs } from '../utils';
 
 import { generateTestHabits } from '../mock/habitsMock';
@@ -31,7 +30,6 @@ export const useHabits = () => {
 export const HabitsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { addToast } = useToast();
   const { preferences } = usePreferences();
-  const { categories } = useCategories();
   const [habits, setHabits] = useState<Habit[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -41,29 +39,11 @@ export const HabitsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const loaded = await storageService.getItemAsync<Habit[]>(STORAGE_KEY, []);
       console.log('Loaded habits:', loaded);
 
-      // Migration: Convert old 'category' string to 'categoryIds' array
-      const migrated = loaded.map(h => {
-        // @ts-ignore - checking for old property
-        if (h.category && !h.categoryIds) {
-          // @ts-ignore
-          const catLabel = h.category;
-          const match = categories.find(c => c.label === catLabel);
-          const catId =
-            match?.id || DEFAULT_CATEGORIES.find(c => c.label === 'Other')?.id || 'cat_other';
-
-          return {
-            ...h,
-            categoryIds: [catId],
-          };
-        }
-        return h;
-      });
-
-      setHabits(migrated);
+      setHabits(loaded);
       setLoading(false);
     };
     loadHabits();
-  }, [categories]);
+  }, []);
 
   const addHabit = (habit: Habit) => {
     const newHabits = [habit, ...habits];

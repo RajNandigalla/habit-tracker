@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Habit, JournalEntry, Achievement, HabitCategory } from '../types';
+import { Habit, JournalEntry, Achievement, HabitCategory, DEFAULT_CATEGORIES } from '../types';
 import {
   Zap,
   Activity,
@@ -219,16 +219,17 @@ export const useAchievements = (habits: Habit[], journalEntries: JournalEntry[])
     LEGACY_CATEGORIES.forEach(c => (categoryCounts[c] = 0));
 
     habits.forEach(h => {
-      // @ts-ignore
-      const cat = h.category;
-      if (cat && categoryCounts[cat] !== undefined) {
-        categoryCounts[cat] += h.completedDates.length;
-      }
+      (h.categoryIds || []).forEach(catId => {
+        // Map ID to label from default categories to support legacy achievements
+        const category = DEFAULT_CATEGORIES.find(c => c.id === catId);
+        if (category && categoryCounts[category.label] !== undefined) {
+          categoryCounts[category.label] += h.completedDates.length;
+        }
+      });
     });
 
     const photoJournalCount = journalEntries.filter(j => j.imageUrl).length;
-    // @ts-ignore
-    const distinctCategories = new Set(habits.map(h => h.category)).size;
+    const distinctCategories = new Set(habits.flatMap(h => h.categoryIds)).size;
 
     MILESTONE_LEVELS.forEach(m => {
       list.push({
