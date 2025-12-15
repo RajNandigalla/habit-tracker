@@ -14,10 +14,10 @@ export const NavItem: React.FC<{
     end={to === '/'}
     className={({ isActive }) =>
       cn(
-        'group flex items-center gap-3 px-4 py-3 rounded-xl text-base transition-all duration-200',
+        'group/navitem flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all duration-200',
         isActive
-          ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 shadow-sm relative overflow-hidden font-bold'
-          : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-white dark:hover:bg-slate-800 hover:ring-1 hover:ring-slate-200 dark:hover:ring-slate-700 hover:shadow-sm font-semibold'
+          ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 shadow-sm relative overflow-hidden font-semibold'
+          : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-white dark:hover:bg-slate-800 hover:ring-1 hover:ring-slate-200 dark:hover:ring-slate-700 hover:shadow-sm font-medium'
       )
     }
   >
@@ -28,10 +28,10 @@ export const NavItem: React.FC<{
         )}
         <span
           className={cn(
-            'transition-transform duration-300 group-hover:scale-110',
+            'transition-transform duration-300 group-hover/navitem:scale-110',
             isActive
               ? 'text-indigo-600 dark:text-indigo-400'
-              : 'text-slate-400 group-hover:text-indigo-500'
+              : 'text-slate-400 group-hover/navitem:text-indigo-500'
           )}
         >
           {React.cloneElement(icon as React.ReactElement<{ className?: string }>, {
@@ -39,11 +39,12 @@ export const NavItem: React.FC<{
           })}
         </span>
         <span
-          className={
+          className={cn(
+            'md:hidden lg:block group-data-[expanded=true]/sidebar:block',
             isActive
               ? 'translate-x-1'
-              : 'group-hover:translate-x-1 transition-transform duration-300'
-          }
+              : 'group-hover/navitem:translate-x-1 transition-transform duration-300'
+          )}
         >
           {label}
         </span>

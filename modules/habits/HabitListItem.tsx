@@ -19,21 +19,26 @@ import { Button, Show } from '../../core';
 import { useStore } from '../../context/Store';
 import HabitDetailsModal, { HabitActionProps } from './HabitDetailsModal';
 
-const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
+const HabitListItem: React.FC<{ habit: Habit; selectedDate?: string } & HabitActionProps> = ({
   habit,
   toggleHabitCompletion,
   onFocus,
+  selectedDate = getTodayISO(),
 }) => {
   const { updateHabit, deleteHabit, categories } = useStore();
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [initialMode, setInitialMode] = useState<'view' | 'edit' | 'delete'>('view');
 
-  const today = getTodayISO();
-  const isCompletedToday = habit.completedDates.includes(today);
+  const isCompletedSelectedDate = habit.completedDates.includes(selectedDate);
 
   const isChallenge = !!habit.challengeId;
   const isNegative = habit.habitType === 'negative';
-  const isScheduledToday = isHabitScheduledForDate(habit, today);
+  const isScheduledForDate = isHabitScheduledForDate(habit, selectedDate);
+  const isScheduledToday = isHabitScheduledForDate(habit, getTodayISO()); // Keep checking today for 'active' status styling nuances if needed, or simplify
+
+  // Simplified logic for "active" styling - use selected date
+  const isActiveForView = isScheduledForDate;
+
   const weeklyStats = calculateWeeklyProgress(habit);
 
   const handleFocus = (e: React.MouseEvent) => {
@@ -43,7 +48,7 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
 
   const handleToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
-    toggleHabitCompletion(habit.id, today);
+    toggleHabitCompletion(habit.id, selectedDate);
   };
 
   const handleStats = (e: React.MouseEvent) => {
@@ -67,27 +72,27 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
           setDetailsOpen(true);
         }}
         className={cn(
-          'group relative flex items-center p-3 bg-white dark:bg-slate-800 rounded-2xl border transition-all duration-300 ease-ios cursor-pointer shadow-sm md:hover:shadow-md active:scale-[0.99]',
-          isCompletedToday
+          'group relative flex items-center p-3 bg-white dark:bg-slate-800 rounded-3xl border transition-all duration-300 ease-ios cursor-pointer shadow-xs md:hover:shadow-md active:scale-[0.99]',
+          isCompletedSelectedDate
             ? isNegative
               ? 'border-red-200 bg-red-50 dark:bg-red-900/10 dark:border-red-800/50'
               : 'border-slate-200 dark:border-slate-700/50 bg-slate-50/80 dark:bg-slate-900/30'
             : 'border-slate-200 dark:border-slate-700 md:hover:border-indigo-300 dark:md:hover:border-indigo-700',
-          !isScheduledToday && !isCompletedToday && 'opacity-70 grayscale-[0.5]'
+          !isActiveForView && !isCompletedSelectedDate && 'opacity-70 grayscale-[0.5]'
         )}
       >
         {/* Checkbox / Action Area */}
-        <div className="flex-shrink-0 mr-3">
+        <div className="flex-shrink-0 mr-3 pl-2">
           <button
             onClick={handleToggle}
-            disabled={!isScheduledToday && !isCompletedToday && habit.frequency !== 'weekly'}
+            disabled={!isActiveForView && !isCompletedSelectedDate && habit.frequency !== 'weekly'}
             className={cn(
-              'w-6 h-6 rounded-md flex items-center justify-center transition-all duration-300 ease-spring border-2 relative overflow-hidden',
+              'w-6 h-6 rounded-lg flex items-center justify-center transition-all duration-300 ease-spring border-2 relative overflow-hidden',
               isNegative
-                ? isCompletedToday
+                ? isCompletedSelectedDate
                   ? 'bg-red-500 border-red-500 text-white'
                   : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 md:hover:border-red-400 dark:md:hover:border-red-500'
-                : isCompletedToday
+                : isCompletedSelectedDate
                   ? 'bg-green-500 border-green-500 text-white scale-100'
                   : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-transparent md:hover:border-indigo-400 dark:md:hover:border-indigo-500 md:hover:bg-indigo-50 dark:md:hover:bg-indigo-900/10 active:scale-90'
             )}
@@ -99,14 +104,14 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
                 <Check
                   className={cn(
                     'w-4 h-4 transition-transform duration-300 ease-spring',
-                    isCompletedToday ? 'scale-100' : 'scale-0'
+                    isCompletedSelectedDate ? 'scale-100' : 'scale-0'
                   )}
                   strokeWidth={3}
                 />
               }
             >
               <Show
-                when={isCompletedToday}
+                when={isCompletedSelectedDate}
                 fallback={<Skull className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />}
               >
                 <AlertCircle className="w-4 h-4" />
@@ -121,11 +126,11 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
             <h3
               className={cn(
                 'font-bold text-base truncate transition-all duration-300',
-                isCompletedToday
+                isCompletedSelectedDate
                   ? 'text-slate-500 dark:text-slate-400'
                   : 'text-slate-900 dark:text-white',
                 isNegative &&
-                  isCompletedToday &&
+                  isCompletedSelectedDate &&
                   'text-red-600 dark:text-red-400 decoration-red-300'
               )}
             >
@@ -136,7 +141,7 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
             <div
               className={cn(
                 'w-2 h-2 rounded-full flex-shrink-0 transition-all',
-                isCompletedToday ? 'opacity-50 grayscale' : ''
+                isCompletedSelectedDate ? 'opacity-50 grayscale' : ''
               )}
               style={{ backgroundColor: habit.color }}
             />
@@ -145,11 +150,11 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
               <Crown className="h-3.5 w-3.5 text-yellow-500 fill-yellow-500 animate-pulse" />
             )}
 
-            {habit.reminderTime && !isCompletedToday && isScheduledToday && (
+            {habit.reminderTime && !isCompletedSelectedDate && isActiveForView && (
               <Bell className="h-3 w-3 text-slate-400" />
             )}
 
-            {!isScheduledToday && !isCompletedToday && habit.frequency !== 'weekly' && (
+            {!isActiveForView && !isCompletedSelectedDate && habit.frequency !== 'weekly' && (
               <span className="text-[10px] uppercase font-bold bg-slate-100 dark:bg-slate-800 text-slate-400 px-1.5 rounded">
                 Rest Day
               </span>
@@ -157,7 +162,9 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
           </div>
 
           <div className="flex items-center gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400 overflow-hidden">
-            <span className={cn('flex items-center gap-1', isCompletedToday && 'opacity-75')}>
+            <span
+              className={cn('flex items-center gap-1', isCompletedSelectedDate && 'opacity-75')}
+            >
               <Show
                 when={isNegative}
                 fallback={
@@ -165,7 +172,7 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
                     <Flame
                       className={cn(
                         'w-3.5 h-3.5 transition-colors',
-                        habit.streak > 0 && !isCompletedToday
+                        habit.streak > 0 && !isCompletedSelectedDate
                           ? 'text-orange-500 fill-orange-500'
                           : 'text-slate-400'
                       )}
@@ -177,7 +184,7 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
                 <ShieldBan
                   className={cn(
                     'w-3.5 h-3.5',
-                    isCompletedToday ? 'text-red-500' : 'text-green-500'
+                    isCompletedSelectedDate ? 'text-red-500' : 'text-green-500'
                   )}
                 />
                 {habit.streak} days clean
@@ -216,7 +223,7 @@ const HabitListItem: React.FC<{ habit: Habit } & HabitActionProps> = ({
                     key={i}
                     className={cn(
                       'inline-flex items-center gap-1 px-1.5 py-0.5 rounded whitespace-nowrap',
-                      isCompletedToday
+                      isCompletedSelectedDate
                         ? 'bg-slate-100 dark:bg-slate-800 text-slate-400'
                         : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
                     )}

@@ -117,7 +117,7 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({
         </div>
 
         {view !== 'list' ? (
-          <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
             <CategoryForm
               mode={view}
               existingCategories={categories}
@@ -130,7 +130,7 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({
           <div className="space-y-6">
             {/* User Custom Categories */}
             {customCategories.length > 0 ? (
-              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+              <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-md font-bold text-slate-900 dark:text-white flex items-center gap-2">
                     <Tags className="w-5 h-5 text-indigo-500" />
@@ -144,7 +144,7 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({
                 />
               </div>
             ) : (
-              <div className="flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+              <div className="flex items-center gap-4 p-4 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
                 <div className="flex-shrink-0 w-10 h-10 bg-white dark:bg-slate-800 rounded-full flex items-center justify-center shadow-sm text-indigo-500">
                   <Tags className="w-5 h-5" />
                 </div>
@@ -165,7 +165,7 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({
 
             {/* Application Defaults Card */}
             {defaultCategories.length > 0 && (
-              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+              <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
                 <div className="mb-4">
                   <div className="flex items-center gap-2">
                     <h3 className="text-md font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -188,7 +188,7 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({
         )}
 
         {view === 'list' && archivedCategories.length > 0 && (
-          <div className="mt-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+          <div className="mt-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
             <div className="flex items-center gap-2 mb-4">
               <h3 className="text-md font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <Archive className="w-5 h-5 text-slate-400" />

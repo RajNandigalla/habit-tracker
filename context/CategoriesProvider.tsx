@@ -34,6 +34,7 @@ export const CategoriesProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
       if (!loaded || loaded.length === 0) {
         setCategories(DEFAULT_CATEGORIES);
+        setLoading(false);
         return;
       }
 

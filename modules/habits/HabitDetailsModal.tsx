@@ -413,7 +413,7 @@ const HabitDetailsModal: React.FC<{
                   <div className="md:col-span-7 space-y-6">
                     {/* Stats Grid */}
                     <div className="grid grid-cols-3 gap-3">
-                      <div className="flex flex-col items-center justify-center p-4 bg-orange-50 dark:bg-orange-900/10 rounded-2xl">
+                      <div className="flex flex-col items-center justify-center p-4 bg-orange-50 dark:bg-orange-900/10 rounded-3xl">
                         <div className="text-3xl font-extrabold text-orange-500 dark:text-orange-400 mb-1">
                           {habit.streak}
                         </div>
@@ -422,7 +422,7 @@ const HabitDetailsModal: React.FC<{
                         </div>
                       </div>
                       {habit.habitType === 'positive' && (
-                        <div className="flex flex-col items-center justify-center p-4 bg-blue-50 dark:bg-blue-900/10 rounded-2xl">
+                        <div className="flex flex-col items-center justify-center p-4 bg-blue-50 dark:bg-blue-900/10 rounded-3xl">
                           <div className="text-3xl font-extrabold text-blue-500 dark:text-blue-400 mb-1">
                             {stats.longestStreak}
                           </div>
@@ -431,7 +431,7 @@ const HabitDetailsModal: React.FC<{
                           </div>
                         </div>
                       )}
-                      <div className="flex flex-col items-center justify-center p-4 bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl">
+                      <div className="flex flex-col items-center justify-center p-4 bg-emerald-50 dark:bg-emerald-900/10 rounded-3xl">
                         <div className="text-3xl font-extrabold text-emerald-500 dark:text-emerald-400 mb-1">
                           {stats.totalCompletions}
                         </div>
@@ -451,7 +451,7 @@ const HabitDetailsModal: React.FC<{
                           Last 15 Weeks
                         </span>
                       </div>
-                      <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex justify-center overflow-x-auto">
+                      <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-3xl border border-slate-100 dark:border-slate-800 flex justify-center overflow-x-auto">
                         <HeatmapGrid data={heatmapData} />
                       </div>
                     </div>
@@ -459,7 +459,7 @@ const HabitDetailsModal: React.FC<{
 
                   {/* Right Column: Calendar */}
                   <div className="md:col-span-5 md:pl-6 pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-slate-100 dark:border-slate-800 h-full">
-                    <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 h-full">
+                    <div className="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-3xl border border-slate-100 dark:border-slate-800 h-full">
                       <div className="flex items-center justify-between mb-4">
                         <h4 className="text-base font-bold text-slate-900 dark:text-white uppercase tracking-wide opacity-80 flex items-center gap-2">
                           <CalendarIcon className="h-4 w-4" />

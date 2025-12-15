@@ -107,7 +107,7 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
     <>
       {/* --- Mobile View: High-Density Command Bar --- */}
       <div className="lg:hidden mb-6 animate-slide-up">
-        <div className="relative overflow-hidden rounded-2xl bg-slate-900 text-white shadow-xl shadow-indigo-900/20">
+        <div className="relative overflow-hidden rounded-3xl bg-slate-900 text-white shadow-xl shadow-indigo-900/20">
           {/* Background Gradient */}
           <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-90"></div>
 
@@ -271,7 +271,7 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
           <div className="flex items-center justify-between">
             {/* Left: Info */}
             <div className="flex items-center gap-5">
-              <div className="p-3 bg-indigo-50 dark:bg-slate-800 rounded-2xl text-indigo-600 dark:text-indigo-400">
+              <div className="p-3 bg-indigo-50 dark:bg-slate-800 rounded-3xl text-indigo-600 dark:text-indigo-400">
                 <Smile className="w-6 h-6" />
               </div>
               <div>

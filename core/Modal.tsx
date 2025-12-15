@@ -91,10 +91,10 @@ export const Modal: React.FC<ModalProps> = ({
           clsx(
             'relative w-full flex flex-col overflow-hidden bg-white shadow-2xl border border-slate-100',
             mobileFullScreen
-              ? 'h-full rounded-none md:h-auto md:max-h-[85vh] md:rounded-2xl'
+              ? 'h-full rounded-none md:h-auto md:max-h-[85vh] md:rounded-3xl'
               : bottomSheet
-                ? 'max-h-[85vh] rounded-t-2xl rounded-b-none md:rounded-2xl md:mb-auto'
-                : 'max-h-[85vh] rounded-2xl',
+                ? 'max-h-[85vh] rounded-t-2xl rounded-b-none md:rounded-3xl md:mb-auto'
+                : 'max-h-[85vh] rounded-3xl',
             // On desktop, even if bottomSheet is true, we might want it centered or at least respected size.
             // Usually bottom sheet is mobile pattern. Let's make it full width on mobile if bottomSheet.
             bottomSheet ? 'w-full md:w-auto' : '',

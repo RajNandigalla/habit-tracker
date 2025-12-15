@@ -29,6 +29,7 @@ import {
   Smartphone,
   LogOut,
   BarChartBig, // Added
+  User,
 } from 'lucide-react';
 
 export const SpinnerIcon = ({ className }: { className?: string }) => (
@@ -62,3 +63,4 @@ export const ShieldCheckIcon = ShieldCheck;
 export const SmartphoneIcon = Smartphone;
 export const LogOutIcon = LogOut;
 export const BarChartBigIcon = BarChartBig;
+export const UserIcon = User;
