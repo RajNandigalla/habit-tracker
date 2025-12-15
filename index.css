@@ -164,6 +164,7 @@ body {
   overflow-y: scroll;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  padding-top: max(1rem, env(safe-area-inset-top) + 1rem);
 }
 
 /* Scrollbar styling */

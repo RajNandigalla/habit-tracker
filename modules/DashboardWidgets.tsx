@@ -2,11 +2,11 @@ import filter from 'lodash/filter';
 import find from 'lodash/find';
 import maxBy from 'lodash/maxBy';
 import React, { useMemo, useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, Show } from '../core';
 import { Habit, JournalEntry } from '../types';
 import { getTodayISO, cn, dayjs } from '../utils';
 import { Smile, Meh, Frown, Zap, Trophy, CloudRain, Sun, Moon, Flame } from 'lucide-react';
-import { MoodSelectionModal } from './dashboard';
 
 interface DailyOverviewProps {
   habits: Habit[];
@@ -21,9 +21,10 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
   onLogMood,
   username = 'Achiever',
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const todayISO = getTodayISO();
   const currentHour = dayjs().hour();
-  const [isMoodModalOpen, setIsMoodModalOpen] = useState(false);
 
   // Animation state for progress ring
   const [animatedProgress, setAnimatedProgress] = useState(0);
@@ -103,6 +104,10 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
     ? find(moodOptions, { value: currentMood })?.icon || Smile
     : Smile;
 
+  const handleOpenMoodCheckIn = () => {
+    navigate('/check-in', { state: { background: location } });
+  };
+
   return (
     <>
       {/* --- Mobile View: High-Density Command Bar --- */}
@@ -165,7 +170,7 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
 
               {/* Mood Trigger */}
               <button
-                onClick={() => setIsMoodModalOpen(true)}
+                onClick={handleOpenMoodCheckIn}
                 className={cn(
                   'flex flex-col items-center justify-center w-11 h-11 rounded-xl transition-all active:scale-95 border border-white/10',
                   currentMood ? 'bg-white/20' : 'bg-white/10 hover:bg-white/20'
@@ -187,13 +192,6 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
           </div>
         </div>
       </div>
-
-      <MoodSelectionModal
-        isOpen={isMoodModalOpen}
-        onClose={() => setIsMoodModalOpen(false)}
-        currentMood={currentMood}
-        onLogMood={onLogMood}
-      />
 
       {/* --- Desktop View: Compact Stacked Layout --- */}
       <div className="hidden lg:flex flex-col gap-4 mb-8 animate-slide-up">

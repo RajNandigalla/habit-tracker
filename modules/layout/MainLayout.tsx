@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { useNavigation } from '../../context/NavigationContext';
 import { useStore } from '../../context/Store';
 import { Dashboard } from '../../pages/Dashboard';
@@ -9,6 +9,7 @@ import { Progress } from '../../pages/Progress';
 import { Challenges } from '../../pages/Challenges';
 import { Achievements } from '../../pages/Achievements';
 import { Categories } from '../../pages/Categories';
+import { MoodCheckInPage } from '../../pages/MoodCheckInPage';
 import {
   ListTodo,
   BookText,
@@ -31,6 +32,10 @@ export const MainLayout: React.FC = () => {
   const { isSideMenuOpen, closeSideMenu } = useNavigation();
   const { preferences, toggleDarkMode } = useStore();
   const [isExpanded, setIsExpanded] = React.useState(false);
+
+  const location = useLocation();
+  const state = location.state as { background?: Location };
+  const background = state?.background;
 
   return (
     <div className="flex flex-col min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
@@ -159,7 +164,7 @@ export const MainLayout: React.FC = () => {
         {/* Main Content Area - Full width/height, no margins */}
         <div className="flex-1 min-w-0 flex flex-col min-h-full relative mb-40">
           <div className="flex-1 w-full h-full">
-            <Routes>
+            <Routes location={background || location}>
               <Route path="/" element={<Dashboard />} />
               <Route path="/challenges" element={<Challenges />} />
               <Route path="/achievements" element={<Achievements />} />
@@ -167,7 +172,15 @@ export const MainLayout: React.FC = () => {
               <Route path="/progress" element={<Progress />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/categories" element={<Categories />} />
+              <Route path="/check-in" element={<MoodCheckInPage />} />
             </Routes>
+
+            {/* Modal Route */}
+            {background && (
+              <Routes>
+                <Route path="/check-in" element={<MoodCheckInPage />} />
+              </Routes>
+            )}
           </div>
         </div>
       </Container>
