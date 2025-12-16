@@ -1,10 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Category, DEFAULT_CATEGORIES } from '../types';
-import { storageService } from '../services/storageService';
+import { categoryRepository } from '../core/repositories/LocalCategoryRepository';
 import { useToast } from './ToastContext';
 import { generateId } from '../utils';
-
-const STORAGE_KEY = 'tickoff_categories';
 
 interface CategoriesContextType {
   categories: Category[];
@@ -30,7 +28,7 @@ export const CategoriesProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   // Load categories from storage
   useEffect(() => {
     const loadCategories = async () => {
-      const loaded = await storageService.getItemAsync<Category[] | string[]>(STORAGE_KEY, []);
+      const loaded = await categoryRepository.getCategories();
 
       if (!loaded || loaded.length === 0) {
         setCategories(DEFAULT_CATEGORIES);
@@ -52,28 +50,28 @@ export const CategoriesProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     };
     const newCategories = [...categories, newCategory];
     setCategories(newCategories);
-    storageService.setItemAsync(STORAGE_KEY, newCategories);
+    categoryRepository.saveCategories(newCategories);
     addToast(`Category "${newCategory.label}" created!`, 'success');
   };
 
   const updateCategory = (category: Category) => {
     const newCategories = categories.map(c => (c.id === category.id ? category : c));
     setCategories(newCategories);
-    storageService.setItemAsync(STORAGE_KEY, newCategories);
+    categoryRepository.saveCategories(newCategories);
     addToast('Category updated.', 'success');
   };
 
   const archiveCategory = (id: string) => {
     const newCategories = categories.map(c => (c.id === id ? { ...c, isArchived: true } : c));
     setCategories(newCategories);
-    storageService.setItemAsync(STORAGE_KEY, newCategories);
+    categoryRepository.saveCategories(newCategories);
     addToast('Category archived.', 'info');
   };
 
   const restoreCategory = (id: string) => {
     const newCategories = categories.map(c => (c.id === id ? { ...c, isArchived: false } : c));
     setCategories(newCategories);
-    storageService.setItemAsync(STORAGE_KEY, newCategories);
+    categoryRepository.saveCategories(newCategories);
     addToast('Category restored.', 'success');
   };
 

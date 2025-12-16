@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { dayjs, cn } from '../../utils';
 
 interface WeeklyCalendarProps {
@@ -44,18 +45,28 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
     onSelectDate(dayjs(selectedDate).add(1, 'week').startOf('week').format('YYYY-MM-DD'));
   };
 
+  const handleJumpToToday = () => {
+    onSelectDate(currentDate);
+  };
+
+  const showTodayButton = useMemo(() => {
+    return !days.some(day => day.isToday);
+  }, [days]);
+
   const currentMonthYear = startOfWeek.format('MMM YYYY');
 
   return (
-    <div className="w-full mb-6 md:max-w-lg md:mx-auto">
-      {/* Header: Month & Navigation - Center Aligned as per design */}
-      <div className="flex items-center justify-between mb-4 px-2">
-        <button
-          onClick={handlePrevWeek}
-          className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-600 dark:text-slate-400"
-        >
-          <ChevronLeft className="w-5 h-5" />
-        </button>
+    <div className="w-full mb-6 md:max-w-lg md:mx-auto relative">
+      {/* Search/Filter toggle would go here if needed, keeping relative for positioning */}
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center mb-4 px-2">
+        <div className="flex justify-start">
+          <button
+            onClick={handlePrevWeek}
+            className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-600 dark:text-slate-400"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+        </div>
 
         <div className="bg-indigo-50 dark:bg-indigo-900/20 px-6 py-1.5 rounded-full border border-indigo-100 dark:border-indigo-500/30">
           <h3 className="text-base font-bold text-indigo-900 dark:text-indigo-100">
@@ -63,13 +74,36 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
           </h3>
         </div>
 
-        <button
-          onClick={handleNextWeek}
-          className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-600 dark:text-slate-400"
-        >
-          <ChevronRight className="w-5 h-5" />
-        </button>
+        <div className="flex justify-end items-center gap-2">
+          <button
+            onClick={handleNextWeek}
+            className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-600 dark:text-slate-400"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
       </div>
+
+      {/* Floating Action Bar - "Jump to Today" */}
+      <AnimatePresence>
+        {showTodayButton && (
+          <motion.div
+            initial={{ height: 0, opacity: 0, marginBottom: 0 }}
+            animate={{ height: 'auto', opacity: 1, marginBottom: 12 }}
+            exit={{ height: 0, opacity: 0, marginBottom: 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="flex justify-center overflow-hidden py-1"
+          >
+            <button
+              onClick={handleJumpToToday}
+              className="px-4 py-1.5 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-xs font-semibold text-indigo-600 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-900/60 transition-colors flex items-center gap-2 shadow-sm my-0.5"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0 animate-pulse" />
+              Return to Today
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Days Strip */}
       <div className="grid grid-cols-7 gap-1 md:gap-3">

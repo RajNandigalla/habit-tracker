@@ -1,13 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Habit, Challenge, DEFAULT_CATEGORIES } from '../types';
-import { storageService } from '../services/storageService';
+import { habitRepository } from '../core/repositories/LocalHabitRepository';
 import { useToast } from './ToastContext';
 import { usePreferences } from './PreferencesProvider';
 import { calculateStreak, generateId, getTodayISO, audioManager, dayjs } from '../utils';
 
 import { generateTestHabits } from '../mock/habitsMock';
-
-const STORAGE_KEY = 'tickoff_habits';
 
 interface HabitsContextType {
   habits: Habit[];
@@ -36,7 +34,7 @@ export const HabitsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   // Load habits from storage ONCE on mount
   useEffect(() => {
     const loadHabits = async () => {
-      const loaded = await storageService.getItemAsync<Habit[]>(STORAGE_KEY, []);
+      const loaded = await habitRepository.getHabits();
       console.log('Loaded habits:', loaded);
 
       setHabits(loaded);
@@ -45,24 +43,23 @@ export const HabitsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     loadHabits();
   }, []);
 
-  const addHabit = (habit: Habit) => {
+  const addHabit = async (habit: Habit) => {
+    await habitRepository.addHabit(habit);
+    // Refresh local state (or optimistically update)
     const newHabits = [habit, ...habits];
     setHabits(newHabits);
-    storageService.setItemAsync(STORAGE_KEY, newHabits);
     addToast('Habit created successfully!', 'success');
   };
 
-  const updateHabit = (updatedHabit: Habit) => {
-    const newHabits = habits.map(h => (h.id === updatedHabit.id ? updatedHabit : h));
-    setHabits(newHabits);
-    storageService.setItemAsync(STORAGE_KEY, newHabits);
+  const updateHabit = async (updatedHabit: Habit) => {
+    await habitRepository.updateHabit(updatedHabit);
+    setHabits(habits.map(h => (h.id === updatedHabit.id ? updatedHabit : h)));
     addToast('Habit updated.', 'success');
   };
 
-  const deleteHabit = (id: string) => {
-    const newHabits = habits.filter(h => h.id !== id);
-    setHabits(newHabits);
-    storageService.setItemAsync(STORAGE_KEY, newHabits);
+  const deleteHabit = async (id: string) => {
+    await habitRepository.deleteHabit(id);
+    setHabits(habits.filter(h => h.id !== id));
     addToast('Habit deleted.', 'info');
   };
 
@@ -91,7 +88,7 @@ export const HabitsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     });
 
     setHabits(newHabits);
-    storageService.setItemAsync(STORAGE_KEY, newHabits);
+    habitRepository.saveHabits(newHabits);
   };
 
   const joinChallenge = (challenge: Challenge, existingHabitId?: string) => {
@@ -113,7 +110,7 @@ export const HabitsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         return h;
       });
       setHabits(newHabits);
-      storageService.setItemAsync(STORAGE_KEY, newHabits);
+      habitRepository.saveHabits(newHabits);
       addToast(`Challenge linked to existing habit!`, 'success');
       return;
     }
@@ -138,14 +135,14 @@ export const HabitsProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     const newHabits = [newHabit, ...habits];
     setHabits(newHabits);
-    storageService.setItemAsync(STORAGE_KEY, newHabits);
+    habitRepository.saveHabits(newHabits);
     addToast(`Joined ${challenge.title}!`, 'success');
   };
 
   const populateTestData = () => {
     const habitsWithStreaks = generateTestHabits();
     setHabits(habitsWithStreaks);
-    storageService.setItemAsync(STORAGE_KEY, habitsWithStreaks);
+    habitRepository.saveHabits(habitsWithStreaks);
     addToast('Test data loaded!', 'success');
   };
 

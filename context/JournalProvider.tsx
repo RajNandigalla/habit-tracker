@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { JournalEntry } from '../types';
-import { storageService } from '../services/storageService';
+import { journalRepository } from '../core/repositories/LocalJournalRepository';
 import { useToast } from './ToastContext';
-
-const STORAGE_KEY = 'tickoff_journal';
 
 interface JournalContextType {
   journalEntries: JournalEntry[];
@@ -26,24 +24,22 @@ export const JournalProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
   useEffect(() => {
     const loadEntries = async () => {
-      const loaded = await storageService.getItemAsync<JournalEntry[]>(STORAGE_KEY, []);
+      const loaded = await journalRepository.getEntries();
       setJournalEntries(loaded);
       setLoading(false);
     };
     loadEntries();
   }, []);
 
-  const addJournalEntry = (entry: JournalEntry) => {
-    const newEntries = [entry, ...journalEntries];
-    setJournalEntries(newEntries);
-    storageService.setItemAsync(STORAGE_KEY, newEntries);
+  const addJournalEntry = async (entry: JournalEntry) => {
+    await journalRepository.addEntry(entry);
+    setJournalEntries([entry, ...journalEntries]);
     addToast('Journal entry saved.', 'success');
   };
 
-  const deleteJournalEntry = (id: string) => {
-    const newEntries = journalEntries.filter(e => e.id !== id);
-    setJournalEntries(newEntries);
-    storageService.setItemAsync(STORAGE_KEY, newEntries);
+  const deleteJournalEntry = async (id: string) => {
+    await journalRepository.deleteEntry(id);
+    setJournalEntries(journalEntries.filter(e => e.id !== id));
     addToast('Entry deleted.', 'info');
   };
 

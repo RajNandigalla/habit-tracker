@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { UserPreferences, ViewMode } from '../types';
-import { storageService } from '../services/storageService';
+import { preferencesRepository } from '../core/repositories/LocalPreferencesRepository';
 import { audioManager } from '../utils';
-
-const STORAGE_KEY = 'tickoff_prefs';
 
 interface PreferencesContextType {
   preferences: UserPreferences;
@@ -30,11 +28,11 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   useEffect(() => {
     const loadPrefs = async () => {
-      const loaded = await storageService.getItemAsync<UserPreferences>(STORAGE_KEY, {
+      const loaded = (await preferencesRepository.getPreferences()) || {
         darkMode: false,
         viewMode: 'list',
         soundEnabled: true,
-      });
+      };
       setPreferences(loaded);
       setLoading(false);
 
@@ -66,7 +64,7 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
     }
 
     audioManager.setEnabled(newPrefs.soundEnabled);
-    storageService.setItemAsync(STORAGE_KEY, newPrefs);
+    preferencesRepository.savePreferences(newPrefs);
 
     setTimeout(() => {
       root.classList.remove('disable-transitions');
@@ -77,13 +75,13 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const newPrefs = { ...preferences, soundEnabled: !preferences.soundEnabled };
     setPreferences(newPrefs);
     audioManager.setEnabled(newPrefs.soundEnabled);
-    storageService.setItemAsync(STORAGE_KEY, newPrefs);
+    preferencesRepository.savePreferences(newPrefs);
   };
 
   const setViewMode = (mode: ViewMode) => {
     const newPrefs = { ...preferences, viewMode: mode };
     setPreferences(newPrefs);
-    storageService.setItemAsync(STORAGE_KEY, newPrefs);
+    preferencesRepository.savePreferences(newPrefs);
   };
 
   if (loading) return null;
