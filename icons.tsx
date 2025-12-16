@@ -30,6 +30,8 @@ import {
   LogOut,
   BarChartBig, // Added
   User,
+  Type,
+  Palette,
 } from 'lucide-react';
 
 export const SpinnerIcon = ({ className }: { className?: string }) => (
@@ -64,3 +66,5 @@ export const SmartphoneIcon = Smartphone;
 export const LogOutIcon = LogOut;
 export const BarChartBigIcon = BarChartBig;
 export const UserIcon = User;
+export const TypeIcon = Type;
+export const PaletteIcon = Palette;

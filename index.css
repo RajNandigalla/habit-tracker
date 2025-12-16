@@ -170,14 +170,18 @@ body {
   padding-top: max(1rem, env(safe-area-inset-top) + 1rem);
 }
 
-/* Scrollbar styling */
+/* Global Thin Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background-color: var(--color-slate-300);
-  border-radius: 4px;
+  border-radius: 20px;
 }
 .dark ::-webkit-scrollbar-thumb {
-  background-color: var(--color-slate-700);
+  background-color: var(--color-slate-600);
 }

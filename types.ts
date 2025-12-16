@@ -99,6 +99,7 @@ export interface UserPreferences {
   darkMode: boolean;
   viewMode: 'list' | 'streak';
   soundEnabled: boolean;
+  fontSize: number;
 }
 
 export type ViewMode = 'list' | 'streak';

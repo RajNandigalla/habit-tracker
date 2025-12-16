@@ -2,7 +2,6 @@ import React, { useState, useRef } from 'react';
 import { Card, Switch, Button, SettingsRow, ConfirmationModal } from '../core';
 import {
   CloudIcon,
-  MoonIcon,
   BellIcon,
   ShieldCheckIcon,
   SmartphoneIcon,
@@ -13,17 +12,14 @@ import {
   TrashIcon,
 } from '../icons';
 import { UserPreferences } from '../types';
-import { cn } from '../utils';
 import { PageTitle } from '../modules/PageTitle';
 import PageTransition from '../core/PageTransition';
 import { ActionRow } from '../modules/settings';
 import { PrivacyModal } from '../modules/settings/PrivacyModal';
 import pkg from '../package.json';
-import { useThemeTransition } from '../hooks/useThemeTransition';
 
 interface SettingsViewProps {
   preferences: UserPreferences;
-  onToggleDarkMode: () => void;
   onExportData: () => void;
   onImportData: (file: File) => void;
   onPopulateTestData: () => void;
@@ -31,8 +27,7 @@ interface SettingsViewProps {
 }
 
 export const SettingsView: React.FC<SettingsViewProps> = ({
-  preferences,
-  onToggleDarkMode,
+  preferences, // Kept if needed later, though currently unused for toggle. Wait, check usage.
   onExportData,
   onImportData,
   onPopulateTestData,
@@ -89,7 +84,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       isOpen: true,
       title: 'Start Fresh',
       message:
-        'This will permanently delete all your habits, journal entries, and history. This action cannot be undone.',
+        'This will permanently delete all your habits and journal entries. This action cannot be undone.',
       confirmLabel: 'Clear All Data',
       isDanger: true,
       onConfirm: () => {
@@ -98,10 +93,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       },
     });
   };
-
-  // TODO: Re-enable when theme transition is optimized
-  // const handleThemeToggle = useThemeTransition(onToggleDarkMode);
-  const handleThemeToggle = onToggleDarkMode;
 
   return (
     <PageTransition>
@@ -140,20 +131,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                   Preferences
                 </h2>
                 <Card className="space-y-1">
-                  <SettingsRow
-                    icon={MoonIcon}
-                    title="Dark Mode"
-                    description="Adjust the appearance for low light."
-                  >
-                    <Switch
-                      checked={preferences.darkMode}
-                      onChange={() => {}} // Handled by onClick for animation
-                      onClick={handleThemeToggle}
-                    />
-                  </SettingsRow>
-
-                  <div className="border-t border-slate-100 dark:border-slate-700/50 my-1"></div>
-
                   <SettingsRow
                     icon={BellIcon}
                     title="Daily Reminders"

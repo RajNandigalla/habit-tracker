@@ -8,6 +8,7 @@ interface PreferencesContextType {
   toggleDarkMode: () => void;
   toggleSound: () => void;
   setViewMode: (mode: ViewMode) => void;
+  setFontSize: (size: number) => void;
 }
 
 const PreferencesContext = createContext<PreferencesContextType | undefined>(undefined);
@@ -23,8 +24,13 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
     darkMode: false,
     viewMode: 'list',
     soundEnabled: true,
+    fontSize: 14.5,
   });
   const [loading, setLoading] = useState(true);
+
+  const applyFontSize = (size: number) => {
+    document.documentElement.style.fontSize = `${size}px`;
+  };
 
   useEffect(() => {
     const loadPrefs = async () => {
@@ -32,18 +38,41 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
         darkMode: false,
         viewMode: 'list',
         soundEnabled: true,
+        fontSize: 14.5,
       };
-      setPreferences(loaded);
+
+      // Handle legacy string migration if necessary
+      let loadedFontSize = 14.5;
+      if (typeof loaded.fontSize === 'string') {
+        const legacySize = loaded.fontSize as string;
+        if (legacySize === 'small') loadedFontSize = 13;
+        else if (legacySize === 'medium') loadedFontSize = 14.5;
+        else if (legacySize === 'large') loadedFontSize = 16;
+      } else if (typeof loaded.fontSize === 'number') {
+        loadedFontSize = loaded.fontSize;
+      }
+
+      // Merge with defaults
+      const merged: UserPreferences = {
+        darkMode: false,
+        viewMode: 'list',
+        soundEnabled: true,
+        ...loaded,
+        fontSize: loadedFontSize,
+      };
+
+      setPreferences(merged);
       setLoading(false);
 
-      // Apply initial dark mode and sound settings
+      // Apply initial preferences
       const html = document.documentElement;
-      if (loaded.darkMode) {
+      if (merged.darkMode) {
         html.classList.add('dark');
       } else {
         html.classList.remove('dark');
       }
-      audioManager.setEnabled(loaded.soundEnabled);
+      audioManager.setEnabled(merged.soundEnabled);
+      applyFontSize(merged.fontSize);
     };
     loadPrefs();
   }, []);
@@ -84,10 +113,19 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
     preferencesRepository.savePreferences(newPrefs);
   };
 
+  const setFontSize = (size: number) => {
+    const newPrefs = { ...preferences, fontSize: size };
+    setPreferences(newPrefs);
+    applyFontSize(size);
+    preferencesRepository.savePreferences(newPrefs);
+  };
+
   if (loading) return null;
 
   return (
-    <PreferencesContext.Provider value={{ preferences, toggleDarkMode, toggleSound, setViewMode }}>
+    <PreferencesContext.Provider
+      value={{ preferences, toggleDarkMode, toggleSound, setViewMode, setFontSize }}
+    >
       {children}
     </PreferencesContext.Provider>
   );

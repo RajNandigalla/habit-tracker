@@ -4,15 +4,8 @@ import { SettingsView } from '../views/SettingsView';
 import { exportUserData, parseImportFile } from '../utils/dataUtils';
 
 export const Settings: React.FC = () => {
-  const {
-    preferences,
-    habits,
-    journalEntries,
-    toggleDarkMode,
-    importData,
-    populateTestData,
-    clearAllData,
-  } = useStore();
+  const { preferences, habits, journalEntries, importData, populateTestData, clearAllData } =
+    useStore();
 
   const handleImportData = async (file: File): Promise<void> => {
     try {
@@ -30,7 +23,6 @@ export const Settings: React.FC = () => {
   return (
     <SettingsView
       preferences={preferences}
-      onToggleDarkMode={toggleDarkMode}
       onExportData={handleExportData}
       onImportData={handleImportData}
       onPopulateTestData={populateTestData}

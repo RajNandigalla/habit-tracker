@@ -50,6 +50,7 @@ export const useStore = () => {
     toggleDarkMode: preferences.toggleDarkMode,
     toggleSound: preferences.toggleSound,
     setViewMode: preferences.setViewMode,
+    setFontSize: preferences.setFontSize,
 
     // Categories
     categories: categories.categories,
