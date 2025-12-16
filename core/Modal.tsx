@@ -97,7 +97,7 @@ export const Modal: React.FC<ModalProps> = ({
                 : 'max-h-[85vh] rounded-3xl',
             // On desktop, even if bottomSheet is true, we might want it centered or at least respected size.
             // Usually bottom sheet is mobile pattern. Let's make it full width on mobile if bottomSheet.
-            bottomSheet ? 'w-full md:w-auto' : '',
+            bottomSheet ? 'w-full' : '',
             sizeClasses[size],
             hasGenieAnimation
               ? isVisible

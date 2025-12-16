@@ -40,11 +40,7 @@ export const MainLayout: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
       {/* Global Header */}
-      <Header
-        className="sticky top-0"
-        darkMode={preferences.darkMode}
-        onToggleDarkMode={toggleDarkMode}
-      />
+      <Header className="sticky top-0" />
 
       <Container className="flex flex-1 relative px-0 sm:px-0 md:px-0 max-w-none md:max-w-none lg:max-w-7xl lg:px-8">
         {/* Desktop Floating Sidebar - Height fit content */}

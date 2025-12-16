@@ -75,7 +75,7 @@ export const AppearanceBottomSheet: React.FC<AppearanceBottomSheetProps> = ({
       {currentView !== 'main' && (
         <button
           onClick={() => navigateTo('main')}
-          className="p-1 -ml-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+          className="p-2 -ml-2 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
         >
           <ChevronLeftIcon className="w-5 h-5" />
         </button>
@@ -93,16 +93,11 @@ export const AppearanceBottomSheet: React.FC<AppearanceBottomSheetProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={ModalTitle}
-      bottomSheet
+      size="lg"
       className="max-h-[80vh] flex flex-col"
     >
-      <motion.div
-        className="relative overflow-hidden w-full"
-        initial={false}
-        animate={{ height: currentView === 'font' ? '50vh' : 240 }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      >
-        <AnimatePresence initial={false} custom={direction}>
+      <div className="w-full overflow-hidden">
+        <AnimatePresence initial={false} mode="wait" custom={direction}>
           {currentView === 'main' && (
             <motion.div
               key="main"
@@ -112,11 +107,11 @@ export const AppearanceBottomSheet: React.FC<AppearanceBottomSheetProps> = ({
               animate="center"
               exit="exit"
               transition={{ type: 'tween', ease: 'easeInOut', duration: 0.3 }}
-              className="absolute inset-0 space-y-2 bg-white dark:bg-slate-900"
+              className="space-y-2 bg-white dark:bg-slate-900 min-h-[240px]"
             >
               <button
                 onClick={() => navigateTo('theme')}
-                className="w-full flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-2xl transition-colors group"
+                className="w-full flex items-center justify-between p-3 sm:p-4 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-2xl transition-colors group"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
@@ -138,7 +133,7 @@ export const AppearanceBottomSheet: React.FC<AppearanceBottomSheetProps> = ({
 
               <button
                 onClick={() => navigateTo('font')}
-                className="w-full flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-2xl transition-colors group"
+                className="w-full flex items-center justify-between p-3 sm:p-4 bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-2xl transition-colors group"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
@@ -165,12 +160,12 @@ export const AppearanceBottomSheet: React.FC<AppearanceBottomSheetProps> = ({
               animate="center"
               exit="exit"
               transition={{ type: 'tween', ease: 'easeInOut', duration: 0.3 }}
-              className="absolute inset-0 space-y-3 bg-white dark:bg-slate-900"
+              className="space-y-3 bg-white dark:bg-slate-900 min-h-[240px]"
             >
               <button
                 onClick={() => preferences.darkMode && toggleDarkMode()}
                 className={cn(
-                  'w-full flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-200',
+                  'w-full flex items-center justify-between p-3 sm:p-4 rounded-2xl border-2 transition-all duration-200',
                   !preferences.darkMode
                     ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-900/10'
                     : 'border-slate-200 dark:border-slate-800'
@@ -201,7 +196,7 @@ export const AppearanceBottomSheet: React.FC<AppearanceBottomSheetProps> = ({
               <button
                 onClick={() => !preferences.darkMode && toggleDarkMode()}
                 className={cn(
-                  'w-full flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-200',
+                  'w-full flex items-center justify-between p-3 sm:p-4 rounded-2xl border-2 transition-all duration-200',
                   preferences.darkMode
                     ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-900/10'
                     : 'border-slate-200 dark:border-slate-800'
@@ -240,10 +235,10 @@ export const AppearanceBottomSheet: React.FC<AppearanceBottomSheetProps> = ({
               animate="center"
               exit="exit"
               transition={{ type: 'tween', ease: 'easeInOut', duration: 0.3 }}
-              className="absolute inset-0 flex flex-col bg-white dark:bg-slate-900"
+              className="flex flex-col bg-white dark:bg-slate-900 min-h-[500px] sm:min-h-[600px]"
             >
               {/* Preview Text */}
-              <div className="w-full flex-1 mb-6 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-y-auto">
+              <div className="w-full mb-4 sm:mb-6 p-3 sm:p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 overflow-y-auto max-h-[40vh] sm:max-h-[50vh]">
                 <h3
                   className="font-bold mb-2 text-slate-900 dark:text-white transition-all duration-200"
                   style={{ fontSize: `${tempFontSize * 1.2}px` }}
@@ -324,7 +319,7 @@ export const AppearanceBottomSheet: React.FC<AppearanceBottomSheetProps> = ({
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
+      </div>
     </Modal>
   );
 };
