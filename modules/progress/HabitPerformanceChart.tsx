@@ -49,7 +49,9 @@ const HabitPerformanceChart: React.FC<{ habits: Habit[] }> = ({ habits }) => {
             </>
           }
         >
-          <div className="text-center py-8 text-slate-400 italic">No habits to display yet.</div>
+          <div className="text-center py-8 text-slate-500 dark:text-slate-400 italic">
+            No habits to display yet.
+          </div>
         </Show>
       </div>
     </Card>

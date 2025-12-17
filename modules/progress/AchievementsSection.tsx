@@ -25,7 +25,7 @@ const AchievementsSection: React.FC<{ achievements: Achievement[] }> = ({ achiev
               <Show
                 when={ach.isUnlocked}
                 fallback={
-                  <div className="absolute top-0 right-0 p-2.5 bg-slate-200 dark:bg-slate-700 text-slate-400 rounded-bl-2xl">
+                  <div className="absolute top-0 right-0 p-2.5 bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 rounded-bl-2xl">
                     <Lock className="h-4 w-4 translate-x-0 translate-y-0" />
                   </div>
                 }
@@ -41,7 +41,7 @@ const AchievementsSection: React.FC<{ achievements: Achievement[] }> = ({ achiev
                     'w-12 h-12 rounded-full flex items-center justify-center mb-3 transition-transform duration-300 md:group-hover:scale-110',
                     ach.isUnlocked
                       ? ach.color
-                      : 'bg-slate-200 dark:bg-slate-700 text-slate-400 grayscale'
+                      : 'bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400 grayscale'
                   )}
                 >
                   <ach.icon className="h-6 w-6" />

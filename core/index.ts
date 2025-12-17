@@ -20,8 +20,8 @@ export * from './Show';
 export * from '../context/ToastContext';
 export { default as AnimatedNumber } from './AnimatedNumber';
 export { default as SideMenu } from './SideMenu';
+export { default as BottomToolbar } from './BottomToolbar';
 
-// Legacy export for backward compatibility if any
 export { Switch as Toggle } from './Switch';
 export * from './Container';
 export { default as FAB } from './FAB';

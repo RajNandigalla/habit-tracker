@@ -48,7 +48,7 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   // Added `active:scale-[0.96]` and `transition-all duration-200 ease-ios`
   const baseClasses =
-    'inline-flex items-center justify-center font-semibold rounded-lg shadow-sm transition-all duration-200 ease-ios focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 focus:ring-offset-white dark:focus:ring-offset-slate-900 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.96]';
+    'inline-flex items-center justify-center font-semibold rounded-lg shadow-sm transition-all duration-200 ease-ios focus:outline-none focus-visible-ring disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.96] transform-gpu will-change-transform';
 
   const variantClasses: Record<ButtonVariant, string> = {
     primary:

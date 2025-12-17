@@ -1,6 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { acquireScrollLock, releaseScrollLock } from '../utils/scrollLock';
+import { useScrollLock } from 'usehooks-ts';
+import useAnimationFrame from '../hooks/useAnimationFrame';
+import { useTimeout } from 'usehooks-ts';
 
 interface SideMenuProps {
   isOpen: boolean;
@@ -12,44 +14,35 @@ const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose, children }) => {
   const menuRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const isLockedRef = useRef(false);
+
+  // Lock scroll when menu is open
+  useScrollLock({ autoLock: isOpen });
 
   useEffect(() => {
-    let closingTimer: ReturnType<typeof setTimeout>;
-
     if (!isOpen) {
       setIsActive(false);
-      // Wait for transition to finish before unmounting
-      closingTimer = setTimeout(() => {
-        setIsMounted(false);
-        if (isLockedRef.current) {
-          releaseScrollLock();
-          isLockedRef.current = false;
-        }
-      }, 500); // Matches the duration-500
-      return () => clearTimeout(closingTimer);
+      return;
     }
 
-    if (!isLockedRef.current) {
-      acquireScrollLock();
-      isLockedRef.current = true;
-    }
     setIsMounted(true);
-    // Small delay to allow mount before starting transition
-    const openingTimer = setTimeout(() => {
-      setIsActive(true);
-    }, 20);
 
-    return () => clearTimeout(openingTimer);
+    return;
   }, [isOpen]);
 
-  useEffect(() => {
-    return () => {
-      if (isLockedRef.current) {
-        releaseScrollLock();
-      }
-    };
-  }, []);
+  // Trigger CSS transition after mount (double-rAF pattern)
+  useAnimationFrame(() => {
+    if (isOpen) {
+      setIsActive(true);
+    }
+  }, [isOpen]);
+
+  // Wait for transition before unmounting
+  useTimeout(
+    () => {
+      setIsMounted(false);
+    },
+    !isOpen && isActive === false ? 500 : null
+  );
 
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {

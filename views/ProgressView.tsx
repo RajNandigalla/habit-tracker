@@ -46,7 +46,8 @@ export const ProgressView: React.FC<ProgressViewProps> = ({
 }) => {
   return (
     <PageTransition>
-      <main className="flex-1">
+      <main className="flex-1" aria-label="Progress view">
+        <h1 className="sr-only">Progress Report</h1>
         <div className="max-w-7xl mx-auto px-4 py-6 md:px-8 pb-24 md:pb-8">
           <div
             className="flex flex-col md:flex-row md:items-start md:justify-between mb-6 gap-4 animate-slide-up"
@@ -67,12 +68,26 @@ export const ProgressView: React.FC<ProgressViewProps> = ({
 
           <div className="space-y-8">
             {/* 1. Global KPI Grid */}
-            <section className="animate-slide-up" style={{ animationDelay: '100ms', opacity: 0 }}>
+            <section
+              aria-labelledby="global-stats-heading"
+              className="animate-slide-up"
+              style={{ animationDelay: '100ms', opacity: 0 }}
+            >
+              <h2 id="global-stats-heading" className="sr-only">
+                Global Statistics
+              </h2>
               <GlobalStatsGrid stats={stats} />
             </section>
 
             {/* 2. Mood Correlation */}
-            <section className="animate-slide-up" style={{ animationDelay: '200ms', opacity: 0 }}>
+            <section
+              aria-labelledby="mood-correlation-heading"
+              className="animate-slide-up"
+              style={{ animationDelay: '200ms', opacity: 0 }}
+            >
+              <h2 id="mood-correlation-heading" className="sr-only">
+                Mood Correlation
+              </h2>
               <MoodCorrelationCard data={moodCorrelationData} />
             </section>
 
@@ -80,31 +95,31 @@ export const ProgressView: React.FC<ProgressViewProps> = ({
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Heatmap (Takes up 2/3 on large screens) */}
               <section
+                aria-labelledby="consistency-heatmap-heading"
                 className="lg:col-span-2 animate-slide-up"
                 style={{ animationDelay: '400ms', opacity: 0 }}
               >
+                <h2 id="consistency-heatmap-heading" className="sr-only">
+                  Consistency Heatmap
+                </h2>
                 <ConsistencyHeatmap data={heatmapData} />
               </section>
 
               {/* Bar Chart (Takes up 1/3 on large screens) */}
               <section
+                aria-labelledby="habit-performance-heading"
                 className="lg:col-span-1 animate-slide-up"
                 style={{ animationDelay: '500ms', opacity: 0 }}
               >
+                <h2 id="habit-performance-heading" className="sr-only">
+                  Habit Performance
+                </h2>
                 <HabitPerformanceChart habits={habits} />
               </section>
             </div>
           </div>
         </div>
       </main>
-
-      <AIReportModal
-        isOpen={isAIModalOpen}
-        onClose={onCloseAIModal}
-        report={aiReport}
-        isLoading={isGeneratingReport}
-        onGenerate={onGenerateReport}
-      />
     </PageTransition>
   );
 };

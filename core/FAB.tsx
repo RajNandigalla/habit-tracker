@@ -2,6 +2,7 @@ import React, { useState, useEffect, forwardRef } from 'react';
 import { createPortal } from 'react-dom';
 import { PlusIcon } from '../icons';
 import { useScrollAwareFab } from '../hooks/useScrollAwareFab';
+import { useTimeout } from 'usehooks-ts';
 
 interface FABProps {
   onClick: () => void;
@@ -23,11 +24,17 @@ const FAB = forwardRef<HTMLButtonElement, FABProps>(({ onClick, ariaLabel, isPar
 
   const handleClick = () => {
     setIsAnimatingOut(true);
-    // Delay opening the modal to allow the animation to play
-    setTimeout(() => {
-      onClick();
-    }, 200); // This duration should match the scale-out animation
   };
+
+  // Wait for scale-out animation before triggering modal
+  useTimeout(
+    () => {
+      if (isAnimatingOut) {
+        onClick();
+      }
+    },
+    isAnimatingOut ? 200 : null
+  );
 
   const fabButton = (
     <button

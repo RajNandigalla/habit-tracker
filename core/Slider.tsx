@@ -80,7 +80,7 @@ export const Slider: React.FC<SliderProps> = ({
           <div
             className={cn(
               'transition-colors duration-300',
-              isDragging ? 'text-indigo-500' : 'text-slate-400'
+              isDragging ? 'text-indigo-500' : 'text-slate-500 dark:text-slate-400'
             )}
           >
             {leftIcon}
@@ -174,7 +174,7 @@ export const Slider: React.FC<SliderProps> = ({
           <div
             className={cn(
               'transition-colors duration-300',
-              isDragging ? 'text-indigo-500' : 'text-slate-400'
+              isDragging ? 'text-indigo-500' : 'text-slate-500 dark:text-slate-400'
             )}
           >
             {rightIcon}

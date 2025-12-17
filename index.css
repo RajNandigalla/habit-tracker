@@ -170,6 +170,31 @@ body {
   padding-top: max(1rem, env(safe-area-inset-top) + 1rem);
 }
 
+/* Screen Reader Only - For accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only:focus,
+.sr-only:active {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: inherit;
+}
+
 /* Global Thin Scrollbar */
 ::-webkit-scrollbar {
   width: 4px;
@@ -184,4 +209,12 @@ body {
 }
 .dark ::-webkit-scrollbar-thumb {
   background-color: var(--color-slate-600);
+}
+
+@utility focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-900;
+}
+
+@utility focus-visible-ring {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-900;
 }

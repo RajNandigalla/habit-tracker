@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { UserPreferences, ViewMode } from '../types';
 import { preferencesRepository } from '../core/repositories/LocalPreferencesRepository';
 import { audioManager } from '../utils';
+import { useTimeout } from 'usehooks-ts';
 
 interface PreferencesContextType {
   preferences: UserPreferences;
@@ -9,6 +10,7 @@ interface PreferencesContextType {
   toggleSound: () => void;
   setViewMode: (mode: ViewMode) => void;
   setFontSize: (size: number) => void;
+  toggleMobileBottomNav: () => void;
 }
 
 const PreferencesContext = createContext<PreferencesContextType | undefined>(undefined);
@@ -25,8 +27,10 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
     viewMode: 'list',
     soundEnabled: true,
     fontSize: 14.5,
+    useMobileBottomNav: true,
   });
   const [loading, setLoading] = useState(true);
+  const [isTogglingTheme, setIsTogglingTheme] = useState(false);
 
   const applyFontSize = (size: number) => {
     document.documentElement.style.fontSize = `${size}px`;
@@ -39,26 +43,16 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
         viewMode: 'list',
         soundEnabled: true,
         fontSize: 14.5,
+        useMobileBottomNav: true,
       };
 
-      // Handle legacy string migration if necessary
-      let loadedFontSize = 14.5;
-      if (typeof loaded.fontSize === 'string') {
-        const legacySize = loaded.fontSize as string;
-        if (legacySize === 'small') loadedFontSize = 13;
-        else if (legacySize === 'medium') loadedFontSize = 14.5;
-        else if (legacySize === 'large') loadedFontSize = 16;
-      } else if (typeof loaded.fontSize === 'number') {
-        loadedFontSize = loaded.fontSize;
-      }
-
-      // Merge with defaults
       const merged: UserPreferences = {
         darkMode: false,
         viewMode: 'list',
         soundEnabled: true,
+        fontSize: 14.5,
+        useMobileBottomNav: true,
         ...loaded,
-        fontSize: loadedFontSize,
       };
 
       setPreferences(merged);
@@ -95,10 +89,19 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
     audioManager.setEnabled(newPrefs.soundEnabled);
     preferencesRepository.savePreferences(newPrefs);
 
-    setTimeout(() => {
-      root.classList.remove('disable-transitions');
-    }, 1000);
+    setIsTogglingTheme(true);
   };
+
+  // Re-enable transitions after theme change
+  useTimeout(
+    () => {
+      if (isTogglingTheme) {
+        document.documentElement.classList.remove('disable-transitions');
+        setIsTogglingTheme(false);
+      }
+    },
+    isTogglingTheme ? 1000 : null
+  );
 
   const toggleSound = () => {
     const newPrefs = { ...preferences, soundEnabled: !preferences.soundEnabled };
@@ -120,11 +123,24 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
     preferencesRepository.savePreferences(newPrefs);
   };
 
+  const toggleMobileBottomNav = () => {
+    const newPrefs = { ...preferences, useMobileBottomNav: !preferences.useMobileBottomNav };
+    setPreferences(newPrefs);
+    preferencesRepository.savePreferences(newPrefs);
+  };
+
   if (loading) return null;
 
   return (
     <PreferencesContext.Provider
-      value={{ preferences, toggleDarkMode, toggleSound, setViewMode, setFontSize }}
+      value={{
+        preferences,
+        toggleDarkMode,
+        toggleSound,
+        setViewMode,
+        setFontSize,
+        toggleMobileBottomNav,
+      }}
     >
       {children}
     </PreferencesContext.Provider>

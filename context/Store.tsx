@@ -21,7 +21,7 @@ export const StoreProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 };
 
 /**
- * Combined useStore hook for backward compatibility
+ * Combined useStore hook for convenience
  * Use individual hooks (useHabits, useJournal, etc.) for better performance
  */
 export const useStore = () => {

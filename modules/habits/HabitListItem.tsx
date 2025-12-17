@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Habit } from '../../types';
 import { cn, getTodayISO, isHabitScheduledForDate, calculateWeeklyProgress } from '../../utils';
 import {
@@ -8,33 +8,33 @@ import {
   Crown,
   Trash2,
   BarChart2,
-  Bell,
-  Repeat,
-  ShieldBan,
   Skull,
   AlertCircle,
   ChevronRight,
 } from 'lucide-react';
 import { Button, Show } from '../../core';
 import { useStore } from '../../context/Store';
-import HabitDetailsModal, { HabitActionProps } from './HabitDetailsModal';
+import { HabitActionProps } from './HabitDetailsModal';
+import { HabitMetadataRow } from './HabitMetadataRow';
+import { useAnnouncer } from '../../hooks/useAnnouncer';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const HabitListItem: React.FC<{ habit: Habit; selectedDate?: string } & HabitActionProps> = ({
   habit,
   toggleHabitCompletion,
-  onFocus,
   selectedDate = getTodayISO(),
 }) => {
-  const { updateHabit, deleteHabit, categories } = useStore();
-  const [detailsOpen, setDetailsOpen] = useState(false);
-  const [initialMode, setInitialMode] = useState<'view' | 'edit' | 'delete'>('view');
+  const { categories } = useStore();
+  const { announce } = useAnnouncer();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const isCompletedSelectedDate = habit.completedDates.includes(selectedDate);
 
   const isChallenge = !!habit.challengeId;
   const isNegative = habit.habitType === 'negative';
   const isScheduledForDate = isHabitScheduledForDate(habit, selectedDate);
-  const isScheduledToday = isHabitScheduledForDate(habit, getTodayISO()); // Keep checking today for 'active' status styling nuances if needed, or simplify
+  const isScheduledToday = isHabitScheduledForDate(habit, getTodayISO());
 
   // Simplified logic for "active" styling - use selected date
   const isActiveForView = isScheduledForDate;
@@ -43,36 +43,37 @@ const HabitListItem: React.FC<{ habit: Habit; selectedDate?: string } & HabitAct
 
   const handleFocus = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (onFocus) onFocus(habit);
+    navigate(`/focus/${habit.id}`, { state: { background: location } });
   };
 
   const handleToggle = (e: React.MouseEvent) => {
     e.stopPropagation();
     toggleHabitCompletion(habit.id, selectedDate);
+    const wasCompleted = habit.completedDates.includes(selectedDate);
+    const status = wasCompleted ? 'incomplete' : 'complete';
+    announce(`${habit.name} marked as ${status}`);
   };
 
   const handleStats = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setInitialMode('view');
-    setDetailsOpen(true);
+    navigate(`/habit/${habit.id}`, { state: { background: location } });
   };
 
   const handleQuickDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    setInitialMode('delete');
-    setDetailsOpen(true);
+    navigate(`/habit/${habit.id}`, { state: { background: location, mode: 'delete' } });
   };
 
   return (
     <>
-      <div
+      <button
         onClick={() => {
-          setInitialMode('view');
-          setDetailsOpen(true);
+          navigate(`/habit/${habit.id}`, { state: { background: location } });
         }}
+        aria-label={`View details for ${habit.name}`}
         className={cn(
-          'group relative flex items-center p-3 bg-white dark:bg-slate-800 rounded-3xl border transition-all duration-300 ease-ios cursor-pointer shadow-xs md:hover:shadow-md active:scale-[0.99]',
+          'group relative flex items-center p-3 bg-white dark:bg-slate-800 rounded-3xl border transition-all duration-300 ease-ios cursor-pointer shadow-xs md:hover:shadow-md active:scale-[0.99] w-full text-left transform-gpu will-change-transform',
           isCompletedSelectedDate
             ? isNegative
               ? 'border-red-200 bg-red-50 dark:bg-red-900/10 dark:border-red-800/50'
@@ -81,9 +82,7 @@ const HabitListItem: React.FC<{ habit: Habit; selectedDate?: string } & HabitAct
           !isActiveForView && !isCompletedSelectedDate && 'opacity-70 grayscale-[0.5]'
         )}
       >
-        {/* Checkbox / Action Area - Full height click target
-            Using self-stretch to fill the parent height while keeping parent items-center for content
-        */}
+        {/* Checkbox / Action Area */}
         <div
           className="flex-shrink-0 mr-3 pl-2 flex items-center cursor-pointer self-stretch"
           onClick={handleToggle}
@@ -91,12 +90,11 @@ const HabitListItem: React.FC<{ habit: Habit; selectedDate?: string } & HabitAct
           <button
             type="button"
             disabled={!isActiveForView && !isCompletedSelectedDate && habit.frequency !== 'weekly'}
+            aria-label={
+              isNegative ? `Log incident for ${habit.name}` : `Mark ${habit.name} as complete`
+            }
             className={cn(
-              'w-6 h-6 rounded-lg flex items-center justify-center transition-all duration-300 ease-spring border-2 relative overflow-hidden pointer-events-none', // pointer-events-none helps let the click pass to the div, or we just rely on parent div click. Actually disabling button click is safer to avoid double triggering if they click the button directly?
-              // Wait, if I click button, it bubbles to div.
-              // If button has onClick, it fires button onClick then div onClick.
-              // If I remove onClick from button, button behaves like a static element.
-              // I should allow the button to just be visual (pointer-events-none) or remove its onClick.
+              'w-6 h-6 rounded-lg flex items-center justify-center transition-all duration-300 ease-spring border-2 relative overflow-hidden pointer-events-none',
               isNegative
                 ? isCompletedSelectedDate
                   ? 'bg-red-500 border-red-500 text-white'
@@ -105,7 +103,6 @@ const HabitListItem: React.FC<{ habit: Habit; selectedDate?: string } & HabitAct
                   ? 'bg-green-500 border-green-500 text-white scale-100'
                   : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 text-transparent md:hover:border-indigo-400 dark:md:hover:border-indigo-500 md:hover:bg-indigo-50 dark:md:hover:bg-indigo-900/10 active:scale-90'
             )}
-            title={isNegative ? 'Log Incident' : 'Complete Habit'}
           >
             <Show
               when={isNegative}
@@ -161,7 +158,7 @@ const HabitListItem: React.FC<{ habit: Habit; selectedDate?: string } & HabitAct
             )}
 
             {!isActiveForView && !isCompletedSelectedDate && habit.frequency !== 'weekly' && (
-              <span className="text-[10px] uppercase font-bold bg-slate-100 dark:bg-slate-800 text-slate-400 px-1.5 rounded">
+              <span className="text-[10px] uppercase font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-1.5 rounded">
                 Rest Day
               </span>
             )}
@@ -169,99 +166,17 @@ const HabitListItem: React.FC<{ habit: Habit; selectedDate?: string } & HabitAct
 
           {/* Row 2: Description (if exists) */}
           {habit.description && (
-            <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-1 font-medium">
+            <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-1 font-medium">
               {habit.description}
             </p>
           )}
 
           {/* Row 3: Metadata (Time + Stats) */}
-          <div className="flex items-center gap-3 text-xs font-semibold text-slate-500 dark:text-slate-400 overflow-hidden mt-0.5">
-            {/* Time Badge - Visible if set */}
-            {habit.reminderTime && (
-              <div className="flex items-center gap-1 text-indigo-500 font-medium">
-                <Bell className="h-3 w-3" />
-                {habit.reminderTime}
-              </div>
-            )}
-
-            <span
-              className={cn('flex items-center gap-1', isCompletedSelectedDate && 'opacity-75')}
-            >
-              <Show
-                when={isNegative}
-                fallback={
-                  <>
-                    <Flame
-                      className={cn(
-                        'w-3.5 h-3.5 transition-colors',
-                        habit.streak > 0 && !isCompletedSelectedDate
-                          ? 'text-orange-500 fill-orange-500'
-                          : 'text-slate-400'
-                      )}
-                    />
-                    {habit.streak} streak
-                  </>
-                }
-              >
-                <ShieldBan
-                  className={cn(
-                    'w-3.5 h-3.5',
-                    isCompletedSelectedDate ? 'text-red-500' : 'text-green-500'
-                  )}
-                />
-                {habit.streak} days clean
-              </Show>
-            </span>
-
-            {weeklyStats && (
-              <span className="flex items-center gap-1 text-indigo-600 dark:text-indigo-400">
-                <Repeat className="w-3 h-3" />
-                {weeklyStats.current} / {weeklyStats.target} this week
-              </span>
-            )}
-
-            <div className="hidden sm:flex gap-1 overflow-x-auto no-scrollbar">
-              {(() => {
-                const displayCats = [];
-                // Resolve IDs
-                if (habit.categoryIds && habit.categoryIds.length > 0) {
-                  habit.categoryIds.forEach(id => {
-                    const cat = categories.find(c => c.id === id);
-                    if (cat) displayCats.push(cat);
-                  });
-                }
-                // Fallback
-                // Fallback for legacy 'category' string field
-                const legacyCategory = (habit as any).category;
-                if (displayCats.length === 0 && legacyCategory) {
-                  const match = categories.find(c => c.label === legacyCategory);
-                  if (match) displayCats.push(match);
-                  else displayCats.push({ label: legacyCategory, icon: '🏷️' } as any);
-                }
-                if (displayCats.length === 0) return null;
-
-                return displayCats.slice(0, 2).map((cat, i) => (
-                  <span
-                    key={i}
-                    className={cn(
-                      'inline-flex items-center gap-1 px-1.5 py-0.5 rounded whitespace-nowrap',
-                      isCompletedSelectedDate
-                        ? 'bg-slate-100 dark:bg-slate-800 text-slate-400'
-                        : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                    )}
-                  >
-                    <span>{cat.icon}</span> {cat.label}
-                  </span>
-                ));
-              })()}
-              {/* Check if there are more than 2 */}
-              {(habit.categoryIds?.length || 0) > 2 && (
-                <span className="text-[10px] bg-slate-100 dark:bg-slate-800 px-1 rounded text-slate-400">
-                  +{habit.categoryIds!.length - 2}
-                </span>
-              )}
-            </div>
-          </div>
+          <HabitMetadataRow
+            habit={habit}
+            isCompletedSelectedDate={isCompletedSelectedDate}
+            weeklyStats={weeklyStats}
+          />
         </div>
 
         {/* Actions Area */}
@@ -271,7 +186,7 @@ const HabitListItem: React.FC<{ habit: Habit; selectedDate?: string } & HabitAct
               size="icon-sm"
               variant="ghost"
               onClick={handleFocus}
-              title="Start Focus Timer"
+              aria-label={`Start focus timer for ${habit.name}`}
               className="hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30"
             >
               <Timer className="h-4 w-4" />
@@ -281,14 +196,14 @@ const HabitListItem: React.FC<{ habit: Habit; selectedDate?: string } & HabitAct
             size="icon-sm"
             variant="ghost"
             onClick={handleStats}
-            title="View Stats"
+            aria-label={`View stats for ${habit.name}`}
             className="hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30"
           >
             <BarChart2 className="h-4 w-4" />
           </Button>
           <button
             onClick={handleQuickDelete}
-            title="Delete Habit"
+            aria-label={`Delete ${habit.name}`}
             className="p-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-colors"
           >
             <Trash2 className="h-4 w-4" />
@@ -296,20 +211,10 @@ const HabitListItem: React.FC<{ habit: Habit; selectedDate?: string } & HabitAct
         </div>
 
         {/* Mobile Chevron Indicator */}
-        <div className="lg:hidden ml-2 text-slate-300 dark:text-slate-600">
+        <div className="lg:hidden ml-2 text-slate-500 dark:text-slate-500">
           <ChevronRight className="w-6 h-6" strokeWidth={2} />
         </div>
-      </div>
-
-      <HabitDetailsModal
-        habit={habit}
-        isOpen={detailsOpen}
-        onClose={() => setDetailsOpen(false)}
-        onUpdate={updateHabit}
-        onDelete={deleteHabit}
-        onFocus={onFocus}
-        initialMode={initialMode}
-      />
+      </button>
     </>
   );
 };

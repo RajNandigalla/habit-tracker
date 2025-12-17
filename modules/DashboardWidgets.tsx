@@ -1,17 +1,20 @@
 import filter from 'lodash/filter';
 import find from 'lodash/find';
 import maxBy from 'lodash/maxBy';
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Card, Show } from '../core';
+import { Card, Tooltip, Show } from '../core';
 import { Habit, JournalEntry } from '../types';
 import { getTodayISO, cn, dayjs } from '../utils';
-import { Smile, Meh, Frown, Zap, Trophy, CloudRain, Sun, Moon, Flame } from 'lucide-react';
+import { Trophy, CloudRain, Sun, Moon, Flame, Smile } from 'lucide-react';
+import { MOOD_OPTIONS } from './mood/constants';
+import { getMoodIcon, getMoodBgClass } from './mood/utils';
+import useAnimationFrame from '../hooks/useAnimationFrame';
 
 interface DailyOverviewProps {
   habits: Habit[];
   journalEntries: JournalEntry[];
-  onLogMood: (mood: 'happy' | 'motivated' | 'neutral' | 'sad' | 'tired') => void;
+  onLogMood: (mood: string | null) => void;
   username?: string;
 }
 
@@ -50,59 +53,15 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
     totalHabits > 0 ? Math.round((completedHabits / totalHabits) * 100) : 0;
   const bestStreak = maxBy(habits, 'streak')?.streak || 0;
 
-  useEffect(() => {
-    // Slight delay to trigger animation after mount
-    const timer = setTimeout(() => {
-      setAnimatedProgress(progressPercentage);
-    }, 100);
-    return () => clearTimeout(timer);
+  // Trigger progress animation (double-rAF pattern)
+  useAnimationFrame(() => {
+    setAnimatedProgress(progressPercentage);
   }, [progressPercentage]);
 
   // Mood Logic
   const todayEntry = find(journalEntries, j => j.date.startsWith(todayISO));
   const currentMood = todayEntry?.mood;
-
-  const moodOptions = [
-    {
-      value: 'motivated',
-      icon: Zap,
-      label: 'Motivated',
-      color: 'text-amber-500',
-      bg: 'bg-amber-100 dark:bg-amber-900/30',
-    },
-    {
-      value: 'happy',
-      icon: Smile,
-      label: 'Great',
-      color: 'text-green-500',
-      bg: 'bg-green-100 dark:bg-green-900/30',
-    },
-    {
-      value: 'neutral',
-      icon: Meh,
-      label: 'Okay',
-      color: 'text-blue-500',
-      bg: 'bg-blue-100 dark:bg-blue-900/30',
-    },
-    {
-      value: 'tired',
-      icon: Moon,
-      label: 'Tired',
-      color: 'text-purple-500',
-      bg: 'bg-purple-100 dark:bg-purple-900/30',
-    },
-    {
-      value: 'sad',
-      icon: Frown,
-      label: 'Down',
-      color: 'text-slate-500',
-      bg: 'bg-slate-100 dark:bg-slate-800',
-    },
-  ];
-
-  const CurrentMoodIcon = currentMood
-    ? find(moodOptions, { value: currentMood })?.icon || Smile
-    : Smile;
+  const currentMoodEmoji = currentMood ? getMoodIcon(currentMood) : '😊';
 
   const handleOpenMoodCheckIn = () => {
     navigate('/check-in', { state: { background: location } });
@@ -176,14 +135,7 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
                   currentMood ? 'bg-white/20' : 'bg-white/10 hover:bg-white/20'
                 )}
               >
-                <Show
-                  when={!!currentMood}
-                  fallback={<Smile className="w-5 h-5 text-indigo-200 mb-0.5" />}
-                >
-                  <div className={cn('text-white')}>
-                    <CurrentMoodIcon className="w-5 h-5 mb-0.5" />
-                  </div>
-                </Show>
+                <div className="text-xl mb-0.5">{currentMoodEmoji}</div>
                 <span className="text-[9px] font-medium text-indigo-100 truncate w-full text-center px-0.5">
                   {currentMood ? 'Mood' : 'Log'}
                 </span>
@@ -274,7 +226,7 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
               </div>
               <div>
                 <h3 className="font-bold text-slate-900 dark:text-white text-base">Mood Check</h3>
-                <p className="text-base text-slate-500 dark:text-slate-400">
+                <p className="text-base text-slate-600 dark:text-slate-400">
                   How are you feeling right now?
                 </p>
               </div>
@@ -300,30 +252,17 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
               when={!!currentMood}
               fallback={
                 <div className="flex items-center gap-2">
-                  {moodOptions.map(mood => (
-                    <button
-                      key={mood.value}
-                      onClick={() => onLogMood(mood.value as any)}
-                      className="group relative p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 hover:scale-110 active:scale-95"
-                    >
-                      <mood.icon
-                        className={cn(
-                          'w-6 h-6 transition-colors duration-200 text-slate-400 dark:text-slate-500',
-                          mood.value === 'motivated' && 'group-hover:text-amber-500',
-                          mood.value === 'happy' && 'group-hover:text-green-500',
-                          mood.value === 'neutral' && 'group-hover:text-blue-500',
-                          mood.value === 'tired' && 'group-hover:text-purple-500',
-                          mood.value === 'sad' &&
-                            'group-hover:text-slate-600 dark:group-hover:text-slate-300'
-                        )}
-                      />
-
-                      {/* Custom Tooltip - Restored */}
-                      <span className="absolute -top-9 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 dark:bg-white text-white dark:text-slate-900 text-[10px] font-bold rounded opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 pointer-events-none whitespace-nowrap shadow-xl z-20">
-                        {mood.label}
-                        <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-800 dark:border-t-white"></span>
-                      </span>
-                    </button>
+                  {MOOD_OPTIONS.map(mood => (
+                    <Tooltip key={mood.id} content={mood.label}>
+                      <button
+                        onClick={() => onLogMood(mood.id)}
+                        className="group relative p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 hover:scale-110 active:scale-95"
+                      >
+                        <div className="text-2xl transition-transform duration-200">
+                          {mood.emoji}
+                        </div>
+                      </button>
+                    </Tooltip>
                   ))}
                 </div>
               }
@@ -333,16 +272,15 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
                 <div
                   className={cn(
                     'flex items-center gap-2 font-bold px-2 py-0.5 rounded-md text-base',
-                    find(moodOptions, { value: currentMood })?.color,
-                    find(moodOptions, { value: currentMood })?.bg
+                    getMoodBgClass(currentMood || '')
                   )}
                 >
-                  <CurrentMoodIcon className="w-4 h-4" />
+                  <div className="text-xl">{currentMoodEmoji}</div>
                   <span className="capitalize">{currentMood}</span>
                 </div>
                 <button
-                  onClick={() => onLogMood(null as any)}
-                  className="ml-2 text-xs text-slate-400 underline hover:text-indigo-500"
+                  onClick={() => onLogMood(null)}
+                  className="ml-2 text-xs text-slate-500 dark:text-slate-400 underline hover:text-indigo-600 dark:hover:text-indigo-400"
                 >
                   Edit
                 </button>

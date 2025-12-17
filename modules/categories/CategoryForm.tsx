@@ -79,11 +79,16 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
 
       <div className="grid grid-cols-[auto_1fr] gap-4">
         <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-slate-700 dark:text-slate-300">Icon</label>
-          <IconPicker currentIcon={icon} onSelect={setIcon} />
+          <label id="icon-label" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+            Icon
+          </label>
+          <div aria-labelledby="icon-label">
+            <IconPicker currentIcon={icon} onSelect={setIcon} />
+          </div>
         </div>
         <div className="flex flex-col gap-2">
           <Input
+            id="category-name"
             label="Category Name"
             value={label}
             onChange={e => {
@@ -91,9 +96,10 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
               setError('');
             }}
             placeholder="e.g. Work"
+            error={error}
+            required
             autoFocus
           />
-          {error && <p className="text-sm text-red-600 dark:text-red-400 mt-1">{error}</p>}
         </div>
       </div>
 

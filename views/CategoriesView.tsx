@@ -169,7 +169,7 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({
                 <div className="mb-4">
                   <div className="flex items-center gap-2">
                     <h3 className="text-md font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                      <Layers className="w-5 h-5 text-slate-400" />
+                      <Layers className="w-5 h-5 text-slate-500 dark:text-slate-400" />
                       Default Categories
                     </h3>
                   </div>
@@ -191,10 +191,10 @@ export const CategoriesView: React.FC<CategoriesViewProps> = ({
           <div className="mt-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
             <div className="flex items-center gap-2 mb-4">
               <h3 className="text-md font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Archive className="w-5 h-5 text-slate-400" />
+                <Archive className="w-5 h-5 text-slate-500 dark:text-slate-400" />
                 Archived Categories
               </h3>
-              <span className="text-xs text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full">
+              <span className="text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full">
                 {archivedCategories.length}
               </span>
             </div>

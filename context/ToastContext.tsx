@@ -7,10 +7,13 @@ import React, {
   useRef,
   ReactNode,
   useMemo,
+  useEffect,
 } from 'react';
 import { X, CheckCircle, AlertCircle, Info } from 'lucide-react';
 import { getCurrentTimestamp } from '../utils';
 import ReactDOM from 'react-dom';
+import useAnimationFrame from '../hooks/useAnimationFrame';
+import { useTimeout } from 'usehooks-ts';
 
 const CheckCircleIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg
@@ -69,10 +72,11 @@ interface ToastMessage {
   id: number;
   message: string;
   type: ToastType;
+  duration?: number; // Duration in ms, 0 for infinite
 }
 
 interface ToastContextType {
-  addToast: (message: string, type: ToastType) => void;
+  addToast: (message: string, type?: ToastType, duration?: number) => void;
 }
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
@@ -83,26 +87,31 @@ const Toast: React.FC<{ toast: ToastMessage; onDismiss: (id: number) => void }> 
 }) => {
   const [isExiting, setIsExiting] = useState(false);
   const [isActive, setIsActive] = useState(false);
+  const duration = toast.duration ?? 4000;
 
-  React.useEffect(() => {
-    // Trigger the "enter" animation shortly after mounting
-    const enterTimer = setTimeout(() => setIsActive(true), 50);
-    return () => clearTimeout(enterTimer);
+  // Trigger enter animation (double-rAF pattern)
+  useAnimationFrame(() => {
+    setIsActive(true);
   }, []);
 
-  React.useEffect(() => {
-    // Trigger the "exit" animation after a delay
-    const exitTimer = setTimeout(() => {
+  // Auto-dismiss after duration
+  useTimeout(
+    () => {
       setIsExiting(true);
-      setTimeout(() => onDismiss(toast.id), 300); // Duration should match transition
-    }, 4000);
+    },
+    duration === 0 ? null : duration
+  );
 
-    return () => clearTimeout(exitTimer);
-  }, [toast.id, onDismiss]);
+  // Remove toast after exit animation
+  useTimeout(
+    () => {
+      onDismiss(toast.id);
+    },
+    isExiting ? 300 : null
+  );
 
   const handleDismiss = () => {
     setIsExiting(true);
-    setTimeout(() => onDismiss(toast.id), 300);
   };
 
   const typeClasses = {
@@ -145,7 +154,7 @@ const Toast: React.FC<{ toast: ToastMessage; onDismiss: (id: number) => void }> 
       </p>
       <button
         onClick={handleDismiss}
-        className="flex-shrink-0 p-1 -m-1 rounded-full text-slate-400 hover:bg-black/10 dark:hover:bg-white/10"
+        className="flex-shrink-0 p-1 -m-1 rounded-full text-slate-500 dark:text-slate-400 hover:bg-black/10 dark:hover:bg-white/10"
         aria-label="Dismiss"
       >
         <svg
@@ -184,9 +193,12 @@ const ToastContainer: React.FC<{ toasts: ToastMessage[]; removeToast: (id: numbe
 export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
-  const addToast = useCallback((message: string, type: ToastType = 'info') => {
+  const addToast = useCallback((message: string, type: ToastType = 'info', duration = 4000) => {
     // Use centralized timestamp for ID
-    setToasts(prevToasts => [...prevToasts, { id: getCurrentTimestamp(), message, type }]);
+    setToasts(prevToasts => [
+      ...prevToasts,
+      { id: getCurrentTimestamp(), message, type, duration },
+    ]);
   }, []);
 
   const removeToast = useCallback((id: number) => {

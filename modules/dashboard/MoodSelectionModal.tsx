@@ -1,13 +1,14 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Modal } from '../../core';
 import { cn } from '../../utils';
-import { Smile, Meh, Frown, Zap, Moon } from 'lucide-react';
+import { MOOD_OPTIONS } from '../mood/constants';
 
 interface MoodSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentMood?: string;
-  onLogMood: (mood: 'happy' | 'motivated' | 'neutral' | 'sad' | 'tired') => void;
+  onLogMood: (mood: string) => void;
 }
 
 export const MoodSelectionModal: React.FC<MoodSelectionModalProps> = ({
@@ -16,83 +17,48 @@ export const MoodSelectionModal: React.FC<MoodSelectionModalProps> = ({
   currentMood,
   onLogMood,
 }) => {
-  const moodOptions = [
-    {
-      value: 'motivated',
-      icon: Zap,
-      label: 'Motivated',
-      color: 'text-amber-500',
-      bg: 'bg-amber-100 dark:bg-amber-900/30',
-    },
-    {
-      value: 'happy',
-      icon: Smile,
-      label: 'Great',
-      color: 'text-green-500',
-      bg: 'bg-green-100 dark:bg-green-900/30',
-    },
-    {
-      value: 'neutral',
-      icon: Meh,
-      label: 'Okay',
-      color: 'text-blue-500',
-      bg: 'bg-blue-100 dark:bg-blue-900/30',
-    },
-    {
-      value: 'tired',
-      icon: Moon,
-      label: 'Tired',
-      color: 'text-purple-500',
-      bg: 'bg-purple-100 dark:bg-purple-900/30',
-    },
-    {
-      value: 'sad',
-      icon: Frown,
-      label: 'Down',
-      color: 'text-slate-500',
-      bg: 'bg-slate-100 dark:bg-slate-800',
-    },
-  ];
-
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="How are you feeling?" center>
+    <Modal isOpen={isOpen} onClose={onClose} title="How are you feeling?">
       <div className="grid grid-cols-3 gap-3 py-2">
-        {moodOptions.map(m => {
-          const isSelected = currentMood === m.value;
+        {MOOD_OPTIONS.map((mood, index) => {
+          const isSelected = currentMood === mood.id;
           return (
-            <button
-              key={m.value}
+            <motion.button
+              key={mood.id}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: index * 0.05, type: 'spring', stiffness: 300 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => {
-                onLogMood(m.value as any);
+                onLogMood(mood.id);
                 onClose();
               }}
               className={cn(
-                'flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-200 active:scale-95',
+                'flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all duration-200',
                 isSelected
-                  ? 'bg-indigo-50 border-indigo-500 ring-1 ring-indigo-500 dark:bg-indigo-900/30 dark:border-indigo-400'
-                  : 'bg-white border-slate-200 dark:bg-slate-800 dark:border-slate-700 hover:border-indigo-200'
+                  ? 'bg-indigo-50 border-indigo-500 ring-2 ring-indigo-200 dark:bg-indigo-900/30 dark:border-indigo-400 dark:ring-indigo-800/50'
+                  : 'bg-white border-slate-200 dark:bg-slate-800 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600'
               )}
             >
-              <div
-                className={cn(
-                  'w-10 h-10 rounded-full flex items-center justify-center mb-2',
-                  m.bg,
-                  isSelected ? 'scale-110' : ''
-                )}
+              <motion.div
+                className="text-4xl mb-2"
+                animate={isSelected ? { scale: [1, 1.2, 1] } : {}}
+                transition={{ duration: 0.3 }}
               >
-                <m.icon className={cn('w-6 h-6', m.color)} />
-              </div>
+                {mood.emoji}
+              </motion.div>
               <span
                 className={cn(
-                  'text-xs font-semibold',
+                  'text-sm font-semibold',
                   isSelected
                     ? 'text-indigo-700 dark:text-indigo-300'
                     : 'text-slate-600 dark:text-slate-400'
                 )}
               >
-                {m.label}
+                {mood.label}
               </span>
-            </button>
+            </motion.button>
           );
         })}
       </div>

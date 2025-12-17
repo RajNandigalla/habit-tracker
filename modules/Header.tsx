@@ -3,16 +3,17 @@ import { Activity } from 'lucide-react';
 import { cn } from '../utils';
 import { useNavigation } from '../context/NavigationContext';
 import { MenuIcon, PaletteIcon } from '../icons';
-import { AppearanceBottomSheet } from './settings/AppearanceBottomSheet';
+import { Link, useLocation } from 'react-router-dom';
 
 interface HeaderProps {
   className?: string;
   children?: React.ReactNode;
+  hideHamburger?: boolean;
 }
 
-export const Header: React.FC<HeaderProps> = ({ className, children }) => {
+export const Header: React.FC<HeaderProps> = ({ className, children, hideHamburger = false }) => {
   const { toggleSideMenu } = useNavigation();
-  const [isAppearanceOpen, setIsAppearanceOpen] = useState(false);
+  const location = useLocation();
 
   return (
     <>
@@ -24,14 +25,16 @@ export const Header: React.FC<HeaderProps> = ({ className, children }) => {
       >
         <div className="w-full mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {/* Mobile Hamburger */}
-            <button
-              onClick={toggleSideMenu}
-              className="md:hidden p-2 -ml-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
-              aria-label="Open menu"
-            >
-              <MenuIcon className="h-6 w-6" />
-            </button>
+            {/* Mobile Hamburger - Only show if not hidden */}
+            {!hideHamburger && (
+              <button
+                onClick={toggleSideMenu}
+                className="md:hidden p-2 -ml-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                aria-label="Open menu"
+              >
+                <MenuIcon className="h-6 w-6" />
+              </button>
+            )}
 
             <div className="flex items-center gap-2">
               <div className="flex w-8 h-8 bg-indigo-600 rounded-lg items-center justify-center text-white shadow-lg shadow-indigo-600/20 dark:shadow-indigo-900/20">
@@ -46,18 +49,17 @@ export const Header: React.FC<HeaderProps> = ({ className, children }) => {
           <div className="flex items-center gap-2 md:gap-4">
             {children}
 
-            <button
-              onClick={() => setIsAppearanceOpen(true)}
-              className="p-2 text-slate-500 hover:bg-slate-100 rounded-full dark:text-slate-400 dark:hover:bg-slate-800 transition-colors active:scale-95 duration-200"
+            <Link
+              to="/settings/appearance"
+              state={{ background: location }}
+              className="p-2 text-slate-600 hover:bg-slate-100 rounded-full dark:text-slate-400 dark:hover:bg-slate-800 transition-colors active:scale-95 duration-200"
               aria-label="Appearance settings"
             >
               <PaletteIcon className="h-5 w-5" />
-            </button>
+            </Link>
           </div>
         </div>
       </header>
-
-      <AppearanceBottomSheet isOpen={isAppearanceOpen} onClose={() => setIsAppearanceOpen(false)} />
     </>
   );
 };

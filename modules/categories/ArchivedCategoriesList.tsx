@@ -25,7 +25,7 @@ export const ArchivedCategoriesList: React.FC<ArchivedCategoriesListProps> = ({
     <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
       <button
         onClick={() => setShowArchived(!showArchived)}
-        className="flex items-center gap-2 text-sm font-semibold text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors w-full"
+        className="flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-200 transition-colors w-full"
       >
         <Archive className="w-4 h-4" />
         {showArchived ? 'Hide Archived' : 'Show Archived'}
@@ -51,7 +51,7 @@ export const ArchivedCategoriesList: React.FC<ArchivedCategoriesListProps> = ({
                 onClick={() => onRestore(cat.id)}
                 title="Restore"
               >
-                <RefreshCw className="w-4 h-4 text-slate-400" />
+                <RefreshCw className="w-4 h-4 text-slate-500 dark:text-slate-400" />
               </Button>
             </div>
           ))}
