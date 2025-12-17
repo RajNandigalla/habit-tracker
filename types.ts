@@ -26,7 +26,7 @@ export interface Category {
   id: string;
   label: string;
   icon?: string; // Emoji or icon name
-  color?: string; // Tailwind color name (e.g., 'red-500') or hex (legacy)
+  color?: string; // Tailwind color name (e.g., 'red-500')
   isArchived: boolean;
   isDefault?: boolean; // If true, cannot be renamed/deleted?
 }
@@ -83,7 +83,7 @@ export const DEFAULT_CATEGORIES: Category[] = [
   },
 ];
 
-export type HabitCategory = string; // Keeping for backward compatibility types for now if needed, but should rely on Category interface
+export type HabitCategory = string;
 
 export interface JournalEntry {
   id: string;
