@@ -15,6 +15,7 @@ export const MobileHeaderNav: React.FC<MobileHeaderNavProps> = ({ className }) =
     <header
       className={cn(
         'z-40 shrink-0 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3 transition-colors md:hidden',
+        'pt-[max(0.75rem,env(safe-area-inset-top))]',
         className
       )}
     >

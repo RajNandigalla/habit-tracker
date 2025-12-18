@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Habit, ViewMode, HabitCategory, JournalEntry } from '../types';
 import { HabitListItem, AddHabitModal } from '../modules/habits';
-import { Button, Chip, Modal, Show, FAB } from '../core';
+import { Button, Chip, Modal, Show, FAB, Flex, FlexItem, Grid } from '../core';
 import { dayjs } from '../utils';
 import { Plus, Sparkles, AlertTriangle } from 'lucide-react';
 import { cn, getTodayISO, generateId, isHabitScheduledForDate } from '../utils'; // Added isHabitScheduledForDate
@@ -107,14 +107,20 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </section>
 
           {/* 1. Header Row (Title + Actions) */}
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-6 gap-4">
-            <div className="mb-1">
+          <Flex
+            direction="column"
+            align="start"
+            justify="between"
+            gap={4}
+            className="md:flex-row md:items-end mb-6"
+          >
+            <FlexItem className="mb-1">
               <h2 className="text-xl font-bold text-slate-900 dark:text-white">Your Habits</h2>
               <p className="text-slate-500 text-sm">Focus on today's goals.</p>
-            </div>
+            </FlexItem>
 
             {habits.length > 0 && (
-              <div className="hidden md:flex items-center gap-3">
+              <Flex align="center" gap={3} className="hidden md:flex">
                 <Button
                   onClick={() => navigate('/habit/add', { state: { background: location } })}
                   size="sm"
@@ -122,9 +128,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 >
                   <Plus className="h-4 w-4" /> New Habit
                 </Button>
-              </div>
+              </Flex>
             )}
-          </div>
+          </Flex>
 
           {/* Desktop Card Wrapper */}
           <section aria-labelledby="habits-section-heading">
@@ -139,7 +145,11 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
               {/* Category Filter */}
               <div className="sticky top-0 z-30 -mx-4 px-4 pt-2 pb-4 bg-slate-50/95 dark:bg-slate-950/95 border-b border-slate-200/50 dark:border-slate-800/50 mb-8 transition-all duration-300 md:static md:bg-transparent md:dark:bg-transparent md:border-none md:p-0 md:m-0 md:mb-6">
-                <div className="flex gap-2.5 overflow-x-auto no-scrollbar w-full md:w-auto md:flex-wrap p-1">
+                <Flex
+                  gap={2}
+                  wrap="wrap"
+                  className="overflow-x-auto no-scrollbar w-full md:w-auto p-1"
+                >
                   {categories.map(cat => (
                     <Chip
                       key={cat}
@@ -149,7 +159,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       {cat}
                     </Chip>
                   ))}
-                </div>
+                </Flex>
               </div>
 
               <Show
@@ -158,7 +168,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <Show
                     when={filteredHabits.length === 0}
                     fallback={
-                      <div className="space-y-3">
+                      <Grid gap={3} cols={1}>
                         <AnimatePresence mode="popLayout">
                           {filteredHabits.map(habit => (
                             <motion.div
@@ -178,7 +188,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             </motion.div>
                           ))}
                         </AnimatePresence>
-                      </div>
+                      </Grid>
                     }
                   >
                     <div className="text-center py-12 text-slate-600 dark:text-slate-400 animate-fade-scale">

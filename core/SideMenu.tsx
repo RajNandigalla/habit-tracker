@@ -66,7 +66,7 @@ const SideMenu: React.FC<SideMenuProps> = ({ isOpen, onClose, children }) => {
 
   const menuContent = (
     <div
-      className={`fixed inset-0 bg-black/60 z-50 flex justify-start transition-opacity duration-500 ease-ios ${isActive ? 'opacity-100' : 'opacity-0'}`}
+      className={`fixed inset-0 bg-black/60 z-[60] flex justify-start transition-opacity duration-500 ease-ios ${isActive ? 'opacity-100' : 'opacity-0'}`}
       aria-modal="true"
       role="dialog"
       onClick={handleBackdropClick}

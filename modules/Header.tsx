@@ -20,6 +20,7 @@ export const Header: React.FC<HeaderProps> = ({ className, children, hideHamburg
       <header
         className={cn(
           'z-40 shrink-0 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-4 py-3 md:px-6 transition-colors',
+          'pt-[max(0.75rem,env(safe-area-inset-top))]',
           className
         )}
       >

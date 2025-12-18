@@ -135,7 +135,7 @@ export const DailyOverview: React.FC<DailyOverviewProps> = ({
                   currentMood ? 'bg-white/20' : 'bg-white/10 hover:bg-white/20'
                 )}
               >
-                <div className="text-xl mb-0.5">{currentMoodEmoji}</div>
+                <div className="text-xl">{currentMoodEmoji}</div>
                 <span className="text-[9px] font-medium text-indigo-100 truncate w-full text-center px-0.5">
                   {currentMood ? 'Mood' : 'Log'}
                 </span>

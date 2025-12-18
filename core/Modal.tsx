@@ -86,7 +86,7 @@ export const Modal: React.FC<ModalProps> = ({
   return ReactDOM.createPortal(
     <div
       className={clsx(
-        'fixed inset-0 z-50 flex justify-center transition-opacity duration-300 ease-ios',
+        'fixed inset-0 z-[60] flex justify-center transition-opacity duration-300 ease-ios',
         bottomSheet ? 'items-end' : 'items-center',
         mobileFullScreen ? 'p-0 md:p-4' : bottomSheet ? 'p-0 md:p-4' : 'p-4',
         isVisible ? 'opacity-100' : 'opacity-0'

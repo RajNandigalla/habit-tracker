@@ -232,7 +232,7 @@ export const MainLayout: React.FC = () => {
             </Routes>
 
             {/* Modal Routes */}
-            {(background || location.pathname.includes('/')) && (
+            {background && (
               <Routes>
                 {/* Check In */}
                 <Route path="/check-in" element={<MoodCheckInPage />} />
