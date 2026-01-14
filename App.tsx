@@ -11,6 +11,13 @@ const App: React.FC = () => {
       <ToastProvider>
         <StoreProvider>
           <NavigationProvider>
+            <div
+              id="aria-live-announcer"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+              className="sr-only"
+            />
             <MainLayout />
           </NavigationProvider>
         </StoreProvider>

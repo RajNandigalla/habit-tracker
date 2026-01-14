@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 import ReactDOM from 'react-dom';
 import { XIcon } from '../icons';
-import { clsx } from 'clsx';
+import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { acquireScrollLock, releaseScrollLock } from '../utils/scrollLock';
+import { useScrollLock } from 'usehooks-ts';
+import { useFocusTrap } from '../hooks/useFocusTrap';
+import useAnimationFrame from '../hooks/useAnimationFrame';
+import { useTimeout } from 'usehooks-ts';
 
 interface ModalProps {
   isOpen: boolean;
@@ -32,24 +35,32 @@ export const Modal: React.FC<ModalProps> = ({
   const [isMounted, setIsMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const hasGenieAnimation = !!fabPosition;
+  const modalRef = useFocusTrap(isOpen); // Hook returns ref
+  useScrollLock({ autoLock: isOpen });
 
   useEffect(() => {
     if (!isOpen) {
       setIsVisible(false);
-      // Wait for animation to finish before unmounting
-      const timer = setTimeout(() => {
-        setIsMounted(false);
-        releaseScrollLock();
-      }, 300);
-      return () => clearTimeout(timer);
+      return;
     }
 
     setIsMounted(true);
-    acquireScrollLock();
-    // Slight delay to allow DOM mount before triggering transition
-    const timer = setTimeout(() => setIsVisible(true), 10);
-    return () => clearTimeout(timer);
   }, [isOpen]);
+
+  // Trigger CSS transition after mount (double-rAF pattern)
+  useAnimationFrame(() => {
+    if (isOpen) {
+      setIsVisible(true);
+    }
+  }, [isOpen]);
+
+  // Wait for exit animation before unmounting
+  useTimeout(
+    () => {
+      setIsMounted(false);
+    },
+    !isOpen && isVisible === false ? 300 : null
+  );
 
   // Handle ESC key
   useEffect(() => {
@@ -75,7 +86,7 @@ export const Modal: React.FC<ModalProps> = ({
   return ReactDOM.createPortal(
     <div
       className={clsx(
-        'fixed inset-0 z-50 flex justify-center transition-opacity duration-300 ease-ios',
+        'fixed inset-0 z-[60] flex justify-center transition-opacity duration-300 ease-ios',
         bottomSheet ? 'items-end' : 'items-center',
         mobileFullScreen ? 'p-0 md:p-4' : bottomSheet ? 'p-0 md:p-4' : 'p-4',
         isVisible ? 'opacity-100' : 'opacity-0'
@@ -87,9 +98,10 @@ export const Modal: React.FC<ModalProps> = ({
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px]" onClick={onClose} />
 
       <div
+        ref={modalRef}
         className={twMerge(
           clsx(
-            'relative w-full flex flex-col overflow-hidden bg-white shadow-2xl border border-slate-100',
+            'relative w-full flex flex-col overflow-hidden bg-white shadow-2xl border border-slate-100 outline-none',
             mobileFullScreen
               ? 'h-full rounded-none md:h-auto md:max-h-[85vh] md:rounded-3xl'
               : bottomSheet

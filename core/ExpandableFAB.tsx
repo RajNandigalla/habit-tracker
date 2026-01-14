@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { PlusIcon, XIcon } from '../icons';
 import { useScrollAwareFab } from '../hooks/useScrollAwareFab';
-import { acquireScrollLock, releaseScrollLock } from '../utils/scrollLock';
+import { useScrollLock } from 'usehooks-ts';
 
 export interface FabAction {
   id: string;
@@ -27,7 +28,6 @@ const ExpandableFAB: React.FC<ExpandableFABProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredAction, setHoveredAction] = useState<string | null>(null);
   const fabContainerRef = useRef<HTMLDivElement>(null);
-  const isFabVisible = useScrollAwareFab();
 
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
 
@@ -37,18 +37,14 @@ const ExpandableFAB: React.FC<ExpandableFABProps> = ({
 
   const actionButtonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
+  const isFabVisible = useScrollAwareFab();
+
+  // Lock scroll when FAB is expanded
+  useScrollLock({ autoLock: isOpen });
+
   useEffect(() => {
     actionButtonRefs.current = actionButtonRefs.current.slice(0, actions.length);
   }, [actions.length]);
-
-  useEffect(() => {
-    if (isOpen) {
-      acquireScrollLock();
-      return () => {
-        releaseScrollLock();
-      };
-    }
-  }, [isOpen]);
 
   useEffect(() => {
     if (!isParentOpen) {
@@ -95,7 +91,7 @@ const ExpandableFAB: React.FC<ExpandableFABProps> = ({
 
   const handlePointerUp = useCallback(() => {
     if (longPressTimerRef.current) {
-      clearTimeout(longPressTimerRef.current);
+      cancelAnimationFrame(longPressTimerRef.current);
       longPressTimerRef.current = null;
     }
 
@@ -121,12 +117,27 @@ const ExpandableFAB: React.FC<ExpandableFABProps> = ({
       isLongPress.current = false;
       hoveredActionRef.current = null;
 
-      longPressTimerRef.current = window.setTimeout(() => {
-        isLongPress.current = true;
-        navigator.vibrate?.(50);
-        setIsOpen(true);
-        window.addEventListener('pointermove', handlePointerMove);
-      }, 300);
+      // Use timestamp-based detection instead of setTimeout
+      const pressStartTime = Date.now();
+      let rafId: number;
+
+      const checkLongPress = () => {
+        const elapsed = Date.now() - pressStartTime;
+
+        if (elapsed >= 300) {
+          isLongPress.current = true;
+          navigator.vibrate?.(50);
+          setIsOpen(true);
+          window.addEventListener('pointermove', handlePointerMove);
+          longPressTimerRef.current = null;
+        } else {
+          rafId = requestAnimationFrame(checkLongPress);
+          longPressTimerRef.current = rafId;
+        }
+      };
+
+      rafId = requestAnimationFrame(checkLongPress);
+      longPressTimerRef.current = rafId;
 
       window.addEventListener('pointerup', handlePointerUp, { once: true });
     },
@@ -137,7 +148,7 @@ const ExpandableFAB: React.FC<ExpandableFABProps> = ({
   useEffect(() => {
     return () => {
       if (longPressTimerRef.current) {
-        clearTimeout(longPressTimerRef.current);
+        cancelAnimationFrame(longPressTimerRef.current);
       }
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerup', handlePointerUp);

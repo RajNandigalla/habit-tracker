@@ -150,8 +150,6 @@ const CATEGORY_LEVELS = [
   { count: 2000, suffix: 'Sage' },
 ];
 
-const LEGACY_CATEGORIES = ['Health', 'Work', 'Learning', 'Mindfulness', 'Fitness', 'Other'];
-
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
   Health: Heart,
   Work: Briefcase,
@@ -216,11 +214,10 @@ export const useAchievements = (habits: Habit[], journalEntries: JournalEntry[])
     const stats = { totalCompletions, longestStreak };
 
     const categoryCounts: Record<string, number> = {};
-    LEGACY_CATEGORIES.forEach(c => (categoryCounts[c] = 0));
+    DEFAULT_CATEGORIES.forEach(c => (categoryCounts[c.label] = 0));
 
     habits.forEach(h => {
       (h.categoryIds || []).forEach(catId => {
-        // Map ID to label from default categories to support legacy achievements
         const category = DEFAULT_CATEGORIES.find(c => c.id === catId);
         if (category && categoryCounts[category.label] !== undefined) {
           categoryCounts[category.label] += h.completedDates.length;
@@ -255,17 +252,17 @@ export const useAchievements = (habits: Habit[], journalEntries: JournalEntry[])
       });
     });
 
-    LEGACY_CATEGORIES.forEach(cat => {
-      const currentCount = categoryCounts[cat] || 0;
+    DEFAULT_CATEGORIES.forEach(category => {
+      const currentCount = categoryCounts[category.label] || 0;
       CATEGORY_LEVELS.forEach(level => {
         list.push({
-          id: `cat-${cat}-${level.count}`,
-          title: `${cat} ${level.suffix}`,
-          description: `Complete ${level.count} ${cat} habits.`,
-          icon: CATEGORY_ICONS[cat],
+          id: `cat-${category.label}-${level.count}`,
+          title: `${category.label} ${level.suffix}`,
+          description: `Complete ${level.count} ${category.label} habits.`,
+          icon: CATEGORY_ICONS[category.label],
           isUnlocked: currentCount >= level.count,
           progress: Math.min((currentCount / level.count) * 100, 100),
-          color: CATEGORY_COLORS[cat],
+          color: CATEGORY_COLORS[category.label],
         });
       });
     });

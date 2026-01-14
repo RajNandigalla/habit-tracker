@@ -1,6 +1,14 @@
-import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react';
+import React, {
+  useState,
+  useRef,
+  useMemo,
+  useEffect,
+  useLayoutEffect,
+  useCallback,
+  useId,
+} from 'react';
 import ReactDOM from 'react-dom';
-import useOnClickOutside from '../hooks/useOnClickOutside';
+import { useOnClickOutside } from 'usehooks-ts';
 import { CheckIcon, ChevronDownIcon, SearchIcon } from '../icons';
 import { computePosition, flip, shift, offset } from '@floating-ui/dom';
 
@@ -10,6 +18,7 @@ export interface SelectOption {
 }
 
 interface SelectProps {
+  id?: string;
   options: SelectOption[];
   value: string | number;
   onChange: (value: any) => void;
@@ -17,9 +26,11 @@ interface SelectProps {
   placeholder?: string;
   className?: string;
   disabled?: boolean;
+  required?: boolean;
 }
 
 export const Select: React.FC<SelectProps> = ({
+  id: providedId,
   options,
   value,
   onChange,
@@ -27,7 +38,10 @@ export const Select: React.FC<SelectProps> = ({
   placeholder = 'Select an option',
   className = '',
   disabled = false,
+  required = false,
 }) => {
+  const autoId = useId();
+  const id = providedId || autoId;
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [dropdownPlacement, setDropdownPlacement] = useState('bottom');
@@ -74,7 +88,7 @@ export const Select: React.FC<SelectProps> = ({
     });
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isOpen) {
       setDropdownStyles({
         position: 'fixed',
@@ -86,18 +100,15 @@ export const Select: React.FC<SelectProps> = ({
       return;
     }
 
-    const positionTimer = setTimeout(() => {
-      updatePosition();
-      if (showSearch) {
-        searchInputRef.current?.focus();
-      }
-    }, 0);
+    updatePosition();
+    if (showSearch) {
+      searchInputRef.current?.focus();
+    }
 
     window.addEventListener('scroll', updatePosition, true);
     window.addEventListener('resize', updatePosition);
 
     return () => {
-      clearTimeout(positionTimer);
       window.removeEventListener('scroll', updatePosition, true);
       window.removeEventListener('resize', updatePosition);
     };
@@ -153,7 +164,7 @@ export const Select: React.FC<SelectProps> = ({
               onChange={e => setSearchQuery(e.target.value)}
               className="w-full pl-8 pr-2 py-1.5 bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md focus:outline-none focus:ring-1 focus:ring-indigo-500 text-base dark:text-white dark:placeholder-slate-500"
             />
-            <SearchIcon className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <SearchIcon className="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 dark:text-slate-400" />
           </div>
         </div>
       )}
@@ -185,11 +196,20 @@ export const Select: React.FC<SelectProps> = ({
   return (
     <div className={`relative ${className}`}>
       {label && (
-        <label className="block text-base font-medium text-slate-700 dark:text-slate-300 mb-2">
+        <label
+          htmlFor={id}
+          className="block text-base font-medium text-slate-700 dark:text-slate-300 mb-2"
+        >
           {label}
+          {required && (
+            <span className="text-red-500 ml-1" aria-label="required">
+              *
+            </span>
+          )}
         </label>
       )}
       <button
+        id={id}
         ref={buttonRef}
         type="button"
         onClick={handleToggle}
@@ -197,10 +217,11 @@ export const Select: React.FC<SelectProps> = ({
         className={`${baseClasses} flex items-center justify-between`}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
+        aria-required={required}
       >
         <span className="truncate">{selectedOption?.label || placeholder}</span>
         <ChevronDownIcon
-          className={`w-5 h-5 text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-5 h-5 text-slate-500 dark:text-slate-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
 

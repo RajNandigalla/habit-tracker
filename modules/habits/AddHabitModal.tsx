@@ -8,14 +8,19 @@ import {
   Select,
   Modal,
   Textarea,
-  TimePicker,
   Slider,
   MultiSelect,
   MultiSelectOption,
   ColorPicker,
+  Tooltip,
 } from '../../core';
+import { TimePicker } from '../../core/TimePicker';
+import { X, Calendar, Bell, Check, ChevronRight, Palette, Hash, AlignLeft } from 'lucide-react';
 import { useStore } from '../../context/Store';
 import { useNavigate } from 'react-router-dom';
+import { useNavigation } from '../../context/NavigationContext'; // Import navigation context
+import { HABIT_COLOR_VALUES, HABIT_COLOR_NAMES } from '../../constants/colors';
+import { useAnnouncer } from '../../hooks/useAnnouncer';
 
 interface AddHabitModalProps {
   isOpen: boolean;
@@ -33,14 +38,15 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
   const [frequency, setFrequency] = useState<HabitFrequency>('daily');
   const [targetCount, setTargetCount] = useState(3);
   const [targetDays, setTargetDays] = useState<number[]>([1, 2, 3, 4, 5]);
-
-  const colors = ['#6366f1', '#ef4444', '#f59e0b', '#10b981', '#ec4899', '#8b5cf6', '#3b82f6'];
   const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
   const { categories, addCategory } = useStore();
   const navigate = useNavigate();
+  const { closeSideMenu } = useNavigation(); // Use navigation context to close side menu
+  const { announce } = useAnnouncer();
 
   const [categoryIds, setCategoryIds] = useState<string[]>([]);
+  const [errors, setErrors] = useState<{ name?: string }>({});
 
   // Prepare category options for MultiSelect
   const categoryOptions: MultiSelectOption[] = useMemo(
@@ -72,6 +78,7 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
     setFrequency('daily');
     setTargetCount(3);
     setTargetDays([1, 2, 3, 4, 5]);
+    setErrors({});
     // Reset category to default
     const defaultCat = categories.find(c => c.isDefault && c.label === 'Health');
     setCategoryIds(defaultCat ? [defaultCat.id] : []);
@@ -79,7 +86,14 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name) return;
+
+    // Validation
+    if (!name.trim()) {
+      setErrors({ name: 'Habit name is required' });
+      return;
+    }
+
+    setErrors({});
 
     onAdd({
       id: generateId(),
@@ -115,16 +129,23 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} title="Create New Habit" mobileFullScreen>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6" noValidate>
           <div className="space-y-4">
             <Input
+              id="habit-name"
               label="Name"
               placeholder="e.g., Read 10 pages, No Sugar..."
               value={name}
-              onChange={e => setName(e.target.value)}
+              onChange={e => {
+                setName(e.target.value);
+                if (errors.name) setErrors({ ...errors, name: undefined });
+              }}
+              error={errors.name}
+              required
               autoFocus
             />
             <Textarea
+              id="habit-description"
               label="Description (Optional)"
               placeholder="Why is this important?"
               value={description}
@@ -157,6 +178,7 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
                   onClose();
                   navigate('/categories');
                 }}
+                aria-label="Manage categories"
                 className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 hover:underline transition-colors flex items-center gap-1"
               >
                 <Plus size={14} />
@@ -175,6 +197,7 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
                     key={f}
                     type="button"
                     onClick={() => setFrequency(f)}
+                    aria-label={`Set frequency to ${f.replace('_', ' ')}`}
                     className={cn(
                       'py-2 px-1 text-base rounded-lg border text-center transition-all capitalize',
                       frequency === f
@@ -190,21 +213,33 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
               {/* Dynamic Frequency Inputs */}
               {frequency === 'specific_days' && (
                 <div className="flex justify-between gap-1 pt-2 animate-fade-in">
-                  {weekDays.map((d, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => toggleTargetDay(i)}
-                      className={cn(
-                        'w-9 h-9 rounded-full text-base font-bold flex items-center justify-center transition-all',
-                        targetDays.includes(i)
-                          ? 'bg-indigo-600 text-white shadow-md'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-400 hover:bg-slate-200'
-                      )}
-                    >
-                      {d}
-                    </button>
-                  ))}
+                  {weekDays.map((d, i) => {
+                    const dayNames = [
+                      'Sunday',
+                      'Monday',
+                      'Tuesday',
+                      'Wednesday',
+                      'Thursday',
+                      'Friday',
+                      'Saturday',
+                    ];
+                    return (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => toggleTargetDay(i)}
+                        aria-label={`Toggle ${dayNames[i]}`}
+                        className={cn(
+                          'w-9 h-9 rounded-full text-base font-bold flex items-center justify-center transition-all',
+                          targetDays.includes(i)
+                            ? 'bg-indigo-600 text-white shadow-md'
+                            : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:bg-slate-200'
+                        )}
+                      >
+                        {d}
+                      </button>
+                    );
+                  })}
                 </div>
               )}
 
@@ -231,7 +266,7 @@ const AddHabitModal: React.FC<AddHabitModalProps> = ({ isOpen, onClose, onAdd })
             </div>
 
             <div>
-              <ColorPicker colors={colors} selectedColor={color} onChange={setColor} />
+              <ColorPicker colors={HABIT_COLOR_VALUES} selectedColor={color} onChange={setColor} />
             </div>
           </div>
 

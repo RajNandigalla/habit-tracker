@@ -31,7 +31,7 @@ export const NavItem: React.FC<{
             'transition-transform duration-300 group-hover/navitem:scale-110',
             isActive
               ? 'text-indigo-600 dark:text-indigo-400'
-              : 'text-slate-400 group-hover/navitem:text-indigo-500'
+              : 'text-slate-500 dark:text-slate-400 group-hover/navitem:text-indigo-500'
           )}
         >
           {React.cloneElement(icon as React.ReactElement<{ className?: string }>, {

@@ -11,6 +11,7 @@ import {
   FireIcon,
   TrashIcon,
 } from '../icons';
+import { Tags } from 'lucide-react';
 import { UserPreferences } from '../types';
 import { PageTitle } from '../modules/PageTitle';
 import PageTransition from '../core/PageTransition';
@@ -26,8 +27,10 @@ interface SettingsViewProps {
   onClearAllData: () => void;
 }
 
+import { useNavigate, useLocation } from 'react-router-dom';
+
 export const SettingsView: React.FC<SettingsViewProps> = ({
-  preferences, // Kept if needed later, though currently unused for toggle. Wait, check usage.
+  preferences,
   onExportData,
   onImportData,
   onPopulateTestData,
@@ -35,7 +38,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 }) => {
   const [cloudSync, setCloudSync] = useState(false);
   const [notifications, setNotifications] = useState(true);
-  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const [confirmation, setConfirmation] = useState<{
     isOpen: boolean;
@@ -96,7 +100,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
   return (
     <PageTransition>
-      <main className="flex-1">
+      <main className="flex-1" aria-label="Settings">
+        <h1 className="sr-only">Settings</h1>
         <div className="max-w-7xl mx-auto px-4 py-6 md:px-8 pb-24 md:pb-8">
           <PageTitle
             title="Settings"
@@ -108,8 +113,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             {/* Left Column */}
             <div className="space-y-6">
               {/* Data & Storage */}
-              <section>
-                <h2 className="text-base font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">
+              <section aria-labelledby="data-storage-heading">
+                <h2
+                  id="data-storage-heading"
+                  className="text-base font-bold uppercase tracking-wider text-slate-500 mb-3 px-1"
+                >
                   Data & Storage
                 </h2>
                 <Card className="p-0 overflow-hidden">
@@ -126,8 +134,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               </section>
 
               {/* App Preferences */}
-              <section>
-                <h2 className="text-base font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">
+              <section aria-labelledby="preferences-heading">
+                <h2
+                  id="preferences-heading"
+                  className="text-base font-bold uppercase tracking-wider text-slate-500 mb-3 px-1"
+                >
                   Preferences
                 </h2>
                 <Card className="space-y-1">
@@ -145,8 +156,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             {/* Right Column */}
             <div className="space-y-6">
               {/* Data Management */}
-              <section>
-                <h2 className="text-base font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">
+              <section aria-labelledby="data-management-heading">
+                <h2
+                  id="data-management-heading"
+                  className="text-base font-bold uppercase tracking-wider text-slate-500 mb-3 px-1"
+                >
                   Data Management
                 </h2>
                 <Card className="space-y-4">
@@ -168,6 +182,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                         ref={fileInputRef}
                         onChange={handleFileChange}
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        aria-label="Import Data JSON file"
                       />
                       <Button
                         variant="secondary"
@@ -184,13 +199,32 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               </section>
 
               {/* Support & About */}
-              <section>
-                <h2 className="text-base font-bold uppercase tracking-wider text-slate-400 mb-3 px-1">
+              <section aria-labelledby="support-heading">
+                <h2
+                  id="support-heading"
+                  className="text-base font-bold uppercase tracking-wider text-slate-500 mb-3 px-1"
+                >
                   Support
                 </h2>
                 <Card className="space-y-1 divide-y divide-slate-100 dark:divide-slate-700/50">
                   <button
-                    onClick={() => setIsPrivacyOpen(true)}
+                    onClick={() => navigate('/categories')}
+                    className="w-full flex items-center justify-between py-3 hover:bg-slate-50 dark:hover:bg-slate-700/30 rounded-lg px-2 -mx-2 transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-slate-600 dark:text-slate-300">
+                        <Tags className="h-5 w-5" />
+                      </div>
+                      <span className="font-medium text-slate-900 dark:text-white">
+                        Manage Categories
+                      </span>
+                    </div>
+                    <ChevronRightIcon className="h-4 w-4 text-slate-500 dark:text-slate-400" />
+                  </button>
+                  <button
+                    onClick={() =>
+                      navigate('/settings/privacy', { state: { background: location } })
+                    }
                     className="w-full flex items-center justify-between py-3 hover:bg-slate-50 dark:hover:bg-slate-700/30 rounded-lg px-2 -mx-2 transition-colors"
                   >
                     <div className="flex items-center gap-3">
@@ -201,7 +235,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                         Privacy Policy
                       </span>
                     </div>
-                    <ChevronRightIcon className="h-4 w-4 text-slate-400" />
+                    <ChevronRightIcon className="h-4 w-4 text-slate-500 dark:text-slate-400" />
                   </button>
                   <div className="w-full flex items-center justify-between py-3 px-2 -mx-2">
                     <div className="flex items-center gap-3">
@@ -212,14 +246,19 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                         App Version
                       </span>
                     </div>
-                    <span className="text-base text-slate-400">v{pkg.version}</span>
+                    <span className="text-base text-slate-500 dark:text-slate-400">
+                      v{pkg.version}
+                    </span>
                   </div>
                 </Card>
               </section>
 
               {/* Danger Zone */}
-              <section>
-                <h2 className="text-base font-semibold text-red-600 dark:text-red-400 mb-2 px-2">
+              <section aria-labelledby="danger-zone-heading">
+                <h2
+                  id="danger-zone-heading"
+                  className="text-base font-semibold text-red-600 dark:text-red-400 mb-2 px-2"
+                >
                   Danger Zone
                 </h2>
                 <div className="bg-red-50 dark:bg-red-900/10 rounded-xl shadow-sm px-4 border border-red-200 dark:border-red-500/20 divide-y divide-red-200 dark:divide-red-500/20">
@@ -257,8 +296,6 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         onConfirm={confirmation.onConfirm}
         isDanger={confirmation.isDanger}
       />
-
-      <PrivacyModal isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
     </PageTransition>
   );
 };

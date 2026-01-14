@@ -196,7 +196,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({ habit, isOpen, onClose, 
             />
           </div>
 
-          <p className="text-xs text-slate-400 dark:text-slate-500 text-center max-w-xs mb-6">
+          <p className="text-xs text-slate-500 dark:text-slate-500 text-center max-w-xs mb-6">
             Pro Tip: Stay focused for the full duration to build true discipline
           </p>
 

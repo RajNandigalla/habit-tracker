@@ -1,13 +1,12 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect, useMemo, useCallback } from 'react';
 import ReactDOM from 'react-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ChevronLeftIcon, ChevronRightIcon, CalendarIcon } from '../icons';
-import useOnClickOutside from '../hooks/useOnClickOutside';
+import { CalendarIcon } from '../../icons';
+import { useMediaQuery, useOnClickOutside } from 'usehooks-ts';
 import { computePosition, flip, shift, offset } from '@floating-ui/dom';
-import Button from './Button';
-import useIsMobile from '../hooks/useIsMobile';
-import Modal from './Modal';
-import { dayjs, Dayjs, MONTH_NAMES, DAYS_OF_WEEK } from '../utils'; // Use centralized dayjs
+import Modal from '../Modal';
+import { cn, dayjs, Dayjs } from '../../utils';
+import { DatePickerContent } from './DatePickerContent';
 
 interface DatePickerProps {
   id?: string;
@@ -16,180 +15,13 @@ interface DatePickerProps {
   disabled?: boolean;
 }
 
-const YearView: React.FC<{
-  viewDate: Dayjs;
-  stagedValue: string;
-  handleYearClick: (year: number) => void;
-}> = ({ viewDate, stagedValue, handleYearClick }) => {
-  const yearGridRef = useRef<HTMLDivElement>(null);
-
-  const currentNavYear = viewDate.year();
-  const startYear = Math.floor(currentNavYear / 100) * 100;
-  const years = Array.from({ length: 100 }, (_, i) => startYear + i);
-
-  const selectedYearValue = stagedValue ? parseInt(stagedValue.substring(0, 4), 10) : null;
-
-  useEffect(() => {
-    const yearToScroll =
-      selectedYearValue && selectedYearValue >= startYear && selectedYearValue < startYear + 100
-        ? selectedYearValue
-        : currentNavYear;
-
-    const selector = `[data-year="${yearToScroll}"]`;
-    const selectedYearElement = yearGridRef.current?.querySelector(selector);
-
-    if (selectedYearElement) {
-      const timer = setTimeout(() => {
-        selectedYearElement.scrollIntoView({ block: 'center', behavior: 'auto' });
-      }, 0);
-      return () => clearTimeout(timer);
-    }
-  }, [viewDate, stagedValue, startYear, currentNavYear, selectedYearValue]);
-
-  return (
-    <div
-      ref={yearGridRef}
-      className="grid grid-cols-4 gap-y-1 gap-x-2 py-2 h-[220px] overflow-y-auto pr-2"
-    >
-      {years.map(year => {
-        const isSelected = year === selectedYearValue;
-
-        return (
-          <button
-            key={year}
-            data-year={year}
-            onClick={() => handleYearClick(year)}
-            className={`p-2 rounded-md text-base text-center 
-                            ${
-                              isSelected
-                                ? 'bg-indigo-600 text-white font-semibold hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600'
-                                : 'font-normal text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700'
-                            }`}
-          >
-            {year}
-          </button>
-        );
-      })}
-    </div>
-  );
-};
-
-const DatePickerContent: React.FC<{
-  viewDate: Dayjs;
-  stagedValue: string;
-  currentView: 'day' | 'year';
-  animationClass: string;
-  handlePrev: () => void;
-  handleNext: () => void;
-  handleHeaderClick: () => void;
-  handleYearClick: (year: number) => void;
-  handleSet: () => void;
-  handleCancel: () => void;
-  handleClear: () => void;
-  renderDayView: () => React.ReactElement;
-  showActions: boolean;
-  formattedStagedDate: string | null;
-  isMobile: boolean;
-}> = ({
-  viewDate,
-  stagedValue,
-  currentView,
-  animationClass,
-  handlePrev,
-  handleNext,
-  handleHeaderClick,
-  renderDayView,
-  handleYearClick,
-  handleSet,
-  handleCancel,
-  handleClear,
-  showActions,
-  formattedStagedDate,
-  isMobile,
-}) => {
-  const headerTitle = useMemo(() => {
-    const year = viewDate.year();
-    if (currentView === 'day') return `${MONTH_NAMES[viewDate.month()]} ${year}`;
-    const startYear = Math.floor(year / 100) * 100;
-    return `${startYear} - ${startYear + 99}`;
-  }, [viewDate, currentView]);
-
-  return (
-    <>
-      <div className="flex items-center justify-between mb-2">
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          onClick={handlePrev}
-          className="rounded-full"
-        >
-          <ChevronLeftIcon className="w-5 h-5" />
-        </Button>
-        <div className="flex-grow text-center">
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={handleHeaderClick}
-            className="font-semibold text-slate-800 dark:text-slate-100 hover:text-indigo-600 dark:hover:text-indigo-400 text-base"
-          >
-            {headerTitle}
-          </Button>
-        </div>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon-sm"
-          onClick={handleNext}
-          className="rounded-full"
-        >
-          <ChevronRightIcon className="w-5 h-5" />
-        </Button>
-      </div>
-
-      <div className="min-h-[220px] overflow-hidden">
-        {currentView === 'day' && (
-          <div key={`${viewDate.year()}-${viewDate.month()}`} className={animationClass}>
-            {renderDayView()}
-          </div>
-        )}
-        {currentView === 'year' && (
-          <div key={Math.floor(viewDate.year() / 100)} className={animationClass}>
-            <YearView
-              viewDate={viewDate}
-              stagedValue={stagedValue}
-              handleYearClick={handleYearClick}
-            />
-          </div>
-        )}
-      </div>
-
-      {showActions && (
-        <div className="flex justify-between items-center pt-3 mt-2 border-t border-slate-200 dark:border-slate-700">
-          <Button variant="ghost" size="sm" onClick={handleClear}>
-            Clear
-          </Button>
-          <div className="flex gap-2">
-            <Button variant="secondary" size="sm" onClick={handleCancel}>
-              Cancel
-            </Button>
-            <Button variant="primary" size="sm" onClick={handleSet} className="px-6 py-2">
-              Set
-            </Button>
-          </div>
-        </div>
-      )}
-    </>
-  );
-};
-
 export const DatePicker: React.FC<DatePickerProps> = ({
   id = 'date-picker',
   value,
   onChange,
   disabled = false,
 }) => {
-  const isMobile = useIsMobile();
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const [isPopoverOpen, setIsPopoverOpen] = useState(false); // For desktop popover
 
   const navigate = useNavigate();
@@ -252,20 +84,17 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     }
   }, [isOpen, value]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isOpen || isMobile) {
       setDropdownStyles(prev => ({ ...prev, opacity: 0, pointerEvents: 'none' }));
       return;
     }
 
-    const positionTimer = setTimeout(() => {
-      updatePosition();
-    }, 0);
+    updatePosition();
 
     window.addEventListener('scroll', updatePosition, true);
     window.addEventListener('resize', updatePosition);
     return () => {
-      clearTimeout(positionTimer);
       window.removeEventListener('scroll', updatePosition, true);
       window.removeEventListener('resize', updatePosition);
     };
@@ -380,66 +209,6 @@ export const DatePicker: React.FC<DatePickerProps> = ({
     return formattedStagedDate || 'Select Date';
   }, [isMobile, formattedStagedDate]);
 
-  const renderDayView = useCallback(() => {
-    const currentYear = viewDate.year();
-    const currentMonth = viewDate.month(); // 0-11
-
-    // Get first day of month (0-6, Sun-Sat)
-    const firstDayOfMonth = viewDate.startOf('month').day();
-    const daysInMonth = viewDate.daysInMonth();
-
-    let stagedDateObj: Dayjs | null = null;
-    if (stagedValue && /^\d{4}-\d{2}-\d{2}$/.test(stagedValue)) {
-      stagedDateObj = dayjs(stagedValue);
-    }
-
-    const grid = [];
-    for (let i = 0; i < firstDayOfMonth; i++) {
-      grid.push(<div key={`empty-${i}`} className="w-9 h-9" />);
-    }
-
-    const today = dayjs();
-    for (let day = 1; day <= daysInMonth; day++) {
-      const isSelected =
-        stagedDateObj?.year() === currentYear &&
-        stagedDateObj?.month() === currentMonth &&
-        stagedDateObj?.date() === day;
-      const isToday =
-        today.year() === currentYear && today.month() === currentMonth && today.date() === day;
-
-      grid.push(
-        <button
-          key={day}
-          onClick={() => handleDayClick(day)}
-          className={`w-9 h-9 rounded-full flex items-center justify-center text-base font-semibold transition-colors
-                        ${
-                          isSelected
-                            ? 'bg-indigo-600 text-white hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600'
-                            : isToday
-                              ? 'bg-slate-200 dark:bg-slate-600 text-slate-900 dark:text-white hover:bg-slate-300 dark:hover:bg-slate-500'
-                              : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700'
-                        }`}
-        >
-          {day}
-        </button>
-      );
-    }
-    return (
-      <>
-        <div className="grid grid-cols-7 gap-1 text-center text-base text-slate-500 dark:text-slate-400 mb-2">
-          {DAYS_OF_WEEK.map(
-            (
-              day // Changed from DAY_NAMES
-            ) => (
-              <div key={day}>{day}</div>
-            )
-          )}
-        </div>
-        <div className="grid grid-cols-7 gap-1 place-items-center">{grid}</div>
-      </>
-    );
-  }, [viewDate, stagedValue, handleDayClick]);
-
   return (
     <div className="relative">
       <button
@@ -453,7 +222,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         aria-expanded={isOpen}
       >
         <span className="truncate">{formattedValue}</span>
-        <CalendarIcon className="w-5 h-5 text-slate-400" />
+        <CalendarIcon className="w-5 h-5 text-slate-500 dark:text-slate-400" />
       </button>
 
       {isMobile ? (
@@ -467,10 +236,10 @@ export const DatePicker: React.FC<DatePickerProps> = ({
             handleNext={handleNext}
             handleHeaderClick={handleHeaderClick}
             handleYearClick={handleYearClick}
+            handleDayClick={handleDayClick}
             handleSet={handleSet}
             handleCancel={handleClose}
             handleClear={handleClear}
-            renderDayView={renderDayView}
             showActions={isMobile}
             formattedStagedDate={formattedStagedDate}
             isMobile={isMobile}
@@ -493,10 +262,10 @@ export const DatePicker: React.FC<DatePickerProps> = ({
               handleNext={handleNext}
               handleHeaderClick={handleHeaderClick}
               handleYearClick={handleYearClick}
+              handleDayClick={handleDayClick}
               handleSet={handleSet}
               handleCancel={handleClose}
               handleClear={handleClear}
-              renderDayView={renderDayView}
               showActions={isMobile}
               formattedStagedDate={formattedStagedDate}
               isMobile={isMobile}

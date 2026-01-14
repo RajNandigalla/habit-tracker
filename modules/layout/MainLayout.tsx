@@ -1,7 +1,8 @@
 import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useNavigation } from '../../context/NavigationContext';
 import { useStore } from '../../context/Store';
+import { usePreferences } from '../../context/PreferencesProvider';
 import { Dashboard } from '../../pages/Dashboard';
 import { Journal } from '../../pages/Journal';
 import { Settings } from '../../pages/Settings';
@@ -24,23 +25,69 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
-import { SideMenu, Container } from '../../core';
+import { SideMenu, Container, BottomToolbar } from '../../core';
 import { Header } from '../Header';
+import { MobileHeaderNav } from './MobileHeaderNav';
 import { NavItem } from './NavItem';
+
+import {
+  AddHabitModal,
+  // HabitDetailsModal, // Removed as it's now used in wrapper file
+} from '../habits';
+import { AddJournalEntryModal } from '../journal';
+import { AppearanceBottomSheet } from '../settings/AppearanceBottomSheet';
+import { PrivacyModal } from '../settings/PrivacyModal';
+// import { ChallengeDetailsModal } from '../challenges/ChallengeDetailsModal'; // Removed
+// import AIReportModal from '../progress/AIReportModal'; // Removed
+// import { FocusTimer } from '../FocusTimer'; // Removed
+
+// Import wrappers
+import {
+  HabitDetailsModalWrapper,
+  FocusTimerWrapper,
+  ChallengeDetailsWrapper,
+  AIReportModalWrapper,
+} from './ModalWrappers';
+
+// CHALLENGES import removed from here as it moved to wrapper
 
 export const MainLayout: React.FC = () => {
   const { isSideMenuOpen, closeSideMenu } = useNavigation();
-  const { preferences, toggleDarkMode } = useStore();
+  const { preferences } = usePreferences();
+  const {
+    habits,
+    addHabit,
+    journalEntries,
+    addJournalEntry,
+    updateHabit,
+    deleteHabit,
+    toggleHabitCompletion,
+    joinChallenge,
+  } = useStore();
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   const location = useLocation();
   const state = location.state as { background?: Location };
   const background = state?.background;
 
+  // Helper to handle modal closing
+  const navigate = useNavigate();
+  const handleCloseModal = () => navigate(-1);
+
   return (
     <div className="flex flex-col min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
-      {/* Global Header */}
-      <Header className="sticky top-0" />
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-indigo-600 focus:text-white focus:rounded-md focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-indigo-600 transition-all font-medium"
+      >
+        Skip to main content
+      </a>
+      {/* Desktop/Tablet Header - Always show */}
+      <Header className="sticky top-0 hidden md:block" />
+
+      {/* Mobile Header - Conditional based on nav preference */}
+      {!preferences.useMobileBottomNav && <Header className="sticky top-0 md:hidden" />}
+      {preferences.useMobileBottomNav && <MobileHeaderNav className="sticky top-0 md:hidden" />}
 
       <Container className="flex flex-1 relative px-0 sm:px-0 md:px-0 max-w-none md:max-w-none lg:max-w-7xl lg:px-8">
         {/* Desktop Floating Sidebar - Height fit content */}
@@ -88,77 +135,90 @@ export const MainLayout: React.FC = () => {
           </div>
         </aside>
 
-        {/* Mobile Side Menu */}
-        <SideMenu isOpen={isSideMenuOpen} onClose={closeSideMenu}>
-          <div className="flex flex-col h-full bg-white dark:bg-slate-900">
-            <div className="px-4 py-3 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 safe-area-inset-top">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-md">
-                  <Activity className="h-4 w-4" />
+        {/* Mobile Side Menu - Only show if NOT using bottom nav */}
+        {!preferences.useMobileBottomNav && (
+          <SideMenu isOpen={isSideMenuOpen} onClose={closeSideMenu}>
+            <div className="flex flex-col h-full bg-white dark:bg-slate-900">
+              <div className="px-4 py-3 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 safe-area-inset-top">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white shadow-md">
+                    <Activity className="h-4 w-4" />
+                  </div>
+                  <span className="text-md font-extrabold text-slate-900 dark:text-white">
+                    TickOff
+                  </span>
                 </div>
-                <span className="text-md font-extrabold text-slate-900 dark:text-white">
-                  TickOff
-                </span>
+                <button
+                  onClick={closeSideMenu}
+                  className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full"
+                >
+                  <X className="h-5 w-5" />
+                </button>
               </div>
-              <button
-                onClick={closeSideMenu}
-                className="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
 
-            <nav className="flex-1 px-4 space-y-2 mt-6">
-              <NavItem to="/" icon={<ListTodo />} label="Habits" onClick={closeSideMenu} />
-              <NavItem
-                to="/challenges"
-                icon={<Swords />}
-                label="Challenges"
-                onClick={closeSideMenu}
-              />
-              <NavItem
-                to="/achievements"
-                icon={<Trophy />}
-                label="Achievements"
-                onClick={closeSideMenu}
-              />
-              <NavItem to="/journal" icon={<BookText />} label="Journal" onClick={closeSideMenu} />
-              <NavItem
-                to="/progress"
-                icon={<BarChartBigIcon />}
-                label="Progress"
-                onClick={closeSideMenu}
-              />
-              <NavItem
-                to="/settings"
-                icon={<Settings2 />}
-                label="Settings"
-                onClick={closeSideMenu}
-              />
-              <div className="my-2 border-t border-slate-100 dark:border-slate-800" />
-              <NavItem
-                to="/categories"
-                icon={<Tags />}
-                label="Categories"
-                onClick={closeSideMenu}
-              />
-            </nav>
+              <nav className="flex-1 px-4 space-y-2 mt-6">
+                <NavItem to="/" icon={<ListTodo />} label="Habits" onClick={closeSideMenu} />
+                <NavItem
+                  to="/challenges"
+                  icon={<Swords />}
+                  label="Challenges"
+                  onClick={closeSideMenu}
+                />
+                <NavItem
+                  to="/achievements"
+                  icon={<Trophy />}
+                  label="Achievements"
+                  onClick={closeSideMenu}
+                />
+                <NavItem
+                  to="/journal"
+                  icon={<BookText />}
+                  label="Journal"
+                  onClick={closeSideMenu}
+                />
+                <NavItem
+                  to="/progress"
+                  icon={<BarChartBigIcon />}
+                  label="Progress"
+                  onClick={closeSideMenu}
+                />
+                <NavItem
+                  to="/settings"
+                  icon={<Settings2 />}
+                  label="Settings"
+                  onClick={closeSideMenu}
+                />
+                <div className="my-2 border-t border-slate-100 dark:border-slate-800" />
+                <NavItem
+                  to="/categories"
+                  icon={<Tags />}
+                  label="Categories"
+                  onClick={closeSideMenu}
+                />
+              </nav>
 
-            <div className="p-5 mt-auto border-t border-slate-100 dark:border-slate-800">
-              <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-xl">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">
-                  Daily Quote
-                </p>
-                <p className="text-base text-slate-600 dark:text-slate-300 italic font-serif leading-relaxed">
-                  "Consistency is what transforms average into excellence."
-                </p>
+              <div className="p-5 mt-auto border-t border-slate-100 dark:border-slate-800">
+                <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-xl">
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wide mb-2">
+                    Daily Quote
+                  </p>
+                  <p className="text-base text-slate-600 dark:text-slate-300 italic font-serif leading-relaxed">
+                    "Consistency is what transforms average into excellence."
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        </SideMenu>
+          </SideMenu>
+        )}
 
-        {/* Main Content Area - Full width/height, no margins */}
-        <div className="flex-1 min-w-0 flex flex-col min-h-full relative mb-40">
+        {/* Main Content Area - Adjust margin based on nav mode */}
+        <div
+          id="main-content"
+          className={`flex-1 min-w-0 flex flex-col min-h-full relative ${
+            preferences.useMobileBottomNav ? 'mb-20' : 'mb-40'
+          }`}
+          tabIndex={-1}
+        >
           <div className="flex-1 w-full h-full">
             <Routes location={background || location}>
               <Route path="/" element={<Dashboard />} />
@@ -171,15 +231,91 @@ export const MainLayout: React.FC = () => {
               <Route path="/check-in" element={<MoodCheckInPage />} />
             </Routes>
 
-            {/* Modal Route */}
+            {/* Modal Routes */}
             {background && (
               <Routes>
+                {/* Check In */}
                 <Route path="/check-in" element={<MoodCheckInPage />} />
+
+                {/* Habits */}
+                <Route
+                  path="/habit/add"
+                  element={
+                    <AddHabitModal isOpen={true} onClose={handleCloseModal} onAdd={addHabit} />
+                  }
+                />
+                <Route
+                  path="/habit/:id"
+                  element={
+                    <HabitDetailsModalWrapper
+                      onClose={handleCloseModal}
+                      habits={habits}
+                      onUpdate={updateHabit}
+                      onDelete={deleteHabit}
+                    />
+                  }
+                />
+
+                {/* Journal */}
+                <Route
+                  path="/journal/new"
+                  element={
+                    <AddJournalEntryModal
+                      isOpen={true}
+                      onClose={handleCloseModal}
+                      onAdd={addJournalEntry}
+                      habits={habits}
+                    />
+                  }
+                />
+
+                {/* Settings */}
+                <Route
+                  path="/settings/appearance"
+                  element={<AppearanceBottomSheet isOpen={true} onClose={handleCloseModal} />}
+                />
+                <Route
+                  path="/settings/privacy"
+                  element={<PrivacyModal isOpen={true} onClose={handleCloseModal} />}
+                />
+
+                {/* Focus Timer */}
+                <Route
+                  path="/focus/:id"
+                  element={
+                    <FocusTimerWrapper
+                      habits={habits}
+                      onClose={handleCloseModal}
+                      onToggleCompletion={toggleHabitCompletion}
+                    />
+                  }
+                />
+
+                {/* Challenges & Reports */}
+                <Route
+                  path="/challenges/:id"
+                  element={
+                    <ChallengeDetailsWrapper
+                      onClose={handleCloseModal}
+                      habits={habits}
+                      onJoinChallenge={joinChallenge}
+                    />
+                  }
+                />
+                <Route
+                  path="/progress/report"
+                  element={<AIReportModalWrapper onClose={handleCloseModal} />}
+                />
               </Routes>
             )}
           </div>
         </div>
       </Container>
+
+      {/* Bottom Toolbar - Only show if using mobile bottom nav */}
+      {preferences.useMobileBottomNav && <BottomToolbar />}
     </div>
   );
 };
+
+// --- Wrappers moved to ./ModalWrappers.tsx ---

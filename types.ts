@@ -100,6 +100,7 @@ export interface UserPreferences {
   viewMode: 'list' | 'streak';
   soundEnabled: boolean;
   fontSize: number;
+  useMobileBottomNav: boolean; // Feature flag: true = bottom toolbar, false = side menu
 }
 
 export type ViewMode = 'list' | 'streak';

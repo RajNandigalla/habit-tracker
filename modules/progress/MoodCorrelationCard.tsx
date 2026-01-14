@@ -1,47 +1,15 @@
 import orderBy from 'lodash/orderBy';
 import React from 'react';
 import { Card, Show } from '../../core';
-import {
-  Smile,
-  Meh,
-  Frown,
-  Sun,
-  Moon,
-  Zap,
-  TrendingUp,
-  BookOpen,
-  AlertCircle,
-  Sparkles,
-} from 'lucide-react';
+import { TrendingUp, AlertCircle, Sparkles } from 'lucide-react';
 import { cn } from '../../utils';
 import { MoodCorrelationData } from './types';
 import { EmptyMoodState } from './EmptyMoodState';
+import { getMoodIcon, getMoodLabel } from '../mood/utils';
 
 const MoodCorrelationCard: React.FC<{ data: MoodCorrelationData[] }> = ({ data }) => {
-  // Sort by completion rate descending
   const sortedData = orderBy(data, ['completionRate'], ['desc']);
   const bestMood = sortedData[0];
-
-  const getMoodIcon = (mood: string) => {
-    switch (mood) {
-      case 'happy':
-        return <Smile className="w-5 h-5 text-green-500" />;
-      case 'motivated':
-        return <Zap className="w-5 h-5 text-yellow-500" />;
-      case 'neutral':
-        return <Meh className="w-5 h-5 text-blue-500" />;
-      case 'sad':
-        return <Frown className="w-5 h-5 text-slate-400" />;
-      case 'tired':
-        return <Moon className="w-5 h-5 text-purple-500" />;
-      default:
-        return <Smile className="w-5 h-5 text-slate-400" />;
-    }
-  };
-
-  const getMoodLabel = (mood: string) => {
-    return mood.charAt(0).toUpperCase() + mood.slice(1);
-  };
 
   return (
     <Card className="p-6">
@@ -83,7 +51,7 @@ const MoodCorrelationCard: React.FC<{ data: MoodCorrelationData[] }> = ({ data }
             {data.map(item => (
               <div key={item.mood} className="group">
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="p-1.5 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700 md:group-hover:scale-110 transition-transform">
+                  <div className="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-100 dark:border-slate-700 md:group-hover:scale-110 transition-transform text-2xl">
                     {getMoodIcon(item.mood)}
                   </div>
                   <div className="flex-1">

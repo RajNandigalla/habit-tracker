@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Modal, Button, Show, Select, Textarea } from '../../core';
 import { dayjs } from '../../utils';
-import { ImageIcon as ImageIconLucide, Sparkles, Smile, Meh, Frown } from 'lucide-react';
+import { ImageIcon as ImageIconLucide } from 'lucide-react';
 import { cn, generateId, toBase64 } from '../../utils';
 import { JournalEntry, Habit } from '../../types';
 import { analyzeJournalEntry } from '../../services/geminiService';
 import { clsx } from 'clsx';
+import { MOOD_OPTIONS } from '../mood/constants';
+import { useAnnouncer } from '../../hooks/useAnnouncer';
 
 const ImageIcon = ImageIconLucide;
 
@@ -27,7 +29,10 @@ const AddJournalEntryModal: React.FC<AddJournalEntryModalProps> = ({
   const [mood, setMood] = useState('neutral');
   const [image, setImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [errors, setErrors] = useState<{ content?: string }>({});
+  const { announce } = useAnnouncer();
 
+  // TODO: Refactor this File upload Should be moved to server
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       try {
@@ -41,7 +46,11 @@ const AddJournalEntryModal: React.FC<AddJournalEntryModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!content.trim()) return;
+    if (!content.trim()) {
+      setErrors({ content: 'Journal entry content is required' });
+      return;
+    }
+    setErrors({});
 
     setIsAnalyzing(true);
     // Get AI analysis implicitly on submit for instant value
@@ -58,6 +67,7 @@ const AddJournalEntryModal: React.FC<AddJournalEntryModalProps> = ({
     };
 
     onAdd(newEntry);
+    announce('Journal entry added successfully');
     setIsAnalyzing(false);
     resetForm();
     onClose();
@@ -68,6 +78,7 @@ const AddJournalEntryModal: React.FC<AddJournalEntryModalProps> = ({
     setHabitId('');
     setMood('neutral');
     setImage(null);
+    setErrors({});
   };
 
   const habitOptions = [
@@ -75,17 +86,16 @@ const AddJournalEntryModal: React.FC<AddJournalEntryModalProps> = ({
     ...habits.map(h => ({ value: h.id, label: h.name })),
   ];
 
-  const moodOptions = [
-    { value: 'happy', label: 'Happy / Proud' },
-    { value: 'motivated', label: 'Motivated / Energetic' },
-    { value: 'neutral', label: 'Neutral / Calm' },
-    { value: 'sad', label: 'Tired / Frustrated' },
-  ];
+  const moodOptions = MOOD_OPTIONS.map(mood => ({
+    value: mood.id,
+    label: `${mood.emoji} ${mood.label}`,
+  }));
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="New Journal Entry">
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         <Select
+          id="journal-habit"
           label="Related Habit (Optional)"
           value={habitId}
           onChange={val => setHabitId(val as string)}
@@ -98,7 +108,11 @@ const AddJournalEntryModal: React.FC<AddJournalEntryModalProps> = ({
           placeholder="What's on your mind? Did you hit a milestone? How do you feel?"
           rows={4}
           value={content}
-          onChange={e => setContent(e.target.value)}
+          onChange={e => {
+            setContent(e.target.value);
+            if (errors.content) setErrors({ ...errors, content: undefined });
+          }}
+          error={errors.content}
           required
         />
 

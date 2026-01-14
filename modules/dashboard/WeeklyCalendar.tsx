@@ -79,22 +79,18 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
         <div className="flex items-center gap-2">
           <AnimatePresence>
             {showTodayButton && (
-              <motion.div
+              <motion.button
                 layout
-                initial={{ width: 0, opacity: 0, scale: 0.8 }}
-                animate={{ width: 'auto', opacity: 1, scale: 1 }}
-                exit={{ width: 0, opacity: 0, scale: 0.8 }}
-                transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
-                className="overflow-hidden"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ type: 'spring', stiffness: 260, damping: 20, mass: 1 }}
+                onClick={handleJumpToToday}
+                className="px-3 py-1.5 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-xs font-semibold text-indigo-600 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-900/60 transition-colors flex items-center gap-1.5 whitespace-nowrap transform-gpu"
               >
-                <button
-                  onClick={handleJumpToToday}
-                  className="px-3 py-1.5 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-xs font-semibold text-indigo-600 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-900/60 transition-colors flex items-center gap-1.5 whitespace-nowrap"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
-                  Today
-                </button>
-              </motion.div>
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
+                Today
+              </motion.button>
             )}
           </AnimatePresence>
 
@@ -126,15 +122,15 @@ export const WeeklyCalendar: React.FC<WeeklyCalendarProps> = ({
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="grid grid-cols-7 gap-1 md:gap-3"
+            transition={{ type: 'spring', stiffness: 260, damping: 20, mass: 1 }}
+            className="grid grid-cols-7 gap-1 md:gap-3 transform-gpu"
           >
             {days.map(day => (
               <div
                 key={day.date}
                 onClick={() => onSelectDate(day.date)}
                 className={cn(
-                  'flex flex-col items-center justify-center py-3 rounded-[20px] transition-all duration-300 relative group cursor-pointer select-none',
+                  'flex flex-col items-center justify-center py-3 rounded-[20px] transition-all duration-300 relative group cursor-pointer select-none transform-gpu will-change-transform',
                   day.isSelected
                     ? 'bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-lg shadow-indigo-500/30 scale-110 z-10'
                     : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400'

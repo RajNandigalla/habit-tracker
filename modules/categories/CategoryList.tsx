@@ -69,7 +69,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({
                 </span>
 
                 {cat.isDefault && !isSelectionMode && (
-                  <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-400 dark:text-slate-500">
+                  <span className="text-[10px] uppercase tracking-wider font-semibold text-slate-500 dark:text-slate-500">
                     • Built-in
                   </span>
                 )}
@@ -97,9 +97,8 @@ export const CategoryList: React.FC<CategoryListProps> = ({
               ) : (
                 <div className="flex items-center gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-200 translate-x-2 md:group-hover:translate-x-0">
                   <Button
-                    size="icon-sm"
                     variant="ghost"
-                    className="hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-400 hover:text-indigo-600"
+                    className="hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 hover:text-indigo-600"
                     onClick={e => {
                       e.stopPropagation();
                       onEdit(cat);
@@ -111,7 +110,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({
                     <Button
                       size="icon-sm"
                       variant="ghost"
-                      className="hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-400 hover:text-red-500"
+                      className="hover:bg-red-50 dark:hover:bg-red-900/20 text-slate-500 dark:text-slate-400 hover:text-red-500"
                       onClick={e => {
                         e.stopPropagation();
                         onArchive(cat);

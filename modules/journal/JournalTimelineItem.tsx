@@ -1,9 +1,10 @@
 import React from 'react';
 import { Card } from '../../core';
-import { Smile, Meh, Frown, Calendar, Sparkles } from 'lucide-react';
+import { Calendar, Sparkles } from 'lucide-react';
 import { cn, formatDate } from '../../utils';
 import { JournalEntry, Habit } from '../../types';
 import { clsx } from 'clsx';
+import { getMoodIcon, getMoodLabel } from '../mood/utils';
 
 interface JournalTimelineItemProps {
   entry: JournalEntry;
@@ -37,7 +38,7 @@ const JournalTimelineItem: React.FC<JournalTimelineItemProps> = ({ entry, habit,
             'dark:text-slate-400 dark:bg-slate-800'
           )}
         >
-          <Calendar className="h-3 w-3 text-slate-400" />
+          <Calendar className="h-3 w-3 text-slate-500 dark:text-slate-400" />
           {formatDate(entry.date, 'MMM D, YYYY • h:mm A')}
         </span>
       </div>
@@ -59,28 +60,14 @@ const JournalTimelineItem: React.FC<JournalTimelineItemProps> = ({ entry, habit,
               {entry.content}
             </p>
           </div>
-          <div className="bg-slate-50 dark:bg-slate-900 p-2 rounded-lg border border-slate-100 dark:border-slate-800">
-            {entry.mood === 'happy' && (
-              <span title="Happy">
-                <Smile className="h-6 w-6 text-green-500" />
-              </span>
-            )}
-            {entry.mood === 'motivated' && (
-              <span title="Motivated">
-                <Sparkles className="h-6 w-6 text-orange-500" />
-              </span>
-            )}
-            {entry.mood === 'neutral' && (
-              <span title="Neutral">
-                <Meh className="h-6 w-6 text-yellow-500" />
-              </span>
-            )}
-            {entry.mood === 'sad' && (
-              <span title="Sad/Tired">
-                <Frown className="h-6 w-6 text-slate-400" />
-              </span>
-            )}
-          </div>
+          {entry.mood && (
+            <div
+              className="bg-slate-50 dark:bg-slate-900 p-2 rounded-lg border border-slate-100 dark:border-slate-800"
+              title={getMoodLabel(entry.mood)}
+            >
+              <span className="text-2xl">{getMoodIcon(entry.mood)}</span>
+            </div>
+          )}
         </div>
 
         {entry.imageUrl && (
